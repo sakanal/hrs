@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 房源所在城市表
@@ -37,6 +38,16 @@ public class HouseCityEntity implements Serializable {
      * 父城市id
      */
     private Long superiorId;
+    /**
+     * 是否有子节点
+     */
+    @TableField(exist = false)
+    private boolean hasChildren;
+    /**
+     * 子节点
+     */
+    @TableField(exist = false)
+    private List<HouseCityEntity> ChildrenList;
     /**
      * 排序
      */

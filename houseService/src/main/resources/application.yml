@@ -1,4 +1,3 @@
-#
 #server:
 #  port: 8030
 #spring:
@@ -20,19 +19,13 @@
 #    type: redis
 #  session:
 #    store-type: redis
-#mybatis-plus:
-#  mapper-locations: classpath:/mapper/**/*.xml
-#  global-config:
-#    db-config:
-#      id-type: auto
-#      logic-delete-value: 1
-#      logic-not-delete-value: 0
-#logging:
-#  level:
-#    com.sakanal.product: debug
-#gulimall:
-#  thread:
-#    core-size: 20
-#    max-size: 200
-#    keep-alive-time: 10
+
+logging:
+  level:
+    com.sakanal.house: debug
+system:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.common.utils.PageUtils;
 import com.sakanal.house.entity.HouseCityEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,10 @@ import java.util.Map;
 public interface HouseCityService extends IService<HouseCityEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<HouseCityEntity> childrenList();
+
+    List<Long> getSuperiorIds(Long cityId);
+
 }
 
