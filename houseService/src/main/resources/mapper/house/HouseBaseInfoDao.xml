@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sakanal.house.dao.HouseBaseInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.sakanal.house.entity.HouseBaseInfoEntity" id="houseBaseInfoMap">
+        <result property="id" column="id"/>
+        <result property="areaId" column="area_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="name" column="name"/>
+        <result property="roomNumber" column="room_number"/>
+        <result property="hallNumber" column="hall_number"/>
+        <result property="cloakroomNumber" column="cloakroom_number"/>
+        <result property="areaCovered" column="area_covered"/>
+        <result property="totalFloor" column="total_floor"/>
+        <result property="floor" column="floor"/>
+        <result property="hasElevator" column="has_elevator"/>
+        <result property="hasParkingPlace" column="has_parking_place"/>
+        <result property="orientationId" column="orientation_id"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+
+</mapper>

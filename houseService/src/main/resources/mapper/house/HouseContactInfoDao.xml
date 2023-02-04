@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sakanal.house.dao.HouseContactInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.sakanal.house.entity.HouseContactInfoEntity" id="houseContactInfoMap">
+        <result property="id" column="id"/>
+        <result property="baseInfoId" column="base_info_id"/>
+        <result property="publisherName" column="publisher_name"/>
+        <result property="publisherIdentity" column="publisher_identity"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="answerPeriodTimeStart" column="answer_period_time_start"/>
+        <result property="answerPeriodTimeEnd" column="answer_period_time_end"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+
+</mapper>

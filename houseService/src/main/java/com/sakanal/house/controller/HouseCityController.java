@@ -1,0 +1,91 @@
+package com.sakanal.house.controller;
+
+import java.util.Arrays;
+import java.util.Map;
+
+//import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sakanal.house.entity.HouseCityEntity;
+import com.sakanal.house.service.HouseCityService;
+import com.sakanal.common.utils.PageUtils;
+import com.sakanal.common.utils.R;
+
+import javax.annotation.Resource;
+
+
+
+/**
+ * 房源所在城市表
+ *
+ * @author sakanal
+ * @email 1104820805@qq.com
+ * @date 2023-02-03 22:03:33
+ */
+@RestController
+@RequestMapping("house/housecity")
+public class HouseCityController {
+    @Resource
+    private HouseCityService houseCityService;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/list")
+    //@RequiresPermissions("house:housecity:list")
+    public R list(@RequestParam Map<String, Object> params){
+        PageUtils page = houseCityService.queryPage(params);
+
+        return R.ok().put("page", page);
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{id}")
+    //@RequiresPermissions("house:housecity:info")
+    public R info(@PathVariable("id") Long id){
+		HouseCityEntity houseCity = houseCityService.getById(id);
+
+        return R.ok().put("houseCity", houseCity);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    //@RequiresPermissions("house:housecity:save")
+    public R save(@RequestBody HouseCityEntity houseCity){
+		houseCityService.save(houseCity);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    //@RequiresPermissions("house:housecity:update")
+    public R update(@RequestBody HouseCityEntity houseCity){
+		houseCityService.updateById(houseCity);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    //@RequiresPermissions("house:housecity:delete")
+    public R delete(@RequestBody Long[] ids){
+		houseCityService.removeByIds(Arrays.asList(ids));
+
+        return R.ok();
+    }
+
+}

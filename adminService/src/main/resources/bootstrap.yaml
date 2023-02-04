@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: adminService
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: b9fda02a-d2a4-4c4c-8b3e-905807233e82

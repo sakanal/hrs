@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sakanal.house.dao.HouseStateDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.sakanal.house.entity.HouseStateEntity" id="houseStateMap">
+        <result property="id" column="id"/>
+        <result property="baseInfoId" column="base_info_id"/>
+        <result property="publisherId" column="publisher_id"/>
+        <result property="housePublishState" column="house_publish_state"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+
+</mapper>

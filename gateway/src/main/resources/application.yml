@@ -1,0 +1,37 @@
+server:
+  port: 9527
+spring:
+  cloud:
+    gateway:
+      default-filters:
+      # 解决双重跨域，剔除重复请求头
+       - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Vary, RETAIN_UNIQUE
+      routes:
+        # 默认后台管理发送的请求都带上admin前缀，
+        - id: houseService
+          uri: http://localhost:8000/
+          predicates:
+            - Path=/admin/house/**
+          filters:
+            - RewritePath=/admin/(?<segment>.*),/$\{segment}
+
+        - id: adminService
+          uri: lb://adminService
+          predicates:
+            - Path=/admin/**
+          filters:
+            - RewritePath=/admin/(?<segment>.*),/$\{segment}
+        # 默认前端项目发送的请求都带上api前缀，
+        ####################### 商品服务 ########################
+#        - id: productService
+#          uri: lb://productService
+#          predicates:
+#            - Path=/api/product/**
+#          filters:
+#            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        ####################### 前台功能 ############################
+#        - id: nginx_gateway_product
+#          uri: lb://productService
+#          predicates:
+#            - Host= gulimall.com,item.gulimall.com
