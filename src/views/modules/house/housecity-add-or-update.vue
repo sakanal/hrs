@@ -1,19 +1,20 @@
 <template>
-  <el-dialog :title="(!dataForm.id ? '新增' : '修改')+type" :close-on-click-modal="false" :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+  <el-dialog :title="(!dataForm.id ? '新增' : '修改')" :close-on-click-modal="false" :visible.sync="visible">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
+             label-width="80px">
       <el-form-item label="城市名称" prop="name">
         <el-input v-model="dataForm.name" placeholder="城市名称"></el-input>
       </el-form-item>
-      <el-form-item label="城市级别" prop="level">
-        <!--        <el-input v-model="dataForm.level" placeholder="城市级别 0-省 1-市"></el-input>-->
-        <el-radio v-model="dataForm.level" label="0">省</el-radio>
-        <el-radio v-model="dataForm.level" label="1">市</el-radio>
+      <el-form-item v-model="dataForm.level" label="城市级别" prop="level">
+        <el-radio v-model="dataForm.level" label="0">省级</el-radio>
+        <el-radio v-model="dataForm.level" label="1">市级</el-radio>
+        <el-radio v-model="dataForm.level" label="2">县级</el-radio>
       </el-form-item>
-      <!--      <el-form-item label="父城市id" prop="superiorId">-->
-      <!--        <el-input v-model="dataForm.superiorId" placeholder="父城市id"></el-input>-->
-      <!--      </el-form-item>-->
+      <el-form-item :label=superiorName prop="superiorId" v-if="superiorCityVisible">
+<!--        <el-input v-model="dataForm.superiorId" placeholder="父城市id"></el-input>-->
+        <city-check-strictly ref="cityCheckStrictly" @childValue="getSuperiorIds" :superiorIds="superiorIds"></city-check-strictly>
+      </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <!--        <el-input v-model="dataForm.sort" placeholder="排序"></el-input>-->
         <el-input-number v-model="dataForm.sort" controls-position="right" :min="0" :max="100"></el-input-number>
       </el-form-item>
       <el-form-item label="是否显示" prop="showState">
@@ -29,18 +30,19 @@
 </template>
 
 <script>
+import cityCheckStrictly from '../../../components/cascader/city-checkStrictly'
 export default {
+  components: {cityCheckStrictly},
   data () {
     return {
       visible: false,
-      type: '',
       dataForm: {
         id: 0,
         name: '',
-        level: '',
-        superiorId: '',
-        sort: '',
-        showState: '',
+        level: '0',
+        superiorId: '0',
+        sort: '0',
+        showState: '1',
         isDeleted: '',
         createdTime: '',
         modifyTime: ''
@@ -50,10 +52,10 @@ export default {
           {required: true, message: '城市名称不能为空', trigger: 'blur'}
         ],
         level: [
-          {required: true, message: '城市级别 0-省 1-市不能为空', trigger: 'blur'}
+          {required: true, message: '城市级别空', trigger: 'blur'}
         ],
         superiorId: [
-          {required: true, message: '父城市id不能为空', trigger: 'blur'}
+          {required: true, message: '上级城市不能为空', trigger: 'blur'}
         ],
         sort: [
           {required: true, message: '排序不能为空', trigger: 'blur'}
@@ -70,7 +72,10 @@ export default {
         modifyTime: [
           {required: true, message: '修改时间不能为空', trigger: 'blur'}
         ]
-      }
+      },
+      superiorCityVisible: false,
+      superiorName: '',
+      superiorIds: []
     }
   },
   methods: {
@@ -87,22 +92,37 @@ export default {
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.dataForm.name = data.houseCity.name
-              this.dataForm.level = data.houseCity.level
+              this.dataForm.level = data.houseCity.level.toString()
               this.dataForm.superiorId = data.houseCity.superiorId
               this.dataForm.sort = data.houseCity.sort
-              this.dataForm.showState = data.houseCity.showState
+              this.dataForm.showState = data.houseCity.showState.toString()
               this.dataForm.isDeleted = data.houseCity.isDeleted
               this.dataForm.createdTime = data.houseCity.createdTime
               this.dataForm.modifyTime = data.houseCity.modifyTime
             }
+          })
+          this.$nextTick(() => {
+            this.$http({
+              url: this.$http.adornUrl(`/house/housecity/getSuperiorIds/${this.dataForm.id}`),
+              method: 'get'
+            }).then(({data}) => {
+              this.superiorIds = data.data
+            })
           })
         }
       })
     },
     // 表单提交
     dataFormSubmit () {
+      if (this.dataForm.level !== '0') {
+        this.dataForm.superiorId = ''
+        if (this.superiorIds.length > 0) {
+          this.dataForm.superiorId = this.superiorIds[this.superiorIds.length - 1]
+        }
+      } else {
+        this.dataForm.superiorId = '0'
+      }
       this.$refs['dataForm'].validate((valid) => {
-        console.log(this.dataForm)
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(`/house/housecity/${!this.dataForm.id ? 'save' : 'update'}`),
@@ -114,9 +134,7 @@ export default {
               'superiorId': this.dataForm.superiorId,
               'sort': this.dataForm.sort,
               'showState': this.dataForm.showState,
-              'isDeleted': this.dataForm.isDeleted,
-              'createdTime': this.dataForm.createdTime,
-              'modifyTime': this.dataForm.modifyTime
+              'isDeleted': this.dataForm.isDeleted
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
@@ -135,6 +153,46 @@ export default {
           })
         }
       })
+    },
+    getSuperiorIds (value) {
+      this.superiorIds = value
+    }
+  },
+  watch: {
+    'dataForm.level' (value) {
+      this.superiorName = ''
+      switch (value) {
+        case '0': {
+          this.superiorCityVisible = false
+          break
+        }
+        case '1': {
+          this.superiorCityVisible = true
+          this.superiorName = '所属省级'
+          if (this.dataForm.id === 0) {
+            this.superiorIds = []
+          }
+          this.$nextTick(() => {
+            this.$refs.cityCheckStrictly.init('1')
+          })
+          break
+        }
+        case '2': {
+          this.superiorCityVisible = true
+          this.superiorName = '所属市级'
+          if (this.dataForm.id === 0) {
+            this.superiorIds = []
+          }
+          this.$nextTick(() => {
+            this.$refs.cityCheckStrictly.init('2')
+          })
+          break
+        }
+        default: {
+          this.superiorCityVisible = false
+          break
+        }
+      }
     }
   }
 }

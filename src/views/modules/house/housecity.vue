@@ -2,107 +2,46 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="输入关键字进行过滤" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('house:housecity:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('house:housecity:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+<!--        <el-button v-if="isAuth('house:housecity:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
-    <el-table
+    <el-tree
+      node-key="id"
+      :props="props"
       :data="dataList"
-      border
-      v-loading="dataListLoading"
-      @selection-change="selectionChangeHandle"
-      style="width: 100%;">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        label="id">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        header-align="center"
-        align="center"
-        label="城市名称">
-      </el-table-column>
-      <el-table-column
-        prop="level"
-        header-align="center"
-        align="center"
-        label="城市级别 0-省 1-市">
-      </el-table-column>
-      <el-table-column
-        prop="superiorId"
-        header-align="center"
-        align="center"
-        label="父城市id">
-      </el-table-column>
-      <el-table-column
-        prop="sort"
-        header-align="center"
-        align="center"
-        label="排序">
-      </el-table-column>
-      <el-table-column
-        prop="showState"
-        header-align="center"
-        align="center"
-        label="是否显示 0-不显示 1-显示">
-      </el-table-column>
-      <el-table-column
-        prop="isDeleted"
-        header-align="center"
-        align="center"
-        label="是否删除 0-未删除 1-已删除">
-      </el-table-column>
-      <el-table-column
-        prop="createdTime"
-        header-align="center"
-        align="center"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="modifyTime"
-        header-align="center"
-        align="center"
-        label="修改时间">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        header-align="center"
-        align="center"
-        width="150"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      @size-change="sizeChangeHandle"
-      @current-change="currentChangeHandle"
-      :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="pageSize"
-      :total="totalPage"
-      layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
+      :filter-node-method="filterNode"
+      accordion
+      ref="tree">
+      <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span>{{ node.label }}</span>
+        <span>
+          <el-button
+            type="text"
+            size="mini"
+            @click.stop="addOrUpdateHandle(data.id)">
+            修改
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click.stop="deleteHandle(data.id,data)">
+            删除
+          </el-button>
+        </span>
+      </span>
+    </el-tree>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
 <script>
+// TODO 如果省级数据下已经有市和区数据，不能降低省级数据的城市级别；即最多只有三级数据；二级数据修改时，也要修改下级数据的城市级别
+// TODO 降低城市级别时，不能作为原数据的子城市
   import AddOrUpdate from './housecity-add-or-update'
   export default {
     data () {
@@ -111,12 +50,13 @@
           key: ''
         },
         dataList: [],
-        pageIndex: 1,
-        pageSize: 10,
-        totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        props: {
+          label: 'name',
+          children: 'childrenList'
+        }
       }
     },
     components: {
@@ -125,39 +65,31 @@
     activated () {
       this.getDataList()
     },
+    watch: {
+      'dataForm.key' (value) {
+        this.$refs.tree.filter(value)
+      }
+    },
     methods: {
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/house/housecity/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
-          })
+          url: this.$http.adornUrl('/house/housecity/childrenList'),
+          method: 'post'
         }).then(({data}) => {
+          console.log(data)
           if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+            this.dataList = data.data
           } else {
             this.dataList = []
-            this.totalPage = 0
           }
-          this.dataListLoading = false
         })
       },
-      // 每页数
-      sizeChangeHandle (val) {
-        this.pageSize = val
-        this.pageIndex = 1
-        this.getDataList()
-      },
-      // 当前页
-      currentChangeHandle (val) {
-        this.pageIndex = val
-        this.getDataList()
+      // 根据关键字过滤数据
+      filterNode (value, data) {
+        if (!value) return true
+        return data.name.indexOf(value) !== -1
       },
       // 多选
       selectionChangeHandle (val) {
@@ -171,15 +103,27 @@
         })
       },
       // 删除
-      deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
+      deleteHandle (id, data) {
+        let ids = id ? [id] : this.dataListSelections.map(item => {
           return item.id
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        this.$confirm(`确定对[${data.name}]进行[${id ? '删除' : '批量删除'}]操作?${data.hasChildren ? '</br>该操作会删除其下所有相关城市' : ''}`, '提示', {
+          dangerouslyUseHTMLString: true,
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          if (data.hasChildren) {
+            let childrenList = data.childrenList
+            for (let i = 0; i < childrenList.length; i++) {
+              ids.push(childrenList[i].id)
+              if (childrenList[i].hasChildren) {
+                for (let j = 0; j < childrenList[i].childrenList.length; j++) {
+                  ids.push(childrenList[i].childrenList[j].id)
+                }
+              }
+            }
+          }
           this.$http({
             url: this.$http.adornUrl('/house/housecity/delete'),
             method: 'post',
@@ -189,7 +133,7 @@
               this.$message({
                 message: '操作成功',
                 type: 'success',
-                duration: 1500,
+                duration: 1000,
                 onClose: () => {
                   this.getDataList()
                 }
@@ -203,3 +147,14 @@
     }
   }
 </script>
+
+<style scoped>
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+}
+</style>
