@@ -13,8 +13,8 @@
     <el-form-item label="宜居人数" prop="livablePeopleNumber">
       <el-input v-model="dataForm.livablePeopleNumber" placeholder="宜居人数"></el-input>
     </el-form-item>
-    <el-form-item label="看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房" prop="lookingHourseTimeState">
-      <el-input v-model="dataForm.lookingHourseTimeState" placeholder="看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房"></el-input>
+    <el-form-item label="看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房" prop="lookingHouseTimeState">
+      <el-input v-model="dataForm.lookingHouseTimeState" placeholder="看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房"></el-input>
     </el-form-item>
     <el-form-item label="装修情况 0-毛胚 1-简单装修 2-精装修 3-豪华装修" prop="decorationState">
       <el-input v-model="dataForm.decorationState" placeholder="装修情况 0-毛胚 1-简单装修 2-精装修 3-豪华装修"></el-input>
@@ -28,8 +28,11 @@
     <el-form-item label="房屋要求id 使用"/"分隔" prop="baseRentalRequirementIds">
       <el-input v-model="dataForm.baseRentalRequirementIds" placeholder="房屋要求id 使用"/"分隔"></el-input>
     </el-form-item>
-    <el-form-item label="房源详细描述" prop="hourseDetailedDescription">
-      <el-input v-model="dataForm.hourseDetailedDescription" placeholder="房源详细描述"></el-input>
+    <el-form-item label="房源详细描述" prop="houseDetailedDescription">
+      <el-input v-model="dataForm.houseDetailedDescription" placeholder="房源详细描述"></el-input>
+    </el-form-item>
+    <el-form-item label="房源详细地址" prop="houseDetailedAddress">
+      <el-input v-model="dataForm.houseDetailedAddress" placeholder="房源详细地址"></el-input>
     </el-form-item>
     <el-form-item label="是否删除 0-未删除 1-已删除" prop="isDeleted">
       <el-input v-model="dataForm.isDeleted" placeholder="是否删除 0-未删除 1-已删除"></el-input>
@@ -58,12 +61,13 @@
           baseInfoId: '',
           earliestInTime: '',
           livablePeopleNumber: '',
-          lookingHourseTimeState: '',
+          lookingHouseTimeState: '',
           decorationState: '',
           baseFacilitiesIds: '',
           baseHighlightIds: '',
           baseRentalRequirementIds: '',
-          hourseDetailedDescription: '',
+          houseDetailedDescription: '',
+          houseDetailedAddress: '',
           isDeleted: '',
           createdTime: '',
           modifyTime: ''
@@ -78,7 +82,7 @@
           livablePeopleNumber: [
             { required: true, message: '宜居人数不能为空', trigger: 'blur' }
           ],
-          lookingHourseTimeState: [
+          lookingHouseTimeState: [
             { required: true, message: '看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房不能为空', trigger: 'blur' }
           ],
           decorationState: [
@@ -93,8 +97,11 @@
           baseRentalRequirementIds: [
             { required: true, message: '房屋要求id 使用"/"分隔不能为空', trigger: 'blur' }
           ],
-          hourseDetailedDescription: [
+          houseDetailedDescription: [
             { required: true, message: '房源详细描述不能为空', trigger: 'blur' }
+          ],
+          houseDetailedAddress: [
+            { required: true, message: '房源详细地址不能为空', trigger: 'blur' }
           ],
           isDeleted: [
             { required: true, message: '是否删除 0-未删除 1-已删除不能为空', trigger: 'blur' }
@@ -124,12 +131,13 @@
                 this.dataForm.baseInfoId = data.houseDetailedInfo.baseInfoId
                 this.dataForm.earliestInTime = data.houseDetailedInfo.earliestInTime
                 this.dataForm.livablePeopleNumber = data.houseDetailedInfo.livablePeopleNumber
-                this.dataForm.lookingHourseTimeState = data.houseDetailedInfo.lookingHourseTimeState
+                this.dataForm.lookingHouseTimeState = data.houseDetailedInfo.lookingHouseTimeState
                 this.dataForm.decorationState = data.houseDetailedInfo.decorationState
                 this.dataForm.baseFacilitiesIds = data.houseDetailedInfo.baseFacilitiesIds
                 this.dataForm.baseHighlightIds = data.houseDetailedInfo.baseHighlightIds
                 this.dataForm.baseRentalRequirementIds = data.houseDetailedInfo.baseRentalRequirementIds
-                this.dataForm.hourseDetailedDescription = data.houseDetailedInfo.hourseDetailedDescription
+                this.dataForm.houseDetailedDescription = data.houseDetailedInfo.houseDetailedDescription
+                this.dataForm.houseDetailedAddress = data.houseDetailedInfo.houseDetailedAddress
                 this.dataForm.isDeleted = data.houseDetailedInfo.isDeleted
                 this.dataForm.createdTime = data.houseDetailedInfo.createdTime
                 this.dataForm.modifyTime = data.houseDetailedInfo.modifyTime
@@ -150,12 +158,13 @@
                 'baseInfoId': this.dataForm.baseInfoId,
                 'earliestInTime': this.dataForm.earliestInTime,
                 'livablePeopleNumber': this.dataForm.livablePeopleNumber,
-                'lookingHourseTimeState': this.dataForm.lookingHourseTimeState,
+                'lookingHouseTimeState': this.dataForm.lookingHouseTimeState,
                 'decorationState': this.dataForm.decorationState,
                 'baseFacilitiesIds': this.dataForm.baseFacilitiesIds,
                 'baseHighlightIds': this.dataForm.baseHighlightIds,
                 'baseRentalRequirementIds': this.dataForm.baseRentalRequirementIds,
-                'hourseDetailedDescription': this.dataForm.hourseDetailedDescription,
+                'houseDetailedDescription': this.dataForm.houseDetailedDescription,
+                'houseDetailedAddress': this.dataForm.houseDetailedAddress,
                 'isDeleted': this.dataForm.isDeleted,
                 'createdTime': this.dataForm.createdTime,
                 'modifyTime': this.dataForm.modifyTime

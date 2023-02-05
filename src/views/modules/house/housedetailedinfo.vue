@@ -47,7 +47,7 @@
         label="宜居人数">
       </el-table-column>
       <el-table-column
-        prop="lookingHourseTimeState"
+        prop="lookingHouseTimeState"
         header-align="center"
         align="center"
         label="看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房">
@@ -77,10 +77,16 @@
         label="房屋要求id 使用"/"分隔">
       </el-table-column>
       <el-table-column
-        prop="hourseDetailedDescription"
+        prop="houseDetailedDescription"
         header-align="center"
         align="center"
         label="房源详细描述">
+      </el-table-column>
+      <el-table-column
+        prop="houseDetailedAddress"
+        header-align="center"
+        align="center"
+        label="房源详细地址">
       </el-table-column>
       <el-table-column
         prop="isDeleted"
