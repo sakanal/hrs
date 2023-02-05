@@ -40,7 +40,7 @@ public class HouseDetailedInfoEntity implements Serializable {
     /**
      * 看房时间 0-仅周末 1-仅工作日 2-工作日晚上和周末 3-随时看房
      */
-    private Integer lookingHourseTimeState;
+    private Integer lookingHouseTimeState;
     /**
      * 装修情况 0-毛胚 1-简单装修 2-精装修 3-豪华装修
      */
@@ -60,7 +60,11 @@ public class HouseDetailedInfoEntity implements Serializable {
     /**
      * 房源详细描述
      */
-    private String hourseDetailedDescription;
+    private String houseDetailedDescription;
+    /**
+     * 房源详细地址
+     */
+    private String houseDetailedAddress;
     /**
      * 是否删除 0-未删除 1-已删除
      */

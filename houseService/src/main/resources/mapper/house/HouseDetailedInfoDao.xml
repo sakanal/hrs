@@ -9,12 +9,13 @@
         <result property="baseInfoId" column="base_info_id"/>
         <result property="earliestInTime" column="earliest_in_time"/>
         <result property="livablePeopleNumber" column="livable_people_number"/>
-        <result property="lookingHourseTimeState" column="looking_hourse_time_state"/>
+        <result property="lookingHouseTimeState" column="looking_house_time_state"/>
         <result property="decorationState" column="decoration_state"/>
         <result property="baseFacilitiesIds" column="base_facilities_ids"/>
         <result property="baseHighlightIds" column="base_highlight_ids"/>
         <result property="baseRentalRequirementIds" column="base_rental_requirement_ids"/>
-        <result property="hourseDetailedDescription" column="hourse_detailed_description"/>
+        <result property="houseDetailedDescription" column="house_detailed_description"/>
+        <result property="houseDetailedAddress" column="house_detailed_address"/>
         <result property="isDeleted" column="is_deleted"/>
         <result property="createdTime" column="created_time"/>
         <result property="modifyTime" column="modify_time"/>
