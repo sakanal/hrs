@@ -145,7 +145,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './housebaseinfo-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housebaseinfo-add-or-update'
   export default {
     data () {
       return {

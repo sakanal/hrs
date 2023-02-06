@@ -19,14 +19,14 @@
     <el-form-item label="装修情况 0-毛胚 1-简单装修 2-精装修 3-豪华装修" prop="decorationState">
       <el-input v-model="dataForm.decorationState" placeholder="装修情况 0-毛胚 1-简单装修 2-精装修 3-豪华装修"></el-input>
     </el-form-item>
-    <el-form-item label="房屋设施id 使用"/"分隔" prop="baseFacilitiesIds">
-      <el-input v-model="dataForm.baseFacilitiesIds" placeholder="房屋设施id 使用"/"分隔"></el-input>
+    <el-form-item label="房屋设施id 使用'/'分隔" prop="baseFacilitiesIds">
+      <el-input v-model="dataForm.baseFacilitiesIds" placeholder="房屋设施id 使用'/'分隔"></el-input>
     </el-form-item>
-    <el-form-item label="房屋亮点id 使用"/"分隔" prop="baseHighlightIds">
-      <el-input v-model="dataForm.baseHighlightIds" placeholder="房屋亮点id 使用"/"分隔"></el-input>
+    <el-form-item label="房屋亮点id 使用'/'分隔" prop="baseHighlightIds">
+      <el-input v-model="dataForm.baseHighlightIds" placeholder="房屋亮点id 使用'/'分隔"></el-input>
     </el-form-item>
-    <el-form-item label="房屋要求id 使用"/"分隔" prop="baseRentalRequirementIds">
-      <el-input v-model="dataForm.baseRentalRequirementIds" placeholder="房屋要求id 使用"/"分隔"></el-input>
+    <el-form-item label="房屋要求id 使用'/'分隔" prop="baseRentalRequirementIds">
+      <el-input v-model="dataForm.baseRentalRequirementIds" placeholder="房屋要求id 使用'/'分隔"></el-input>
     </el-form-item>
     <el-form-item label="房源详细描述" prop="houseDetailedDescription">
       <el-input v-model="dataForm.houseDetailedDescription" placeholder="房源详细描述"></el-input>

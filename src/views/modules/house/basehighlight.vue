@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './basehighlight-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/basehighlight-add-or-update'
   export default {
     data () {
       return {

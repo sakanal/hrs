@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './baseorientation-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/baseorientation-add-or-update'
   export default {
     data () {
       return {

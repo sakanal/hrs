@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './baserentalrequirements-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/baserentalrequirements-add-or-update'
   export default {
     data () {
       return {

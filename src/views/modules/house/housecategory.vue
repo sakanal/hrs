@@ -79,7 +79,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './housecategory-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housecategory-add-or-update'
   export default {
     data () {
       return {

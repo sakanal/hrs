@@ -103,7 +103,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './houserentinfo-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/houserentinfo-add-or-update'
   export default {
     data () {
       return {

@@ -97,7 +97,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './basefacilities-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/basefacilities-add-or-update'
   export default {
     data () {
       return {

@@ -103,7 +103,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './houseimage-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/houseimage-add-or-update'
   export default {
     data () {
       return {

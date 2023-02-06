@@ -109,13 +109,15 @@
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+    <city-tree></city-tree>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
 <script>
-  import AddOrUpdate from './housearea-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housearea-add-or-update'
+  import cityTree from '../../../components/tree/city-tree'
   export default {
     data () {
       return {
@@ -132,7 +134,7 @@
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate, cityTree
     },
     activated () {
       this.getDataList()

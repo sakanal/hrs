@@ -42,7 +42,7 @@
 <script>
 // TODO 如果省级数据下已经有市和区数据，不能降低省级数据的城市级别；即最多只有三级数据；二级数据修改时，也要修改下级数据的城市级别
 // TODO 降低城市级别时，不能作为原数据的子城市
-  import AddOrUpdate from './housecity-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housecity-add-or-update'
   export default {
     data () {
       return {

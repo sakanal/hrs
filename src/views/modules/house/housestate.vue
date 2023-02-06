@@ -91,7 +91,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './housestate-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housestate-add-or-update'
   export default {
     data () {
       return {

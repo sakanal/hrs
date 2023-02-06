@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './baserentcontent-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/baserentcontent-add-or-update'
   export default {
     data () {
       return {

@@ -62,19 +62,19 @@
         prop="baseFacilitiesIds"
         header-align="center"
         align="center"
-        label="房屋设施id 使用"/"分隔">
+        label="房屋设施id 使用'/'分隔">
       </el-table-column>
       <el-table-column
         prop="baseHighlightIds"
         header-align="center"
         align="center"
-        label="房屋亮点id 使用"/"分隔">
+        label="房屋亮点id 使用'/'分隔">
       </el-table-column>
       <el-table-column
         prop="baseRentalRequirementIds"
         header-align="center"
         align="center"
-        label="房屋要求id 使用"/"分隔">
+        label="房屋要求id 使用'/'分隔">
       </el-table-column>
       <el-table-column
         prop="houseDetailedDescription"
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './housedetailedinfo-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housedetailedinfo-add-or-update'
   export default {
     data () {
       return {

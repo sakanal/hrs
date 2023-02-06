@@ -109,7 +109,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './housecontactinfo-add-or-update'
+  import AddOrUpdate from '../../../components/add-or-update/housecontactinfo-add-or-update'
   export default {
     data () {
       return {

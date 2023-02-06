@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import cityCheckStrictly from '../../../components/cascader/city-checkStrictly'
+import cityCheckStrictly from '../cascader/city-checkStrictly'
 export default {
   components: {cityCheckStrictly},
   data () {
