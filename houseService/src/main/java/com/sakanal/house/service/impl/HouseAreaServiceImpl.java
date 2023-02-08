@@ -10,6 +10,8 @@ import com.sakanal.house.dao.HouseAreaDao;
 import com.sakanal.house.entity.HouseAreaEntity;
 import com.sakanal.house.service.HouseAreaService;
 import com.sakanal.house.service.HouseCityService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -27,12 +29,17 @@ public class HouseAreaServiceImpl extends ServiceImpl<HouseAreaDao, HouseAreaEnt
     private HouseCityService houseCityService;
 
     @Override
+    @Cacheable(value = {"houseArea"},key = "#root.methodName+'::'+#params['limit']+'+'+#params['cityId']+'+'+#params['key']")
     public PageUtils queryPage(Map<String, Object> params) {
         String key = (String) params.get("key");
         LambdaQueryWrapper<HouseAreaEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasText(key)){
+            // 存在搜索字段，进行搜索；包括交通路和住宅小区
             lambdaQueryWrapper.like(HouseAreaEntity::getName,key)
                     .orderByAsc(HouseAreaEntity::getLevel);
+        }else {
+            // 不存在搜索字段，只搜索交通路
+            lambdaQueryWrapper.eq(HouseAreaEntity::getSuperiorId,0);
         }
         String cityId = (String) params.get("cityId");
         if (StringUtils.hasText(cityId)){
@@ -73,6 +80,7 @@ public class HouseAreaServiceImpl extends ServiceImpl<HouseAreaDao, HouseAreaEnt
         return new PageUtils(page);
     }
     @Override
+    @Cacheable(value = {"houseArea"},key = "#root.methodName+'::'+#root.args")
     public List<HouseAreaEntity> childrenList(Long cityId) {
         LambdaQueryWrapper<HouseAreaEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (cityId!=null && cityId!=0){
@@ -108,6 +116,7 @@ public class HouseAreaServiceImpl extends ServiceImpl<HouseAreaDao, HouseAreaEnt
     }
 
     @Override
+    @CacheEvict(value = {"houseArea"},allEntries = true)
     public boolean updateShowStateById(HouseAreaEntity houseAreaEntity) {
         if (houseAreaEntity.getSuperiorId() == 0){
             //修改的是交通路

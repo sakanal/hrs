@@ -12,5 +12,8 @@ spring:
           - dataId: mybatisPlusConfig.yaml
             group: CONFIG_GROUP
             refresh: true
+          - dataId: redisCacheConfig.yaml
+            group: CONFIG_GROUP
+            refresh: true
           - dataId: houseService.yaml
             refresh: true

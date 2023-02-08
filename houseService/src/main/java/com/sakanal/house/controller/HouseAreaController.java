@@ -6,6 +6,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.house.entity.HouseCityEntity;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.house.entity.HouseAreaEntity;
@@ -63,6 +64,7 @@ public class HouseAreaController {
      * 保存
      */
     @RequestMapping("/save")
+    @CacheEvict(value = {"houseArea"},allEntries = true)
     //@RequiresPermissions("house:housearea:save")
     public R save(@RequestBody HouseAreaEntity houseArea){
 		houseAreaService.save(houseArea);
@@ -74,6 +76,7 @@ public class HouseAreaController {
      * 修改
      */
     @RequestMapping("/update")
+    @CacheEvict(value = {"houseArea"},allEntries = true)
     //@RequiresPermissions("house:housearea:update")
     public R update(@RequestBody HouseAreaEntity houseArea){
 		houseAreaService.updateById(houseArea);
@@ -93,6 +96,7 @@ public class HouseAreaController {
      * 删除
      */
     @RequestMapping("/delete")
+    @CacheEvict(value = {"houseArea"},allEntries = true)
     //@RequiresPermissions("house:housearea:delete")
     public R delete(@RequestBody Long[] ids){
 		houseAreaService.removeByIds(Arrays.asList(ids));

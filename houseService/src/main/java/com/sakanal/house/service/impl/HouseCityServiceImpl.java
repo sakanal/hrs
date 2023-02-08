@@ -2,6 +2,7 @@ package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sakanal.house.entity.HouseRentInfoEntity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,6 +35,7 @@ public class HouseCityServiceImpl extends ServiceImpl<HouseCityDao, HouseCityEnt
     }
 
     @Override
+    @Cacheable(value = {"houseCity"},key = "#root.methodName")
     public List<HouseCityEntity> childrenList(){
         //数据库中的所有未删除的数据
         List<HouseCityEntity> houseCityList = this.list();
