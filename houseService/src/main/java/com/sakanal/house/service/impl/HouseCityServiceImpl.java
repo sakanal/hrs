@@ -1,6 +1,7 @@
 package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.house.entity.HouseRentInfoEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -65,7 +66,7 @@ public class HouseCityServiceImpl extends ServiceImpl<HouseCityDao, HouseCityEnt
 
 
     @Override
-    public List<Long> getSuperiorIds(Long cityId) {
+    public List<Long> getRelatedSuperiorIdsById(Long cityId) {
         HouseCityEntity houseCityEntity = baseMapper.selectById(cityId);
         return getSuperiorIds(houseCityEntity);
     }
@@ -79,6 +80,29 @@ public class HouseCityServiceImpl extends ServiceImpl<HouseCityDao, HouseCityEnt
         return longList;
 
     }
+
+    @Override
+    public List<Long> getRelatedCityIdsById(Long cityId) {
+        HouseCityEntity houseCityEntity = this.getById(cityId);
+        return getCityIds(houseCityEntity);
+    }
+    private List<Long> getCityIds(HouseCityEntity houseCityEntity){
+        if (houseCityEntity == null){
+            return new ArrayList<>();
+        }
+        List<HouseCityEntity> houseCityEntityList = baseMapper.selectList(new LambdaQueryWrapper<HouseCityEntity>().eq(HouseCityEntity::getSuperiorId, houseCityEntity.getId()));
+        List<Long> allCityIds = new ArrayList<>();
+        allCityIds.add(houseCityEntity.getId());
+        if (houseCityEntityList!=null && houseCityEntityList.size()>0){
+            houseCityEntityList.forEach(houseCity -> {
+                List<Long> cityIds = getCityIds(houseCity);
+                allCityIds.addAll(cityIds);
+            });
+        }
+        return allCityIds;
+    }
+
+
 
 
 }

@@ -20,7 +20,14 @@ public interface HouseCityService extends IService<HouseCityEntity> {
 
     List<HouseCityEntity> childrenList();
 
-    List<Long> getSuperiorIds(Long cityId);
+    /**
+     * 根据id获取向上有关的父城市id
+     */
+    List<Long> getRelatedSuperiorIdsById(Long cityId);
 
+    /**
+     * 根据id获取其下有关的所有子城市id
+     */
+    List<Long> getRelatedCityIdsById(Long cityId);
 }
 

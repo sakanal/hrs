@@ -48,7 +48,7 @@ public class HouseCityController {
     }
     @GetMapping("/getSuperiorIds/{id}")
     public R getSuperiorIds(@PathVariable("id") Long cityId){
-        List<Long> superiorIds = houseCityService.getSuperiorIds(cityId);
+        List<Long> superiorIds = houseCityService.getRelatedSuperiorIdsById(cityId);
 
         return R.ok().put("data",superiorIds);
     }
@@ -83,6 +83,7 @@ public class HouseCityController {
     //@RequiresPermissions("house:housecity:update")
     public R update(@RequestBody HouseCityEntity houseCity){
 		houseCityService.updateById(houseCity);
+        // TODO 如果城市名称修改，需要将其他和城市名称有关的数据进行修改，eg：HouseArea里面的areaAddress会使用城市名称
 
         return R.ok();
     }

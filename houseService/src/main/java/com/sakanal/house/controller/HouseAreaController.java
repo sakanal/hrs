@@ -1,14 +1,12 @@
 package com.sakanal.house.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sakanal.house.entity.HouseCityEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.house.entity.HouseAreaEntity;
 import com.sakanal.house.service.HouseAreaService;
@@ -41,6 +39,12 @@ public class HouseAreaController {
         PageUtils page = houseAreaService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+    @PostMapping("/childrenList")
+    public R childrenList(@RequestBody HouseAreaEntity houseAreaEntity){
+        List<HouseAreaEntity> list = houseAreaService.childrenList(houseAreaEntity.getCityId());
+
+        return R.ok().put("data",list);
     }
 
 
@@ -75,6 +79,14 @@ public class HouseAreaController {
 		houseAreaService.updateById(houseArea);
 
         return R.ok();
+    }
+    @PutMapping("/update/showState")
+    public R updateShowState(@RequestBody HouseAreaEntity houseAreaEntity){
+        if (houseAreaService.updateShowStateById(houseAreaEntity)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
     }
 
     /**

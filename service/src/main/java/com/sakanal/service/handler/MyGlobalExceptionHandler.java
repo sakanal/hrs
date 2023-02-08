@@ -16,6 +16,7 @@ public class MyGlobalExceptionHandler {
     @ResponseBody
     public R Exception(Exception e) {
         log.error("Exception异常捕获");
+        e.printStackTrace();
         return R.error(e.getMessage());
     }
 
