@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item :label=superiorName prop="superiorId" v-if="superiorCityVisible">
 <!--        <el-input v-model="dataForm.superiorId" placeholder="父城市id"></el-input>-->
-        <city-check-strictly ref="cityCheckStrictly" @childValue="getSuperiorIds" :superiorIds="superiorIds"></city-check-strictly>
+        <city-check-strictly ref="cityCheckStrictly" @cityIdCascaderSelect="getSuperiorIds" :cityIds="superiorIds"></city-check-strictly>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model="dataForm.sort" controls-position="right" :min="0" :max="100"></el-input-number>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import cityCheckStrictly from '../cascader/city-checkStrictly'
+import cityCheckStrictly from '../cascader/city-cascader'
 export default {
   components: {cityCheckStrictly},
   data () {

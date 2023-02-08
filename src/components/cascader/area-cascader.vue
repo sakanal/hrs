@@ -1,12 +1,11 @@
 <template>
   <div class="block">
     <el-cascader
-      ref="cityCascader"
+      ref="areaCascader"
       v-model="selectValue"
       :options="options"
       :props="configOption"
       @change="changeValue"
-      change-on-select
       expand-trigger="hover"
       clearable>
     </el-cascader>
@@ -19,7 +18,7 @@
 
 export default {
   props: {
-    superiorIds: {
+    areaIds: {
       type: Array,
       required: false
     }
@@ -40,43 +39,32 @@ export default {
   },
   // 方法集合
   methods: {
-    init (cityLevel) {
-      this.cityLevel = cityLevel || 0
+    init (cityId, filterFlag = false) {
       this.$nextTick(() => {
-        // this.selectValue = []
-        this.selectValue = this.superiorIds
+        this.selectValue = this.areaIds
         this.$http({
-          url: this.$http.adornUrl('/house/housecity/childrenList'),
-          method: 'post'
+          url: this.$http.adornUrl('/house/housearea/childrenList'),
+          method: 'post',
+          data: this.$http.adornData({
+            'cityId': cityId
+          })
         }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.options = data.data
-            this.childrenHandler(cityLevel)
-          } else {
-            this.options = []
-          }
+          this.options = data.data
+          this.$nextTick(() => {
+            if (filterFlag) {
+              for (let i = 0; i < this.options.length; i++) {
+                if (this.options[i].hasChildren) {
+                  this.options[i].childrenList = null
+                }
+              }
+            }
+          })
         })
       })
     },
-    childrenHandler (cityLevel) {
-      if (cityLevel === '1') {
-        // 当前设置的是市级城市，需要只显示省级城市
-        for (let i = 0; i < this.options.length; i++) {
-          this.options[i].childrenList = null
-        }
-      } else if (cityLevel === '2') {
-        // 当前设置的是县级城市，需要只显示市级城市
-        for (let i = 0; i < this.options.length; i++) {
-          if (this.options[i].hasChildren) {
-            for (let j = 0; j < this.options[i].childrenList.length; j++) {
-              this.options[i].childrenList[j].childrenList = null
-            }
-          }
-        }
-      }
-    },
     changeValue (value) {
-      this.$emit('childValue', value)
+      this.$emit('areaIdCascaderSelect', value)
+      // this.$emit('areaNameCascaderSelect', this.$refs.areaCascader.currentLabels)
     }
   },
   // 监听属性 类似于data概念
@@ -100,6 +88,9 @@ export default {
   },
   // 生命周期 - 更新之后
   updated () {
+    console.log(this.$refs.areaCascader.currentValue)
+    // this.$emit('areaIdCascaderSelect', this.$refs.areaCascader.currentValue)
+    this.$emit('areaNameCascaderSelect', this.$refs.areaCascader.currentLabels)
   },
   // 生命周期 - 销毁之前
   beforeDestroy () {
