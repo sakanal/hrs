@@ -2,29 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <modules>
-        <module>adminService</module>
-        <module>authService</module>
-        <module>houseService</module>
-        <module>userService</module>
-    </modules>
     <parent>
-        <artifactId>hrs</artifactId>
-        <groupId>com.sakanal.hrs</groupId>
+        <artifactId>service</artifactId>
+        <groupId>com.sakanal</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.sakanal</groupId>
-    <artifactId>service</artifactId>
+    <artifactId>authService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>service</name>
-    <description>service</description>
+    <name>authService</name>
+    <description>authService</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.sakanal</groupId>
-            <artifactId>common_service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

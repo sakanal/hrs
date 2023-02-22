@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.sakanal</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common_base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--gateway-->
