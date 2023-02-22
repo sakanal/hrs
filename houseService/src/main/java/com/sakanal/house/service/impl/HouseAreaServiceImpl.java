@@ -59,23 +59,33 @@ public class HouseAreaServiceImpl extends ServiceImpl<HouseAreaDao, HouseAreaEnt
 
         // TODO 会有bug 最终出现的数据可能会小于pageSize,但是并没有到最后一页
         List<Long> roadIds = roadList.stream().map(HouseAreaEntity::getId).collect(Collectors.toList());
-        // 原始道路数据下的所有住宅数据
-        List<HouseAreaEntity> needAreaList = this.list(new LambdaQueryWrapper<HouseAreaEntity>().in(HouseAreaEntity::getSuperiorId,roadIds));
-
-        if (areaList.size()>0){
-            //原始道路数据+原始住宅数据
-            areaList.removeAll(needAreaList);
+        if (roadIds.size()>0){
+            // 存在道路数据
+            // 原始道路数据下的所有住宅数据
+            List<HouseAreaEntity> needAreaList = this.list(new LambdaQueryWrapper<HouseAreaEntity>().in(HouseAreaEntity::getSuperiorId,roadIds));
             if (areaList.size()>0){
-                //如果原始住宅区数据去除包含在通过原始道路数据获取到的住宅区数据后，还有其他道路的独立数据
-                Set<Long> roadIdSet = areaList.stream().map(HouseAreaEntity::getSuperiorId).collect(Collectors.toSet());
-                // 获取最终的道路数据
-                roadList.addAll(this.listByIds(roadIdSet));
+                // 条件搜索 搜索到了住宅区数据
+                // 去除重复的住宅区数据
+                areaList.removeAll(needAreaList);
+                if (areaList.size()>0){
+                    //如果原始住宅区数据去除包含在通过原始道路数据获取到的住宅区数据后，还有其他道路的独立数据
+                    Set<Long> roadIdSet = areaList.stream().map(HouseAreaEntity::getSuperiorId).collect(Collectors.toSet());
+                    // 获取最终的道路数据
+                    roadList.addAll(this.listByIds(roadIdSet));
+                }
                 // 获取最终的住宅区数据
-                needAreaList.addAll(areaList);
+                areaList.addAll(needAreaList);
+            }else {
+                // 非条件搜索或没有搜索到住宅区数据
+                areaList.addAll(needAreaList);
             }
+        }else {
+            // 不存在道路数据
+            Set<Long> roadIdSet = areaList.stream().map(HouseAreaEntity::getSuperiorId).collect(Collectors.toSet());
+            roadList.addAll(this.listByIds(roadIdSet));
         }
         // 组装数据
-        houseAreaEntityList = fromResultList(roadList,needAreaList);
+        houseAreaEntityList = fromResultList(roadList,areaList);
         page.setRecords(houseAreaEntityList);
         return new PageUtils(page);
     }
