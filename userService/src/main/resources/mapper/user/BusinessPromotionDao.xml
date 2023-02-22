@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sakanal.user.dao.BusinessPromotionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.sakanal.user.entity.BusinessPromotionEntity" id="businessPromotionMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="baseInfoId" column="base_info_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="stateId" column="state_id"/>
+        <result property="promotionNumber" column="promotion_number"/>
+        <result property="promotionState" column="promotion_state"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+
+</mapper>

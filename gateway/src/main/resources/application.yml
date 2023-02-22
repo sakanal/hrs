@@ -9,9 +9,15 @@ spring:
       routes:
         # 默认后台管理发送的请求都带上admin前缀，
         - id: houseService
-          uri: http://localhost:8000/
+          uri: lb://localhost:8000
           predicates:
-            - Path=/admin/house/**
+            - Path=/admin/house/**,/house/**
+          filters:
+            - RewritePath=/admin/(?<segment>.*),/$\{segment}
+        - id: userService
+          uri: lb://userService
+          predicates:
+            - Path=/admin/user/**,/user/**
           filters:
             - RewritePath=/admin/(?<segment>.*),/$\{segment}
 

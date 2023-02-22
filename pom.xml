@@ -12,6 +12,7 @@
     <modules>
         <module>adminService</module>
         <module>houseService</module>
+        <module>userService</module>
         <module>gateway</module>
     </modules>
 
