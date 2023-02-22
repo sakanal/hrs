@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: authService
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: b9fda02a-d2a4-4c4c-8b3e-905807233e82
+      config:
+        namespace: b9fda02a-d2a4-4c4c-8b3e-905807233e82
+        extension-configs:
+          - dataId: mybatisPlusConfig.yaml
+            group: CONFIG_GROUP
+            refresh: true
+          - dataId: redisCacheConfig.yaml
+            group: CONFIG_GROUP
+            refresh: true
+          - dataId: authService.yaml
+            refresh: true
