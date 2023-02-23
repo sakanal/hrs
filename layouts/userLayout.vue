@@ -20,7 +20,7 @@
               </template>
               <template v-else>
                 <el-link :underline="false" v-text="userInfo.nickName"></el-link>
-                <template> </template>
+                <template></template>
                 <el-link :underline="false" @click="toLogout">退出</el-link>
               </template>
             </el-menu-item>
@@ -67,11 +67,14 @@
 import cookie from 'js-cookie'
 
 export default {
-  head() {
+  head () {
     return {
-      title: '旅社租赁',
+      title: '用户中心',
       link: [
-        { rel: 'stylesheet', href:'/css/layout.css'},
+        {
+          rel: 'stylesheet',
+          href: '/css/layout.css'
+        },
       ]
     }
   },
@@ -85,13 +88,13 @@ export default {
   },
   // 方法集合
   methods: {
-    toLogout() {
+    toLogout () {
       // 退出
       cookie.remove('userToken')
       this.$router.go(0)
     },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    handleSelect (key, keyPath) {
+      console.log(key, keyPath)
     }
   },
   // 监听属性 类似于data概念
@@ -102,7 +105,7 @@ export default {
   created () {
     if (cookie.get('userToken')) {
       this.$axios.get('/user/userbaseinfo/userInfoByToken')
-        .then(response=>{
+        .then(response => {
           this.userInfo = response.userInfo
         })
     }

@@ -1,8 +1,8 @@
 <template>
   <el-container>
     <!--  NUXT header部分  -->
-    <el-header height="30px">
-      <el-row style="background-color: #fbfbfb;height: 30px;line-height: 30px" type="flex" class="row-bg" justify="center">
+    <el-header height="90px">
+      <el-row style="background-color: #fbfbfb;height: 30px;line-height: 30px" type="flex" justify="center">
         <el-col :span="6">
           <div class="grid-content bg-purple">
             logo
@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="7"/>
         <el-col :span="6">
-          <el-menu style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+          <el-menu style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">
                 <el-link :underline="false" href="login">登录</el-link>
@@ -20,12 +20,12 @@
               </template>
               <template v-else>
                 <el-link :underline="false" v-text="userInfo.nickName"></el-link>
-                <template> </template>
+                <template></template>
                 <el-link :underline="false" @click="toLogout">退出</el-link>
               </template>
             </el-menu-item>
             <el-submenu index="2">
-              <template slot="title">
+              <template slot="title" style="line-height: 30px">
                 <el-link :underline="false" href="/user">个人中心</el-link>
               </template>
               <el-menu-item index="/user">我的信息</el-menu-item>
@@ -42,19 +42,26 @@
           </el-menu>
         </el-col>
       </el-row>
+      <el-row style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)" type="flex" class="row-bg" justify="center">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-link :underline="false" href="/business">商家中心logo</el-link>
+          </div>
+        </el-col>
+        <el-col :span="7"/>
+        <el-col :span="6"/>
+      </el-row>
     </el-header>
     <!--  NUXT主体部分  -->
-    <el-divider/>
-    <el-main>
-      <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="19">
+    <el-main style="background-color: #fbfbfb;margin-top: 10px;height: 100%">
+      <el-row style="background-color: #fbfbfb;height: 100%" type="flex" class="row-bg" justify="center">
+        <el-col :span="19" style="height: 100%;">
           <Nuxt/>
         </el-col>
       </el-row>
     </el-main>
-    <el-divider/>
     <!--  NUXT Footer部分  -->
-    <el-footer>
+    <el-footer style="background-color: #eff2f7">
       footer
     </el-footer>
   </el-container>
@@ -65,11 +72,10 @@
 // 例如：import 《组件名称》 from ‘《组件路径》‘;
 
 import cookie from 'js-cookie'
-
 export default {
   head() {
     return {
-      title: '旅社租赁',
+      title: '商家中心',
       link: [
         { rel: 'stylesheet', href:'/css/layout.css'},
       ]
@@ -85,13 +91,13 @@ export default {
   },
   // 方法集合
   methods: {
-    toLogout() {
+    toLogout () {
       // 退出
       cookie.remove('userToken')
       this.$router.go(0)
     },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    handleSelect (key, keyPath) {
+      console.log(key, keyPath)
     }
   },
   // 监听属性 类似于data概念
@@ -102,7 +108,7 @@ export default {
   created () {
     if (cookie.get('userToken')) {
       this.$axios.get('/user/userbaseinfo/userInfoByToken')
-        .then(response=>{
+        .then(response => {
           this.userInfo = response.userInfo
         })
     }

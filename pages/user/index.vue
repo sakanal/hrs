@@ -1,7 +1,6 @@
 <template>
   <div class=''>
-    <div><br><br><br></div>
-    <Nuxt/>
+    用户中心
   </div>
 </template>
 
@@ -9,7 +8,10 @@
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from ‘《组件路径》‘;
 
+import userLayout from '@/layouts/userLayout'
+
 export default {
+  layout: 'userLayout',
   // import引入的组件需要注入到对象中才能使用
   components: {},
   data () {
@@ -53,45 +55,5 @@ export default {
 </script>
 
 <style scoped>
-.simple-title{
-  margin-bottom: 5px;
-}
 
-.background {
-  height: 100%;
-  width: 100%;
-  z-index: -1;
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  /*background-image: "../static/image/login.jpg";*/
-}
-.front {
-  z-index: 1;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /*color: #ffffff;*/
-}
-.card {
-  width: 400px;
-  /*background-color: rgba(200, 200, 200, 1); !**rgba中的a为alpha通道， 为不透明参数，.0即为完全透明*!*/
-  /*border-color: rgba(200, 200, 200, 1);*/
-  border-radius: 2px;
-  z-index: 2;
-}
-.main .title {
-  text-align: center;
-  font-size: 24px;
-  /*color: #ffffff;*/
-}
 </style>
