@@ -9,7 +9,7 @@ spring:
       routes:
         # 默认后台管理发送的请求都带上admin前缀，
         - id: houseService
-          uri: lb://localhost:8000
+          uri: lb://houseService
           predicates:
             - Path=/admin/house/**,/house/**
           filters:
