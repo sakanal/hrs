@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sakanal.user.entity.UserBrowseEntity;
+import com.sakanal.service.entity.user.UserBrowseEntity;
 import com.sakanal.user.service.UserBrowseService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;

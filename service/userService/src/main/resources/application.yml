@@ -27,4 +27,5 @@ system:
     core-size: 20
     max-size: 200
     keep-alive-time: 10
-
+common:
+  default-avatar: https://guli-edu-sakanal.oss-cn-hangzhou.aliyuncs.com/avatar/string/2022/09/13/ef45e4e3e2764a77a3925aa4ce1f5e31multipartFile.png
