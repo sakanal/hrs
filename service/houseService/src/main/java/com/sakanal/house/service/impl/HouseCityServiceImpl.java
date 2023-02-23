@@ -15,7 +15,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.house.dao.HouseCityDao;
-import com.sakanal.house.entity.HouseCityEntity;
+import com.sakanal.service.entity.house.HouseCityEntity;
 import com.sakanal.house.service.HouseCityService;
 
 import javax.annotation.Resource;

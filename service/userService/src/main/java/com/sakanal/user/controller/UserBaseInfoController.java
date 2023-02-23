@@ -4,19 +4,21 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sakanal.base.exception.ErrorCodeEnum;
+import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
+import com.sakanal.service.vo.UserBaseInfoVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
-import com.sakanal.user.entity.UserBaseInfoEntity;
+import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.user.service.UserBaseInfoService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 
 import javax.annotation.Resource;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 
 /**
@@ -26,6 +28,7 @@ import javax.annotation.Resource;
  * @email 1104820805@qq.com
  * @date 2023-02-22 13:24:10
  */
+@Slf4j
 @RestController
 @RequestMapping("user/userbaseinfo")
 public class UserBaseInfoController {
@@ -86,6 +89,45 @@ public class UserBaseInfoController {
 		userBaseInfoService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+
+    /**
+     * 注册账号
+     */
+    @RequestMapping("/registerSimple")
+    //@RequiresPermissions("user:userbaseinfo:save")
+    public R registerSimple(@RequestBody @Valid LoginOrRegisterSimpleDTO registerSimple){
+        if (userBaseInfoService.register(registerSimple)){
+            return R.ok("注册成功");
+        }else {
+            return R.error(ErrorCodeEnum.REGISTER_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.REGISTER_FAIL_EXCEPTION.getMsg());
+        }
+    }
+    /**
+     * 检测用户名是否重复
+     */
+    @GetMapping("/checkUserName/{userName}")
+    public R checkUserName(@PathVariable String userName){
+        return R.ok().put("result",userBaseInfoService.checkUserName(userName));
+    }
+    @PostMapping("/loginSimple")
+    public R loginSimple(@RequestBody @Valid LoginOrRegisterSimpleDTO loginSimple){
+        String token = userBaseInfoService.login(loginSimple);
+        if (StringUtils.hasText(token)){
+            return R.ok().put("token",token);
+        }else {
+            return R.error(ErrorCodeEnum.LOGIN_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.LOGIN_FAIL_EXCEPTION.getMsg());
+        }
+    }
+    @GetMapping("/userInfoByToken")
+    public R userInfoByToken(HttpServletRequest httpServletRequest,@RequestHeader(value = "token") String token){
+        UserBaseInfoVO userBaseInfoVO = userBaseInfoService.getUserInfoByToken(token);
+        if (userBaseInfoVO!=null){
+            return R.ok().put("userInfo",userBaseInfoVO);
+        }else {
+            return R.error();
+        }
     }
 
 }

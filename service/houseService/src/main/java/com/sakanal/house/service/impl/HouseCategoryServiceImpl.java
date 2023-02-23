@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.house.dao.HouseCategoryDao;
-import com.sakanal.house.entity.HouseCategoryEntity;
+import com.sakanal.service.entity.house.HouseCategoryEntity;
 import com.sakanal.house.service.HouseCategoryService;
 
 

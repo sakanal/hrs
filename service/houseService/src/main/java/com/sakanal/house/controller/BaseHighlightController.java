@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sakanal.house.entity.BaseHighlightEntity;
+import com.sakanal.service.entity.house.BaseHighlightEntity;
 import com.sakanal.house.service.BaseHighlightService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;

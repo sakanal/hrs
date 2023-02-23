@@ -1,4 +1,4 @@
-package com.sakanal.house.entity;
+package com.sakanal.service.entity.user;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,15 +9,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 房屋朝向表
+ * 用户收藏表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-03 22:03:33
+ * @date 2023-02-22 13:24:10
  */
 @Data
-@TableName("base_orientation")
-public class BaseOrientationEntity implements Serializable {
+@TableName("user_collection")
+public class UserCollectionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -26,13 +26,21 @@ public class BaseOrientationEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 房屋朝向
+     * 用户id
      */
-    private String orientation;
+    private Long userId;
     /**
-     * 是否显示 0-不显示 1-显示
+     * 房源基础信息id
      */
-    private Integer showState;
+    private Long baseInfoId;
+    /**
+     * 房源类别id
+     */
+    private Long houseCategoryId;
+    /**
+     * 房源状态id
+     */
+    private Long houseStateId;
     /**
      * 是否删除 0-未删除 1-已删除
      */

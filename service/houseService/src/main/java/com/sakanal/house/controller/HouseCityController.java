@@ -8,7 +8,7 @@ import java.util.Map;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
-import com.sakanal.house.entity.HouseCityEntity;
+import com.sakanal.service.entity.house.HouseCityEntity;
 import com.sakanal.house.service.HouseCityService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;

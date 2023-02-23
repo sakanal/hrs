@@ -1,4 +1,4 @@
-package com.sakanal.user.entity;
+package com.sakanal.service.entity.user;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;

@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.user.dao.BusinessPromotionDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.user.entity.BusinessPromotionEntity" id="businessPromotionMap">
+    <resultMap type="com.sakanal.service.entity.user.BusinessPromotionEntity" id="businessPromotionMap">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="baseInfoId" column="base_info_id"/>

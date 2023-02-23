@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.user.dao.UserBrowseDao;
-import com.sakanal.user.entity.UserBrowseEntity;
+import com.sakanal.service.entity.user.UserBrowseEntity;
 import com.sakanal.user.service.UserBrowseService;
 
 

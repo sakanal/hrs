@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.house.dao.HouseContactInfoDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.house.entity.HouseContactInfoEntity" id="houseContactInfoMap">
+    <resultMap type="com.sakanal.service.entity.house.HouseContactInfoEntity" id="houseContactInfoMap">
         <result property="id" column="id"/>
         <result property="baseInfoId" column="base_info_id"/>
         <result property="publisherName" column="publisher_name"/>

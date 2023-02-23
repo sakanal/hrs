@@ -1,24 +1,30 @@
-package com.sakanal.house.entity;
+package com.sakanal.service.entity.user;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sakanal.service.utils.PasswordUtils;
+import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 房源租金信息表
+ * 用户基础数据表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-03 21:55:47
+ * @date 2023-02-22 13:24:10
  */
 @Data
-@TableName("house_rent_info")
-public class HouseRentInfoEntity implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName("user_base_info")
+public class UserBaseInfoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -27,25 +33,29 @@ public class HouseRentInfoEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 房源基础信息id
+     * 用户名
      */
-    private Long baseInfoId;
+    private String userName;
     /**
-     * 每月租金
+     * 昵称
      */
-    private BigDecimal monthlyRent;
+    private String nickName;
     /**
-     * 每次付款需要付多少个月的租金
+     * 头像url
      */
-    private Integer payNumber;
+    private String headPortraitUrl;
     /**
-     * 需要抵押多少个月的资金
+     * 电话
      */
-    private Integer mortgageNumber;
+    private Long phone;
     /**
-     * 租金内容ids，使用“/”分割id
+     * 邮箱
      */
-    private String rentContentIds;
+    private String email;
+    /**
+     * 密码
+     */
+    private String password;
     /**
      * 是否删除 0-未删除 1-已删除
      */
@@ -65,4 +75,10 @@ public class HouseRentInfoEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
+
+    public UserBaseInfoEntity(LoginOrRegisterSimpleDTO registerSimple) {
+        // 对密码加密
+        registerSimple.setPassword(PasswordUtils.encode(registerSimple.getPassword()));
+        BeanUtils.copyProperties(registerSimple,this);
+    }
 }

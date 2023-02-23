@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.user.dao.UserBaseInfoDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.user.entity.UserBaseInfoEntity" id="userBaseInfoMap">
+    <resultMap type="com.sakanal.service.entity.user.UserBaseInfoEntity" id="userBaseInfoMap">
         <result property="id" column="id"/>
         <result property="userName" column="user_name"/>
         <result property="nickName" column="nick_name"/>

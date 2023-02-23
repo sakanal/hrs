@@ -1,4 +1,4 @@
-package com.sakanal.user.entity;
+package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,15 +9,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户收藏表
+ * 房源图片表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-22 13:24:10
+ * @date 2023-02-03 21:55:47
  */
 @Data
-@TableName("user_collection")
-public class UserCollectionEntity implements Serializable {
+@TableName("house_image")
+public class HouseImageEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -26,35 +26,39 @@ public class UserCollectionEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 用户id
-     */
-    private Long userId;
-    /**
      * 房源基础信息id
      */
     private Long baseInfoId;
     /**
-     * 房源类别id
+     * 图片名
      */
-    private Long houseCategoryId;
+    private String name;
     /**
-     * 房源状态id
+     * 图片地址
      */
-    private Long houseStateId;
+    private String url;
+    /**
+     * 图片顺序
+     */
+    private Integer sort;
+    /**
+     * 是否为默认图片 0-不是默认图片 1-是默认图片
+     */
+    private Integer isDefaultImage;
     /**
      * 是否删除 0-未删除 1-已删除
      */
     @TableLogic
     private Integer isDeleted;
     /**
-     * 创建时间
+     *
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT)
     private Date createdTime;
     /**
-     * 修改时间
+     *
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

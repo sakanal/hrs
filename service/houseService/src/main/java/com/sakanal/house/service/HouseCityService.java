@@ -2,7 +2,7 @@ package com.sakanal.house.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
-import com.sakanal.house.entity.HouseCityEntity;
+import com.sakanal.service.entity.house.HouseCityEntity;
 
 import java.util.List;
 import java.util.Map;

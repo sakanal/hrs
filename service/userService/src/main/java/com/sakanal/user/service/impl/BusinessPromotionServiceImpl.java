@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.user.dao.BusinessPromotionDao;
-import com.sakanal.user.entity.BusinessPromotionEntity;
+import com.sakanal.service.entity.user.BusinessPromotionEntity;
 import com.sakanal.user.service.BusinessPromotionService;
 
 

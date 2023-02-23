@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.user.dao.BusinessHousePublishDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.user.entity.BusinessHousePublishEntity" id="businessHousePublishMap">
+    <resultMap type="com.sakanal.service.entity.user.BusinessHousePublishEntity" id="businessHousePublishMap">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="baseInfoId" column="base_info_id"/>

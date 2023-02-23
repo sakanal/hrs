@@ -1,4 +1,4 @@
-package com.sakanal.house.entity;
+package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -7,18 +7,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * 房源所在城市表
+ * 房屋出租要求表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-03 21:55:47
+ * @date 2023-02-03 22:03:33
  */
 @Data
-@TableName("house_city")
-public class HouseCityEntity implements Serializable {
+@TableName("base_rental_requirements")
+public class BaseRentalRequirementsEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -27,31 +26,9 @@ public class HouseCityEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 城市名称
+     * 要求
      */
     private String name;
-    /**
-     * 城市级别 0-省 1-市
-     */
-    private Integer level;
-    /**
-     * 父城市id
-     */
-    private Long superiorId;
-    /**
-     * 是否有子节点
-     */
-    @TableField(exist = false)
-    private boolean hasChildren;
-    /**
-     * 子节点
-     */
-    @TableField(exist = false)
-    private List<HouseCityEntity> ChildrenList;
-    /**
-     * 排序
-     */
-    private Integer sort;
     /**
      * 是否显示 0-不显示 1-显示
      */

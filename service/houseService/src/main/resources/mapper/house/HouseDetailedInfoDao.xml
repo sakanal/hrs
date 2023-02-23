@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.house.dao.HouseDetailedInfoDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.house.entity.HouseDetailedInfoEntity" id="houseDetailedInfoMap">
+    <resultMap type="com.sakanal.service.entity.house.HouseDetailedInfoEntity" id="houseDetailedInfoMap">
         <result property="id" column="id"/>
         <result property="baseInfoId" column="base_info_id"/>
         <result property="earliestInTime" column="earliest_in_time"/>

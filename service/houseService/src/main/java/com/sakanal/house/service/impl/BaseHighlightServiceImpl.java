@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.house.dao.BaseHighlightDao;
-import com.sakanal.house.entity.BaseHighlightEntity;
+import com.sakanal.service.entity.house.BaseHighlightEntity;
 import com.sakanal.house.service.BaseHighlightService;
 
 

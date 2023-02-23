@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.house.dao.BaseRentContentDao;
-import com.sakanal.house.entity.BaseRentContentEntity;
+import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.house.service.BaseRentContentService;
 
 

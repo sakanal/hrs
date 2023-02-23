@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.user.dao.UserCollectionDao;
-import com.sakanal.user.entity.UserCollectionEntity;
+import com.sakanal.service.entity.user.UserCollectionEntity;
 import com.sakanal.user.service.UserCollectionService;
 
 

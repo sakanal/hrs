@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.house.dao.HouseRentInfoDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.house.entity.HouseRentInfoEntity" id="houseRentInfoMap">
+    <resultMap type="com.sakanal.service.entity.house.HouseRentInfoEntity" id="houseRentInfoMap">
         <result property="id" column="id"/>
         <result property="baseInfoId" column="base_info_id"/>
         <result property="monthlyRent" column="monthly_rent"/>

@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.house.dao.HouseStateDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.house.entity.HouseStateEntity" id="houseStateMap">
+    <resultMap type="com.sakanal.service.entity.house.HouseStateEntity" id="houseStateMap">
         <result property="id" column="id"/>
         <result property="baseInfoId" column="base_info_id"/>
         <result property="publisherId" column="publisher_id"/>

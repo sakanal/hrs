@@ -1,4 +1,4 @@
-package com.sakanal.house.entity;
+package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -6,19 +6,19 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
- * 房屋基础信息表
+ * 房源所在城市表
  *
  * @author sakanal
  * @email 1104820805@qq.com
  * @date 2023-02-03 21:55:47
  */
 @Data
-@TableName("house_base_info")
-public class HouseBaseInfoEntity implements Serializable {
+@TableName("house_city")
+public class HouseCityEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -27,53 +27,35 @@ public class HouseBaseInfoEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 区域id
-     */
-    private Long areaId;
-    /**
-     * 类别id
-     */
-    private Long categoryId;
-    /**
-     * 房源名称
+     * 城市名称
      */
     private String name;
     /**
-     * 房源有多少可用卧室
+     * 城市级别 0-省 1-市
      */
-    private Integer roomNumber;
+    private Integer level;
     /**
-     * 房源有多少可用厅室
+     * 父城市id
      */
-    private Integer hallNumber;
+    private Long superiorId;
     /**
-     * 房源有多少可用卫生间
+     * 是否有子节点
      */
-    private Integer cloakroomNumber;
+    @TableField(exist = false)
+    private boolean hasChildren;
     /**
-     * 占地面积
+     * 子节点
      */
-    private BigDecimal areaCovered;
+    @TableField(exist = false)
+    private List<HouseCityEntity> ChildrenList;
     /**
-     * 总层数
+     * 排序
      */
-    private Integer totalFloor;
+    private Integer sort;
     /**
-     * 所在层数
+     * 是否显示 0-不显示 1-显示
      */
-    private Integer floor;
-    /**
-     * 是否有电梯 0-没有电梯 1-有电梯
-     */
-    private Integer hasElevator;
-    /**
-     * 是否有车位 0-没有车位 1-有车位
-     */
-    private Integer hasParkingPlace;
-    /**
-     * 房屋朝向id
-     */
-    private Long orientationId;
+    private Integer showState;
     /**
      * 是否删除 0-未删除 1-已删除
      */

@@ -2,7 +2,7 @@ package com.sakanal.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
-import com.sakanal.user.entity.UserCollectionEntity;
+import com.sakanal.service.entity.user.UserCollectionEntity;
 
 import java.util.Map;
 

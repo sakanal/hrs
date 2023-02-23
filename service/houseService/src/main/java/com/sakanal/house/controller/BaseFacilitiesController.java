@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sakanal.house.entity.BaseFacilitiesEntity;
+import com.sakanal.service.entity.house.BaseFacilitiesEntity;
 import com.sakanal.house.service.BaseFacilitiesService;
 
 import javax.annotation.Resource;

@@ -4,7 +4,7 @@
 <mapper namespace="com.sakanal.house.dao.HouseImageDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.sakanal.house.entity.HouseImageEntity" id="houseImageMap">
+    <resultMap type="com.sakanal.service.entity.house.HouseImageEntity" id="houseImageMap">
         <result property="id" column="id"/>
         <result property="baseInfoId" column="base_info_id"/>
         <result property="name" column="name"/>

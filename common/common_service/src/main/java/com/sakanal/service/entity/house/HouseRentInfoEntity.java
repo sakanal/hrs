@@ -1,4 +1,4 @@
-package com.sakanal.house.entity;
+package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -6,18 +6,19 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 房源状态表
+ * 房源租金信息表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-03 21:55:46
+ * @date 2023-02-03 21:55:47
  */
 @Data
-@TableName("house_state")
-public class HouseStateEntity implements Serializable {
+@TableName("house_rent_info")
+public class HouseRentInfoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -30,13 +31,21 @@ public class HouseStateEntity implements Serializable {
      */
     private Long baseInfoId;
     /**
-     * 发布人id
+     * 每月租金
      */
-    private Long publisherId;
+    private BigDecimal monthlyRent;
     /**
-     * 房源发布状态 0-未发布 1-审核中 2-已发布 3-已下架 4-审核失败
+     * 每次付款需要付多少个月的租金
      */
-    private Integer housePublishState;
+    private Integer payNumber;
+    /**
+     * 需要抵押多少个月的资金
+     */
+    private Integer mortgageNumber;
+    /**
+     * 租金内容ids，使用“/”分割id
+     */
+    private String rentContentIds;
     /**
      * 是否删除 0-未删除 1-已删除
      */

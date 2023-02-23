@@ -9,7 +9,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 
 import com.sakanal.user.dao.BusinessHousePublishDao;
-import com.sakanal.user.entity.BusinessHousePublishEntity;
+import com.sakanal.service.entity.user.BusinessHousePublishEntity;
 import com.sakanal.user.service.BusinessHousePublishService;
 
 

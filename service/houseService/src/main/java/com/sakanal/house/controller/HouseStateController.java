@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sakanal.house.entity.HouseStateEntity;
+import com.sakanal.service.entity.house.HouseStateEntity;
 import com.sakanal.house.service.HouseStateService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;

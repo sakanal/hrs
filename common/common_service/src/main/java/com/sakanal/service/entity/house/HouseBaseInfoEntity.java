@@ -1,4 +1,4 @@
-package com.sakanal.house.entity;
+package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -6,18 +6,19 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 房屋设施表
+ * 房屋基础信息表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-03 22:03:33
+ * @date 2023-02-03 21:55:47
  */
 @Data
-@TableName("base_facilities")
-public class BaseFacilitiesEntity implements Serializable {
+@TableName("house_base_info")
+public class HouseBaseInfoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -26,21 +27,53 @@ public class BaseFacilitiesEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 设施名字
+     * 区域id
+     */
+    private Long areaId;
+    /**
+     * 类别id
+     */
+    private Long categoryId;
+    /**
+     * 房源名称
      */
     private String name;
     /**
-     * 设施图标url
+     * 房源有多少可用卧室
      */
-    private String iconUrl;
+    private Integer roomNumber;
     /**
-     * 设施类别 0-公共设施 1-卧室设施
+     * 房源有多少可用厅室
      */
-    private Integer category;
+    private Integer hallNumber;
     /**
-     * 是否显示 0-不显示 1-显示
+     * 房源有多少可用卫生间
      */
-    private Integer showState;
+    private Integer cloakroomNumber;
+    /**
+     * 占地面积
+     */
+    private BigDecimal areaCovered;
+    /**
+     * 总层数
+     */
+    private Integer totalFloor;
+    /**
+     * 所在层数
+     */
+    private Integer floor;
+    /**
+     * 是否有电梯 0-没有电梯 1-有电梯
+     */
+    private Integer hasElevator;
+    /**
+     * 是否有车位 0-没有车位 1-有车位
+     */
+    private Integer hasParkingPlace;
+    /**
+     * 房屋朝向id
+     */
+    private Long orientationId;
     /**
      * 是否删除 0-未删除 1-已删除
      */

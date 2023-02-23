@@ -1,4 +1,4 @@
-package com.sakanal.user.entity;
+package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,15 +9,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 商家房源发布表
+ * 房屋类别表
  *
  * @author sakanal
  * @email 1104820805@qq.com
- * @date 2023-02-22 13:24:10
+ * @date 2023-02-03 21:55:47
  */
 @Data
-@TableName("business_house_publish")
-public class BusinessHousePublishEntity implements Serializable {
+@TableName("house_category")
+public class HouseCategoryEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -26,29 +26,9 @@ public class BusinessHousePublishEntity implements Serializable {
     @TableId
     private Long id;
     /**
-     * 商家的用户id
+     * 房源类别名
      */
-    private Long userId;
-    /**
-     * 房源基础信息id
-     */
-    private Long baseInfoId;
-    /**
-     * 房源类别id
-     */
-    private Long categoryId;
-    /**
-     * 房源状态id
-     */
-    private Long stateId;
-    /**
-     * 浏览人数
-     */
-    private Long visitorNumber;
-    /**
-     * 收藏人数
-     */
-    private Long collectionNumber;
+    private String name;
     /**
      * 是否删除 0-未删除 1-已删除
      */
