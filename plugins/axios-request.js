@@ -1,18 +1,33 @@
-import {Message} from "element-ui";
-export default function ({ $axios, redirect }) {
+import { Message } from 'element-ui'
+import cookie from 'js-cookie'
+
+export default function ({
+  $axios,
+  redirect
+}) {
   $axios.defaults.baseURL = 'http://localhost:9527/'
   $axios.interceptors.request.use(request => {
+    if (cookie.get('userToken')) {
+      request.headers['token'] = cookie.get('userToken')
+    }
     return request
   }, error => {
     Message.error(error.message)
   })
 
   $axios.interceptors.response.use(response => {
-    if(response.data.success === false){
-      console.log("请求失败");
-      return;
+    if (response.data.code === 0) {
+      // 请求成功
+      return response.data
+    } else {
+      switch (response.data.code) {
+        case 10011:
+          // token过期失效
+          Message.error(response.data.msg)
+          return history.push('/login')
+      }
+      Message.error(response.data.msg)
     }
-    return response.data
   }, error => {
     if (error && error.response) {
       switch (error.response.status) {
