@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
+@RequestMapping("/user/register")
 public class RegisterController {
     @Resource
     private UserBaseInfoService userBaseInfoService;
@@ -19,7 +20,7 @@ public class RegisterController {
     /**
      * 注册账号
      */
-    @RequestMapping("/registerSimple")
+    @RequestMapping("/simple")
     //@RequiresPermissions("user:userbaseinfo:save")
     public R registerSimple(@RequestBody @Valid LoginOrRegisterSimpleDTO registerSimple){
         if (userBaseInfoService.register(registerSimple)){

@@ -15,11 +15,12 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
+@RequestMapping("/user/login")
 public class LoginController {
     @Resource
     private UserBaseInfoService userBaseInfoService;
 
-    @PostMapping("/loginSimple")
+    @PostMapping("/simple")
     public R loginSimple(@RequestBody @Valid LoginOrRegisterSimpleDTO loginSimple){
         String token = userBaseInfoService.login(loginSimple);
         if (StringUtils.hasText(token)){
