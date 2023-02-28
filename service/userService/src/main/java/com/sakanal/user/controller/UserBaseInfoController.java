@@ -90,44 +90,4 @@ public class UserBaseInfoController {
 
         return R.ok();
     }
-
-
-    /**
-     * 注册账号
-     */
-    @RequestMapping("/registerSimple")
-    //@RequiresPermissions("user:userbaseinfo:save")
-    public R registerSimple(@RequestBody @Valid LoginOrRegisterSimpleDTO registerSimple){
-        if (userBaseInfoService.register(registerSimple)){
-            return R.ok("注册成功");
-        }else {
-            return R.error(ErrorCodeEnum.REGISTER_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.REGISTER_FAIL_EXCEPTION.getMsg());
-        }
-    }
-    /**
-     * 检测用户名是否重复
-     */
-    @GetMapping("/checkUserName/{userName}")
-    public R checkUserName(@PathVariable String userName){
-        return R.ok().put("result",userBaseInfoService.checkUserName(userName));
-    }
-    @PostMapping("/loginSimple")
-    public R loginSimple(@RequestBody @Valid LoginOrRegisterSimpleDTO loginSimple){
-        String token = userBaseInfoService.login(loginSimple);
-        if (StringUtils.hasText(token)){
-            return R.ok().put("token",token);
-        }else {
-            return R.error(ErrorCodeEnum.LOGIN_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.LOGIN_FAIL_EXCEPTION.getMsg());
-        }
-    }
-    @GetMapping("/userInfoByToken")
-    public R userInfoByToken(HttpServletRequest httpServletRequest,@RequestHeader(value = "token") String token){
-        UserBaseInfoVO userBaseInfoVO = userBaseInfoService.getUserInfoByToken(token);
-        if (userBaseInfoVO!=null){
-            return R.ok().put("userInfo",userBaseInfoVO);
-        }else {
-            return R.error();
-        }
-    }
-
 }
