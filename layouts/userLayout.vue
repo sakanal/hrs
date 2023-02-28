@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <!--  NUXT header部分  -->
-    <el-header height="30px">
+    <el-header height="90px">
       <el-row style="background-color: #fbfbfb;height: 30px;line-height: 30px" type="flex" class="row-bg" justify="center">
         <el-col :span="6">
           <div class="grid-content bg-purple">
@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="7"/>
         <el-col :span="6">
-          <el-menu style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+          <el-menu class="my-el-menu-header" style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">
                 <el-link :underline="false" href="login">登录</el-link>
@@ -42,13 +42,56 @@
           </el-menu>
         </el-col>
       </el-row>
+      <el-row style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)" type="flex" class="row-bg" justify="center">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-link :underline="false" href="/">logo</el-link>
+          </div>
+        </el-col>
+        <el-col :span="5"/>
+        <el-col :span="8"/>
+      </el-row>
     </el-header>
     <!--  NUXT主体部分  -->
     <el-divider/>
-    <el-main>
-      <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="19">
-          <Nuxt/>
+    <el-main style="background-color: #fbfbfb;margin-top: 10px;height: 100%">
+      <el-row style="background-color: #f6f8fb;height: 100%" type="flex" class="row-bg" justify="center">
+        <el-col :span="19" style="height: 100%;">
+          <el-container>
+            <el-aside style="height: 100%;">
+              <el-row style="height: 100%;">
+                <el-col :span="20" style="height: 100%;">
+                  <el-menu :router="true"
+                           style="min-height: 1000px"
+                           default-active="/user/info"
+                           active-text-color="#ffd04b"
+                           background-color="#545c64"
+                           text-color="#fff">
+                    <el-submenu index="/user/info">
+                      <template slot="title">
+                        <span>账户设置</span>
+                      </template>
+                      <el-menu-item index="/user/info">个人资料</el-menu-item>
+                      <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>
+                      <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>
+                      <el-menu-item index="/user/info/messageManagement">消息管理</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="/user">
+                      <template slot="title">
+                        <span>我的收藏</span>
+                      </template>
+                      <el-menu-item index="/user/collection/who">谁收藏我的信息</el-menu-item>
+                      <el-menu-item index="/user/collection/my">我收藏的信息</el-menu-item>
+                    </el-submenu>
+                    <el-menu-item index="/user/browse">我的浏览</el-menu-item>
+                  </el-menu>
+                </el-col>
+              </el-row>
+            </el-aside>
+            <el-main>
+              <Nuxt/>
+            </el-main>
+          </el-container>
         </el-col>
       </el-row>
     </el-main>
@@ -150,7 +193,7 @@ export default {
 .el-main {
   padding: 0;
 }
-.el-submenu /deep/ .el-submenu__title {
+.my-el-menu-header .el-submenu /deep/ .el-submenu__title {
   height: 30px;
   line-height: 30px ;
 }

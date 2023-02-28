@@ -1,6 +1,6 @@
 <template>
   <div class=''>
-    用户中心
+    个人中心
   </div>
 </template>
 

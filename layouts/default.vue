@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="7"/>
         <el-col :span="6">
-          <el-menu style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+          <el-menu class="my-el-menu-header" style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">
                 <el-link :underline="false" href="login">登录</el-link>
@@ -144,7 +144,7 @@ export default {
 .el-main {
   padding: 0;
 }
-.el-submenu /deep/ .el-submenu__title {
+.my-el-menu-header .el-submenu /deep/ .el-submenu__title {
   height: 30px;
   line-height: 30px ;
 }

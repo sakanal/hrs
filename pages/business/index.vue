@@ -1,35 +1,12 @@
 <template>
-  <el-container>
-    <el-aside style="height: 100%;">
-      <el-row style="height: 100%;">
-        <el-col :span="20" style="height: 100%;">
-          <el-menu style="min-height: 1000px"
-            default-active="1"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b">
-            <el-submenu index="1">
-              <template slot="title">
-                <span>导航一</span>
-              </template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-submenu>
-          </el-menu>
-        </el-col>
-      </el-row>
-    </el-aside>
-    <el-main>
-      商家中心<br>
-    </el-main>
-  </el-container>
+  <div>
+    商家中心<br>
+  </div>
 </template>
 
 <script>
 // 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 // 例如：import 《组件名称》 from ‘《组件路径》‘;
-
-import businessLayout from '@/layouts/businessLayout'
 
 export default {
   layout: 'businessLayout',

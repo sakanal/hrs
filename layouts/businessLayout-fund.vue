@@ -71,35 +71,10 @@
                 <el-col :span="20" style="height: 100%;">
                   <el-menu :router="true"
                            style="min-height: 1000px"
-                           default-active="/business/publish"
+                           default-active="/business/fund"
                            active-text-color="#ffd04b"
                            background-color="#545c64"
                            text-color="#fff">
-                    <el-submenu index="/business">
-                      <template slot="title">
-                        <span>首页</span>
-                      </template>
-                      <el-menu-item index="/business/publish">我的发布</el-menu-item>
-                      <el-menu-item index="/business/info">我的资料</el-menu-item>
-                      <el-menu-item index="/business/fund">我的资金</el-menu-item>
-                      <el-menu-item index="/business/service">我的服务</el-menu-item>
-                      <el-menu-item index="/business">推广管理</el-menu-item>
-                      <el-menu-item index="/business">交易管理</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="/business/publish">
-                      <template slot="title">
-                        <span>我的发布</span>
-                      </template>
-                      <el-menu-item index="/business/publish">我的发布</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="/business/info">
-                      <template slot="title">
-                        <span>账户资料</span>
-                      </template>
-                      <el-menu-item index="/business/info">个人资料</el-menu-item>
-                      <el-menu-item index="/business/info/accountBinding">账户绑定</el-menu-item>
-                      <el-menu-item index="/business/info/changePassword">修改密码</el-menu-item>
-                    </el-submenu>
                     <el-submenu index="/business/fund">
                       <template slot="title">
                         <span>我的资金</span>
@@ -107,13 +82,6 @@
                       <el-menu-item index="/business/fund">我的钱包</el-menu-item>
                       <el-menu-item index="/business/fund">推广余额</el-menu-item>
                       <el-menu-item index="/business/fund">我的优惠券</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="/business/service">
-                      <template slot="title">
-                        <span>订购服务</span>
-                      </template>
-                      <el-menu-item index="/business/service">我的服务</el-menu-item>
-                      <el-menu-item index="/business/service/order">我的订单</el-menu-item>
                     </el-submenu>
                   </el-menu>
                 </el-col>
