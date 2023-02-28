@@ -142,7 +142,7 @@ export default {
             'userName': this.simpleLogin.userName,
             'password': this.simpleLogin.password
           }
-          this.$axios.post('/user/userbaseinfo/loginSimple', data)
+          this.$axios.post('/user/login/simple', data)
             .then(response => {
               if (response !== undefined) {
                 cookie.set('userToken', response.token, { domain: 'localhost' })

@@ -64,7 +64,7 @@ export default {
       if (value === '') {
         callback(new Error('请输入姓名'))
       }else{
-        this.$axios.get(`/user/userbaseinfo/checkUserName/${value}`)
+        this.$axios.get(`/user/register/checkUserName/${value}`)
           .then(response=>{
             if (!response.result) {
               callback(new Error('用户名重复'))
@@ -135,7 +135,7 @@ export default {
             'userName': this.register.userName,
             'password': this.register.password
           }
-          this.$axios.post('/user/userbaseinfo/registerSimple', data)
+          this.$axios.post('/user/register/simple', data)
             .then(response => {
               if (response === undefined) {
                 this.$refs.registerForm.resetFields()

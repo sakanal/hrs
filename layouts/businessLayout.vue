@@ -56,6 +56,7 @@
     <el-main style="background-color: #fbfbfb;margin-top: 10px;height: 100%">
       <el-row style="background-color: #fbfbfb;height: 100%" type="flex" class="row-bg" justify="center">
         <el-col :span="19" style="height: 100%;">
+          {{userTest}}
           <Nuxt/>
         </el-col>
       </el-row>
@@ -86,7 +87,8 @@ export default {
   data () {
     // 这里存放数据
     return {
-      userInfo: {}
+      userInfo: {},
+      userTest: {}
     }
   },
   // 方法集合
@@ -107,7 +109,7 @@ export default {
   // 生命周期 - 创建完成（可以访问当前this实例）
   created () {
     if (cookie.get('userToken')) {
-      this.$axios.get('/user/userbaseinfo/userInfoByToken')
+      this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
           this.userInfo = response.userInfo
         })
