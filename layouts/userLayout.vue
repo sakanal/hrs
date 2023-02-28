@@ -108,6 +108,9 @@ export default {
         .then(response => {
           this.userInfo = response.userInfo
         })
+    }else {
+      this.$message.info('请先登录')
+      this.$router.push({path:'/login'})
     }
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
