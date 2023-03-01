@@ -30,9 +30,8 @@
                     <el-input type="password" v-model="simpleLogin.password" placeholder="密码" autocomplete="off"/>
                   </el-form-item>
                   <el-form-item>
-                    <el-checkbox-group v-model="simpleLogin.checkList">
-                      <el-checkbox label="rememberMe">记住密码</el-checkbox>
-                      <el-checkbox label="autoLogin">自动登录</el-checkbox>
+                    <el-checkbox-group v-model="simpleLogin.autoLogin">
+                      <el-checkbox label="autoLogin">7天免登录</el-checkbox>
                     </el-checkbox-group>
                     <div style="position: absolute;top: 0;right: 5px">
                       <el-link :underline="false">忘记密码</el-link>
@@ -80,7 +79,7 @@ export default {
       simpleLogin: {
         userName: '',
         password: '',
-        checkList: []
+        autoLogin: false
       },
       simpleRules: {
         userName: [
@@ -142,10 +141,19 @@ export default {
             'userName': this.simpleLogin.userName,
             'password': this.simpleLogin.password
           }
+          console.log(this.simpleLogin)
           this.$axios.post('/user/login/simple', data)
             .then(response => {
               if (response !== undefined) {
-                cookie.set('userToken', response.token, { domain: 'localhost' })
+                let expires = this.simpleLogin.autoLogin?7:1
+                cookie.set(
+                  'userToken',
+                  response.token,
+                  {
+                    domain: 'localhost',
+                    expires: expires
+                  }
+                )
                 this.$router.push({ path: '/' })
               }
             })
