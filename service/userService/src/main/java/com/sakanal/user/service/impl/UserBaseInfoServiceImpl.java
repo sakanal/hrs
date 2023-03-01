@@ -10,20 +10,18 @@ import com.sakanal.base.exception.MyException;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
+import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.service.properties.MyCommonRedisProperties;
 import com.sakanal.service.utils.JwtUtils;
 import com.sakanal.service.utils.PasswordUtils;
 import com.sakanal.service.utils.RedisUtils;
 import com.sakanal.service.vo.UserBaseInfoVO;
 import com.sakanal.user.dao.UserBaseInfoDao;
-import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.user.service.UserBaseInfoService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -67,9 +65,11 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
         if (matches) {
             //登录成功 创建token，保存到redis中
             String token = JwtUtils.getUserToken(userBaseInfoEntity.getId());
-            UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
-            // token作为key，userInfo作为value，token中的有效数据为userId
-            redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
+            if (!redisUtils.hasKey(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId())) {
+                UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
+                // token作为key，userInfo作为value，token中的有效数据为userId
+                redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
+            }
             return token;
         } else {
             return null;
