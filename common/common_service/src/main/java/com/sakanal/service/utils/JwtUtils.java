@@ -17,7 +17,7 @@ import java.util.Map;
 public class JwtUtils {
 
     // 过期时间
-    public static final int EXPIRE_HOUR = 24;
+    public static final int EXPIRE_DAY = 7;
     // 密钥
     public static final String APP_SECRET = "sakanal-hrs";
 
@@ -32,7 +32,7 @@ public class JwtUtils {
             private static final long serialVersionUID = 1L;
             {
                 put("userId", id);
-                put(JWTPayload.EXPIRES_AT, DateUtil.offsetHour(new Date(),EXPIRE_HOUR));
+                put(JWTPayload.EXPIRES_AT, DateUtil.offsetDay(new Date(),EXPIRE_DAY));
             }
         };
         return JWTUtil.createToken(map, APP_SECRET.getBytes());
