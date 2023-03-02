@@ -6,6 +6,7 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.sakanal.service.entity.house.HouseBaseInfoEntity" id="houseBaseInfoMap">
         <result property="id" column="id"/>
+        <result property="cityId" column="city_id"/>
         <result property="areaId" column="area_id"/>
         <result property="categoryId" column="category_id"/>
         <result property="name" column="name"/>

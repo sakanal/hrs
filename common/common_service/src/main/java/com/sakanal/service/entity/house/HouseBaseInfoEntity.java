@@ -27,6 +27,10 @@ public class HouseBaseInfoEntity implements Serializable {
     @TableId
     private Long id;
     /**
+     * 城市id
+     */
+    private Long cityId;
+    /**
      * 区域id
      */
     private Long areaId;
