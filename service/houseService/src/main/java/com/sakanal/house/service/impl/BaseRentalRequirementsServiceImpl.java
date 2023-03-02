@@ -1,7 +1,13 @@
 package com.sakanal.house.service.impl;
 
+import com.sakanal.service.vo.RentalRequirementsVO;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -21,6 +27,12 @@ public class BaseRentalRequirementsServiceImpl extends ServiceImpl<BaseRentalReq
         IPage<BaseRentalRequirementsEntity> page = this.page(new Query<BaseRentalRequirementsEntity>().getPage(params), new QueryWrapper<BaseRentalRequirementsEntity>());
 
         return new PageUtils(page);
+    }
+
+    @Override
+    @Cacheable(value = {"RentalRequirements"},key = "#root.methodName")
+    public List<RentalRequirementsVO> getAll() {
+        return this.list().stream().map(RentalRequirementsVO::new).collect(Collectors.toList());
     }
 
 }

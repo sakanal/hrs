@@ -3,7 +3,9 @@ package com.sakanal.house.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.entity.house.BaseHighlightEntity;
+import com.sakanal.service.vo.HighlightVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface BaseHighlightService extends IService<BaseHighlightEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<HighlightVO> getAll();
 }
 

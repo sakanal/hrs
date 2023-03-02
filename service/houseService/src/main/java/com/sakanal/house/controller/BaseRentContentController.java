@@ -1,14 +1,13 @@
 package com.sakanal.house.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sakanal.service.vo.OrientationVO;
+import com.sakanal.service.vo.RentContentVO;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.house.service.BaseRentContentService;
@@ -87,5 +86,13 @@ public class BaseRentContentController {
 
         return R.ok();
     }
+
+    @GetMapping("/getAll")
+    public R getAll(){
+        List<RentContentVO> list = baseRentContentService.getAll();
+
+        return R.ok().put("data",list);
+    }
+
 
 }

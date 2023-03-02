@@ -3,7 +3,9 @@ package com.sakanal.house.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.entity.house.BaseRentalRequirementsEntity;
+import com.sakanal.service.vo.RentalRequirementsVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface BaseRentalRequirementsService extends IService<BaseRentalRequirementsEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<RentalRequirementsVO> getAll();
 }
 

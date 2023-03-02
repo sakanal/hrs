@@ -1,16 +1,14 @@
 package com.sakanal.house.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sakanal.service.vo.FacilitiesVO;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.BaseFacilitiesEntity;
 import com.sakanal.house.service.BaseFacilitiesService;
@@ -87,5 +85,13 @@ public class BaseFacilitiesController {
 
         return R.ok();
     }
+
+    @GetMapping("/getAll")
+    public R getAll(){
+        List<FacilitiesVO> list = baseFacilitiesService.getAll();
+
+        return R.ok().put("data",list);
+    }
+
 
 }
