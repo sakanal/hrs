@@ -1,24 +1,24 @@
 package com.sakanal.house.service.impl;
 
+import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.stream.Collectors;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sakanal.base.constant.CityLevelConstant;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
-
 import com.sakanal.house.dao.HouseCityDao;
-import com.sakanal.service.entity.house.HouseCityEntity;
 import com.sakanal.house.service.HouseCityService;
+import com.sakanal.service.entity.house.HouseCityEntity;
+import com.sakanal.service.vo.CityWithPinyinVO;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.*;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 
 @Service("houseCityService")
@@ -87,14 +87,45 @@ public class HouseCityServiceImpl extends ServiceImpl<HouseCityDao, HouseCityEnt
         HouseCityEntity houseCityEntity = this.getById(cityId);
         return getCityIds(houseCityEntity);
     }
-    private List<Long> getCityIds(HouseCityEntity houseCityEntity){
-        if (houseCityEntity == null){
+
+    @Override
+    @Cacheable(value = {"houseCity"}, key = "#root.methodName")
+    public List<CityWithPinyinVO> childrenWithPinyinList() {
+        // 获取level为 省/自治区/直辖市 和 市级 的城市
+        List<HouseCityEntity> houseCityEntityList = this.list(new LambdaQueryWrapper<HouseCityEntity>()
+                .eq(HouseCityEntity::getLevel, CityLevelConstant.FIRST)
+                .or().eq(HouseCityEntity::getLevel, CityLevelConstant.SECOND));
+        // 获取level为 省/自治区/直辖市 的城市
+        List<HouseCityEntity> collect = houseCityEntityList.stream().filter(houseCityEntity -> Objects.equals(houseCityEntity.getLevel(), CityLevelConstant.FIRST)).collect(Collectors.toList());
+        // 组装
+        collect = collect.stream().peek(houseCityEntity -> getGroupCity(houseCityEntity, houseCityEntityList)).collect(Collectors.toList());
+        Map<Character, List<HouseCityEntity>> characterListMap = new HashMap<>();
+        collect.forEach(houseCityEntity -> {
+            char firstPinyin = PinyinUtil.getPinyin(houseCityEntity.getName()).toUpperCase(Locale.ROOT).charAt(0);
+            List<HouseCityEntity> houseCityEntities = characterListMap.get(firstPinyin);
+            if (houseCityEntities==null){
+                houseCityEntities = new ArrayList<>();
+                houseCityEntities.add(houseCityEntity);
+                characterListMap.put(firstPinyin,houseCityEntities);
+            }else {
+                houseCityEntities.add(houseCityEntity);
+            }
+        });
+        return characterListMap.keySet().stream().map(character -> {
+            List<HouseCityEntity> houseCityEntities = characterListMap.get(character);
+            return new CityWithPinyinVO(houseCityEntities,character);
+        }).collect(Collectors.toList());
+
+    }
+
+    private List<Long> getCityIds(HouseCityEntity houseCityEntity) {
+        if (houseCityEntity == null) {
             return new ArrayList<>();
         }
         List<HouseCityEntity> houseCityEntityList = baseMapper.selectList(new LambdaQueryWrapper<HouseCityEntity>().eq(HouseCityEntity::getSuperiorId, houseCityEntity.getId()));
         List<Long> allCityIds = new ArrayList<>();
         allCityIds.add(houseCityEntity.getId());
-        if (houseCityEntityList!=null && houseCityEntityList.size()>0){
+        if (houseCityEntityList != null && houseCityEntityList.size() > 0) {
             houseCityEntityList.forEach(houseCity -> {
                 List<Long> cityIds = getCityIds(houseCity);
                 allCityIds.addAll(cityIds);

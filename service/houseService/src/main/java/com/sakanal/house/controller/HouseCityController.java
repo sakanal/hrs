@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.sakanal.service.vo.CityWithPinyinVO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,11 @@ public class HouseCityController {
         List<Long> superiorIds = houseCityService.getRelatedSuperiorIdsById(cityId);
 
         return R.ok().put("data",superiorIds);
+    }
+    @GetMapping("/childrenListWithPinyin")
+    public R childrenListWithPinyin(){
+        List<CityWithPinyinVO> list = houseCityService.childrenWithPinyinList();
+        return R.ok().put("data",list);
     }
 
 

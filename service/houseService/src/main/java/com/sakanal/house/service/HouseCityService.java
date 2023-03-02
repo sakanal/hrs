@@ -3,6 +3,7 @@ package com.sakanal.house.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.entity.house.HouseCityEntity;
+import com.sakanal.service.vo.CityWithPinyinVO;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +30,7 @@ public interface HouseCityService extends IService<HouseCityEntity> {
      * 根据id获取其下有关的所有子城市id
      */
     List<Long> getRelatedCityIdsById(Long cityId);
+
+    List<CityWithPinyinVO> childrenWithPinyinList();
 }
 
