@@ -20,10 +20,10 @@ spring:
             - Path=/admin/user/**,/user/**
           filters:
             - RewritePath=/admin/(?<segment>.*),/$\{segment}
-        - id: authService
-          uri: lb://authService
+        - id: thirdParty
+          uri: lb://thirdParty
           predicates:
-            - Path=/admin/auth/**,/auth/**
+            - Path=/admin/thirdParty/**,/thirdParty/**
           filters:
             - RewritePath=/admin/(?<segment>.*),/$\{segment}
 
