@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: thirdParty
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: b9fda02a-d2a4-4c4c-8b3e-905807233e82
+      config:
+        namespace: b9fda02a-d2a4-4c4c-8b3e-905807233e82
+        extension-configs:
+          - dataId: thirdParty.yaml
+            refresh: true
