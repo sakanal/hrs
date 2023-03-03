@@ -3,6 +3,7 @@ package com.sakanal.house.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.entity.house.HouseBaseInfoEntity;
+import com.sakanal.service.vo.PublishBaseInfoVO;
 
 import java.util.Map;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface HouseBaseInfoService extends IService<HouseBaseInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PublishBaseInfoVO getPublishBaseInfo(Long cityId);
 }
 

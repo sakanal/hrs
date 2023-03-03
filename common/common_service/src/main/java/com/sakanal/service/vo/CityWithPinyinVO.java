@@ -30,29 +30,3 @@ public class CityWithPinyinVO implements Serializable, Comparable<CityWithPinyin
         return this.pinyin - other.pinyin;
     }
 }
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class City {
-    private Long id;
-    private String name;
-    private Long superiorId;
-    private boolean hasChildren;
-    private List<City> childrenList;
-
-    public City(HouseCityEntity houseCityEntity) {
-        this.id = houseCityEntity.getId();
-        this.name = houseCityEntity.getName();
-        this.superiorId = houseCityEntity.getSuperiorId();
-        this.hasChildren = houseCityEntity.isHasChildren();
-        if (this.hasChildren) {
-            List<HouseCityEntity> childrenList = houseCityEntity.getChildrenList();
-            if (childrenList!=null && childrenList.size()>0){
-                this.childrenList = childrenList.stream().map(City::new).collect(Collectors.toList());
-            }
-        } else {
-            this.childrenList = null;
-        }
-    }
-}

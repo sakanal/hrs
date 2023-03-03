@@ -1,14 +1,14 @@
 package com.sakanal.house.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.service.entity.house.HouseCityEntity;
+import com.sakanal.service.vo.PublishBaseInfoVO;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.HouseBaseInfoEntity;
 import com.sakanal.house.service.HouseBaseInfoService;
@@ -86,6 +86,13 @@ public class HouseBaseInfoController {
 		houseBaseInfoService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @GetMapping("/getPublishBaseInfo/{cityId}")
+    public R getThirdCity(@PathVariable("cityId")Long cityId){
+        PublishBaseInfoVO publishBaseInfoVO = houseBaseInfoService.getPublishBaseInfo(cityId);
+
+        return R.ok().put("data",publishBaseInfoVO);
     }
 
 }
