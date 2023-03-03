@@ -22,6 +22,7 @@
   </div>
 </template>
 <script>
+import * as imageConversion from 'image-conversion'
 export default {
   name: 'multiUpload',
   props: {
@@ -95,26 +96,36 @@ export default {
     },
     beforeUpload (file) {
       let _self = this
-      return new Promise((resolve, reject) => {
-        this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`)
-          .then(response => {
-            _self.dataObj.policy = response.data.policy
-            _self.dataObj.signature = response.data.signature
-            _self.dataObj.ossaccessKeyId = response.data.accessKey
-            _self.dataObj.key = response.data.dir + this.getUUID() + '_${filename}'
-            // 预存所有图片的路径
-            _self.fileKeys.push({
-              key: this.dataObj.key.replace('${filename}', file.name)
+      return this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`)
+        .then(response => {
+          _self.dataObj.policy = response.data.policy
+          _self.dataObj.signature = response.data.signature
+          _self.dataObj.ossaccessKeyId = response.data.accessKey
+          _self.dataObj.key = response.data.dir + this.getUUID() + '_${filename}'
+          // 预存所有图片的路径
+          _self.fileKeys.push({
+            key: this.dataObj.key.replace('${filename}', file.name)
+          })
+          _self.dataObj.dir = response.data.dir
+          _self.dataObj.host = response.data.host
+
+          // 判断图片基础情况
+          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+          if (!isJpgOrPng) {
+            this.$message.error('上传图片只能是 JPG 或 PNG 格式!')
+          }
+          const isLt2M = file.size / 1024 / 1024 < 2
+          return new Promise((resolve) => {
+            // 小于2M 不压缩
+            if (isLt2M) {
+              resolve(file)
+            }
+            // 压缩到400KB,这里的400就是要压缩的大小,可自定义
+            imageConversion.compressAccurately(file, 400).then((res) => {
+              resolve(res)
             })
-            _self.dataObj.dir = response.data.dir
-            _self.dataObj.host = response.data.host
-            resolve(true)
           })
-          .catch(err => {
-            console.log('出错了...', err)
-            reject(false)
-          })
-      })
+        })
     },
     handleUploadSuccess (res, file, fileList) {
       this.fileKeys.forEach(fileKey => {
