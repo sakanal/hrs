@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-upload
+      multiple
       :action="dataObj.host"
       :data="dataObj"
       list-type="picture-card"
@@ -8,7 +9,6 @@
       :before-upload="beforeUpload"
       :before-remove="beforeRemove"
       :on-remove="handleRemoveSuccess"
-      :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
       :limit="maxCount"
       :on-exceed="handleExceed"
@@ -53,8 +53,7 @@ export default {
       fileKeys: []
     }
   },
-  computed: {
-  },
+  computed: {},
   mounted () {
   },
   methods: {
@@ -81,8 +80,8 @@ export default {
       let result = false
       return this.$axios.delete(`/thirdParty/OSS/remove`, { data })
         .then(response => {
-          if (response === undefined){
-            return Promise.reject();
+          if (response === undefined) {
+            return Promise.reject()
           }
         })
     },
@@ -100,47 +99,64 @@ export default {
       在当前情况下只会保存其他一个文件的policy和key以及相关数据，这样在上传的时候会存在相同的uuid
      */
     beforeUpload (file) {
-      let _self = this
-      return this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`)
-        .then(response => {
-          _self.dataObj.policy = response.data.policy
-          _self.dataObj.signature = response.data.signature
-          _self.dataObj.ossaccessKeyId = response.data.accessKey
-          _self.dataObj.key = response.data.dir + this.getUUID() + '_${filename}'
-          // 预存所有图片的路径
-          _self.fileKeys.push({
-            key: this.dataObj.key.replace('${filename}', file.name)
-          })
-          _self.dataObj.dir = response.data.dir
-          _self.dataObj.host = response.data.host
-
-          // 判断图片基础情况
-          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-          if (!isJpgOrPng) {
-            this.$message.error('上传图片只能是 JPG 或 PNG 格式!')
-          }
-          const isLt2M = file.size / 1024 / 1024 < 2
-          return new Promise((resolve) => {
-            // 小于2M 不压缩
-            if (isLt2M) {
-              resolve(file)
-            }
-            // 压缩到400KB,这里的400就是要压缩的大小,可自定义
-            imageConversion.compressAccurately(file, 400).then((res) => {
-              resolve(res)
-            })
-          })
+      console.log(file.uid)
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+      if (!isJpgOrPng) {
+        this.$message.error('上传图片只能是 JPG 或 PNG 格式!')
+      }
+      const littleName = this.getUUID() + '_' + file.name
+      if (!(file.size / 1024 / 1024 < 2)) {
+        // 压缩到400KB,这里的400就是要压缩的大小,可自定义
+        imageConversion.compressAccurately(file, 400).then((res) => {
+          const copyFile = new File([res], littleName)
+          this.handlePddUploadFile(copyFile,file.uid)
         })
+      } else {
+        const copyFile = new File([file], littleName)
+        this.handlePddUploadFile(copyFile,file.uid)
+      }
+      return false
     },
-    handleUploadSuccess (res, file, fileList) {
-      this.fileKeys.forEach(fileKey => {
-        this.fileList.push({
-          name: file.name,
-          url: this.dataObj.host + '/' + fileKey.key,
-          sort: 0,
-          uid: file.uid,
-          isDefaultImage: 0
+    // 自定义的上传form
+    handlePddUploadFile (copyFile,uid) {
+      this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`)
+        .then(response => {
+          const formData = new FormData()
+          formData.append('key', response.data.dir + '${filename}')
+          formData.append('policy', response.data.policy)
+          formData.append('signature', response.data.signature)
+          formData.append('ossaccessKeyId', response.data.accessKey)
+          formData.append('dir', response.data.dir)
+          formData.append('uid', 'uid')
+          formData.append('host', response.data.host)
+          formData.append('file', copyFile)
+          this.handlePddPostForm(response.data.host, formData)
         })
+
+    },
+    handlePddPostForm (host, formData) {
+      try {
+        // TODO 使用自己创建的axios的话可能会有点小问题（oss直传不会有返回数据）
+        this.$axios.post(host, formData)
+        .then(()=>{
+          let fileName = formData.get('file').name
+          let url = formData.get('host')+'/'+formData.get('key').replace('${filename}',fileName)
+          let uid = formData.get('uid')
+          this.handleUploadSuccess(fileName,url,uid)
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    // TODO 可能是因为uid的问题，图片上传会闪动
+    handleUploadSuccess (fileName,url,uid) {
+      this.fileList.push({
+        name: fileName,
+        url: url,
+        sort: 0,
+        uid: uid,
+        isDefaultImage: 0
       })
       this.emitInput(this.fileList)
       this.fileKeys = []
