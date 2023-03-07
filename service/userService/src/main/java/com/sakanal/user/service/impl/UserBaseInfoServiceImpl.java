@@ -87,16 +87,18 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
                 // 缓存过期，查询数据库并更新缓存
                 UserBaseInfoEntity userBaseInfo = this.getById(userId);
                 if (userBaseInfo!=null){
-                    UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(this.getById(userId));
+                    UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfo);
                     redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userId, userBaseInfoVO, redisProperties.getExpireTime());
                     return userBaseInfoVO;
+                }else {
+                    // token中的数据无效
+                    throw new MyException(ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getMsg(),ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getCode());
                 }
             }
         }else {
             // token无效
             throw new MyException(ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getMsg(),ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getCode());
         }
-        return null;
     }
 
 }
