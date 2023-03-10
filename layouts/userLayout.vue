@@ -58,9 +58,9 @@
       <el-row style="background-color: #f6f8fb;height: 100%" type="flex" class="row-bg" justify="center">
         <el-col :span="19" style="height: 100%;">
           <el-container>
-            <el-aside style="height: 100%;">
+            <el-aside width="240px" style="height: 100%;">
               <el-row style="height: 100%;">
-                <el-col :span="20" style="height: 100%;">
+                <el-col :span="22" style="height: 100%;">
                   <el-menu :router="true"
                            style="min-height: 1000px"
                            default-active="/user/info"
