@@ -56,7 +56,7 @@
             <el-menu-item index="/business/info">账户资料</el-menu-item>
             <el-menu-item index="/business/fund">我的资金</el-menu-item>
             <el-menu-item index="/business/service">订购服务</el-menu-item>
-            <el-menu-item index="5">一键发布</el-menu-item>
+            <el-menu-item index="/business/publish/toPublish">一键发布</el-menu-item>
           </el-menu>
         </el-col>
       </el-row>

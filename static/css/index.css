@@ -4,7 +4,7 @@
   padding: 0;
 }
 html, body{
-  min-height: 1000px;
+  /*min-height: 1000px;*/
 }
 body #__nuxt,#__layout {
   height: 100%;
