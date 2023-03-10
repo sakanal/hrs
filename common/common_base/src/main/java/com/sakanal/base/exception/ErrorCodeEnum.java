@@ -5,7 +5,8 @@ public enum ErrorCodeEnum {
     REPEAT_USERNAME_EXCEPTION(10001,"重复的用户名"),
     LOGIN_FAIL_EXCEPTION(10010,"登录失败"),
     TOKEN_EXPIRE_EXCEPTION(10011,"登录失效"),
-    TOKEN_INVALID_EXCEPTION(10012,"用户无效");
+    TOKEN_INVALID_EXCEPTION(10012,"用户无效"),
+    PUBLISH_FAIL_EXCEPTION(20001,"发布失败");
 
     private final int code;
     private final String msg;

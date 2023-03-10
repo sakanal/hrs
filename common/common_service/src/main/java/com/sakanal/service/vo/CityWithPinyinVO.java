@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,11 +17,11 @@ public class CityWithPinyinVO implements Serializable, Comparable<CityWithPinyin
     private static final long serialVersionUID = 1L;
 
     private char pinyin;
-    private List<City> cityList;
+    private List<CityVO> cityList;
 
     public CityWithPinyinVO(List<HouseCityEntity> houseCityEntityList, char pinyin) {
         this.pinyin = pinyin;
-        this.cityList = houseCityEntityList.stream().map(City::new).collect(Collectors.toList());
+        this.cityList = houseCityEntityList.stream().map(CityVO::new).collect(Collectors.toList());
     }
 
     @Override

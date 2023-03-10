@@ -1,6 +1,6 @@
 package com.sakanal.base.constant;
 
-public class ShowStatusConstant {
+public class ShowStateConstant {
     //隐藏
     public static final Integer HIDE_STATUS =  0;
     //显示

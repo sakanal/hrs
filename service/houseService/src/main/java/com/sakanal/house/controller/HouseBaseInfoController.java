@@ -3,9 +3,12 @@ package com.sakanal.house.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.exception.ErrorCodeEnum;
+import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.entity.house.HouseCityEntity;
 import com.sakanal.service.vo.PublishBaseInfoVO;
 import org.springframework.web.bind.annotation.*;
@@ -93,6 +96,15 @@ public class HouseBaseInfoController {
         PublishBaseInfoVO publishBaseInfoVO = houseBaseInfoService.getPublishBaseInfo(cityId);
 
         return R.ok().put("data",publishBaseInfoVO);
+    }
+    @PostMapping("/submitPublishBaseInfo")
+    public R submitPublishBaseInfo(@RequestBody PublishInfoDTO publishInfoDTO){
+        if (houseBaseInfoService.submitPublish(publishInfoDTO)){
+            return R.ok();
+        }else {
+            return R.error(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg());
+        }
+
     }
 
 }

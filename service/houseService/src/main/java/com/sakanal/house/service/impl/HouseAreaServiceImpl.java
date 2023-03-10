@@ -18,8 +18,8 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.sakanal.base.constant.ShowStatusConstant.HIDE_STATUS;
-import static com.sakanal.base.constant.ShowStatusConstant.SHOW_STATUS;
+import static com.sakanal.base.constant.ShowStateConstant.HIDE_STATUS;
+import static com.sakanal.base.constant.ShowStateConstant.SHOW_STATUS;
 
 
 @Service("houseAreaService")

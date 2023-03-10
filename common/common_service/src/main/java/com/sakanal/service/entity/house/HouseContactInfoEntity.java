@@ -44,10 +44,12 @@ public class HouseContactInfoEntity implements Serializable {
     /**
      * 接听时段_start
      */
+    @JsonFormat(pattern = "hh:mm")
     private Date answerPeriodTimeStart;
     /**
      * 接听时段_end
      */
+    @JsonFormat(pattern = "hh:mm")
     private Date answerPeriodTimeEnd;
     /**
      * 是否删除 0-未删除 1-已删除
