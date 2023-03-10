@@ -9,7 +9,7 @@ import com.sakanal.base.exception.MyException;
 import com.sakanal.house.service.*;
 import com.sakanal.service.dto.*;
 import com.sakanal.service.entity.house.*;
-import com.sakanal.service.vo.PublishBaseInfoVO;
+import com.sakanal.service.vo.CityWithAreaVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -64,7 +64,7 @@ public class HouseBaseInfoServiceImpl extends ServiceImpl<HouseBaseInfoDao, Hous
 
     @Override
     @Cacheable(value = {"HouseBaseInfo"},key = "#root.methodName")
-    public PublishBaseInfoVO getPublishBaseInfo(Long cityId) {
+    public CityWithAreaVO getPublishBaseInfo(Long cityId) {
         // 根据 市级城市id 获取 省级城市数据
         List<HouseCityEntity> cityList = houseCityService.list(new LambdaQueryWrapper<HouseCityEntity>().eq(HouseCityEntity::getSuperiorId, cityId).eq(HouseCityEntity::getLevel, CityLevelConstant.THIRD));
         // 获取交通路以及小区数据
@@ -75,7 +75,7 @@ public class HouseBaseInfoServiceImpl extends ServiceImpl<HouseBaseInfoDao, Hous
         // 城市相关的小区
         List<HouseAreaEntity> areaList = roadAndAreaList.stream().filter(houseAreaEntity -> Objects.equals(houseAreaEntity.getLevel(), AreaLevelConstant.SECOND)).collect(Collectors.toList());
         // 组装数据
-        return new PublishBaseInfoVO(cityList,roadList,areaList);
+        return new CityWithAreaVO(cityList,roadList,areaList);
     }
 
     @Override

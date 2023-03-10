@@ -1,16 +1,12 @@
 package com.sakanal.house.controller;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.service.dto.PublishInfoDTO;
-import com.sakanal.service.entity.house.HouseCityEntity;
-import com.sakanal.service.vo.PublishBaseInfoVO;
+import com.sakanal.service.vo.CityWithAreaVO;
 import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.HouseBaseInfoEntity;
@@ -91,9 +87,9 @@ public class HouseBaseInfoController {
         return R.ok();
     }
 
-    @GetMapping("/getPublishBaseInfo/{cityId}")
+    @GetMapping("/getThirdCity/{cityId}")
     public R getThirdCity(@PathVariable("cityId")Long cityId){
-        PublishBaseInfoVO publishBaseInfoVO = houseBaseInfoService.getPublishBaseInfo(cityId);
+        CityWithAreaVO publishBaseInfoVO = houseBaseInfoService.getPublishBaseInfo(cityId);
 
         return R.ok().put("data",publishBaseInfoVO);
     }
