@@ -866,12 +866,15 @@ export default {
     },
     toPublish () {
       if (this.validateAll()) {
+        // TODO 临时设置默认图片
+        let imageForm = this.imageForm
+        imageForm[0].isDefaultImage=1
         this.$axios.post('/house/housebaseinfo/submitPublishBaseInfo', {
           publishId: this.userInfo.id,
           baseInfo: this.baseForm,
           rentInfo: this.rentForm,
           detailedInfo: this.detailedForm,
-          imageInfoList: this.imageForm,
+          imageInfoList: imageForm,
           contactInfo: this.contactForm,
         }).then(response => {
           if(response!==undefined){
