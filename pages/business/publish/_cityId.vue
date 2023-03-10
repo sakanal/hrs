@@ -469,7 +469,7 @@ export default {
       await $axios.get(`/house/basehighlight/getAll`),
       await $axios.get(`/house/baserentalrequirements/getAll`),
       await $axios.get(`/house/baserentcontent/getAll`),
-      await $axios.get(`/house/housebaseinfo/getPublishBaseInfo/${params.cityId}`),
+      await $axios.get(`/house/housebaseinfo/getThirdCity/${params.cityId}`),
     ])
     return {
       cityId: params.cityId,
