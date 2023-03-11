@@ -5,7 +5,9 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.entity.house.HouseBaseInfoEntity;
 import com.sakanal.service.vo.CityWithAreaVO;
+import com.sakanal.service.vo.PublishBaseInfoVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,5 +24,7 @@ public interface HouseBaseInfoService extends IService<HouseBaseInfoEntity> {
     CityWithAreaVO getPublishBaseInfo(Long cityId);
 
     boolean submitPublish(PublishInfoDTO publishInfoDTO);
+
+    PageUtils getPublishInfoList(Long publishId, Integer state, Integer current);
 }
 

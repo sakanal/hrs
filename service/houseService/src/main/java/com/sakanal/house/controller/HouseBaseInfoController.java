@@ -1,20 +1,17 @@
 package com.sakanal.house.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.base.exception.ErrorCodeEnum;
+import com.sakanal.base.utils.PageUtils;
+import com.sakanal.base.utils.R;
+import com.sakanal.house.service.HouseBaseInfoService;
 import com.sakanal.service.dto.PublishInfoDTO;
+import com.sakanal.service.entity.house.HouseBaseInfoEntity;
 import com.sakanal.service.vo.CityWithAreaVO;
 import org.springframework.web.bind.annotation.*;
 
-import com.sakanal.service.entity.house.HouseBaseInfoEntity;
-import com.sakanal.house.service.HouseBaseInfoService;
-import com.sakanal.base.utils.PageUtils;
-import com.sakanal.base.utils.R;
-
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -93,14 +90,23 @@ public class HouseBaseInfoController {
 
         return R.ok().put("data",publishBaseInfoVO);
     }
+
     @PostMapping("/submitPublishBaseInfo")
-    public R submitPublishBaseInfo(@RequestBody PublishInfoDTO publishInfoDTO){
-        if (houseBaseInfoService.submitPublish(publishInfoDTO)){
+    public R submitPublishBaseInfo(@RequestBody PublishInfoDTO publishInfoDTO) {
+        if (houseBaseInfoService.submitPublish(publishInfoDTO)) {
             return R.ok();
-        }else {
+        } else {
             return R.error(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg());
         }
 
     }
 
+    @GetMapping("/getPublishInfoList/{publishId}")
+    public R getPublishInfoList(@PathVariable("publishId") Long publishId,
+                                @RequestParam(value = "state", required = false) Integer state,
+                                @RequestParam(value = "current", defaultValue = "1") Integer currentPage) {
+        PageUtils page = houseBaseInfoService.getPublishInfoList(publishId, state, currentPage);
+
+        return R.ok().put("page",page);
+    }
 }
