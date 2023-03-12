@@ -21,10 +21,8 @@ public interface HouseBaseInfoService extends IService<HouseBaseInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    CityWithAreaVO getPublishBaseInfo(Long cityId);
+    CityWithAreaVO getCityWithAreaInfo(Long cityId);
 
-    boolean submitPublish(PublishInfoDTO publishInfoDTO);
-
-    PageUtils getPublishInfoList(Long publishId, Integer state, Integer current);
+    List<PublishBaseInfoVO> getPublishInfoList(Long publishId, Integer state, int offset, Integer limit);
 }
 

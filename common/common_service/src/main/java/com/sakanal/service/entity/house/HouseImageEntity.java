@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 房源图片表
@@ -64,4 +65,17 @@ public class HouseImageEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HouseImageEntity that = (HouseImageEntity) o;
+        return baseInfoId.equals(that.baseInfoId) && name.equals(that.name) && url.equals(that.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(baseInfoId, name, url);
+    }
 }

@@ -21,5 +21,10 @@ public interface HouseAreaService extends IService<HouseAreaEntity> {
     List<HouseAreaEntity> childrenList(Long cityId);
 
     boolean updateShowStateById(HouseAreaEntity houseAreaEntity);
+
+    /**
+     * 根据areaId获取roadId
+     */
+    Long getRelatedSuperiorIdById(Long areaId);
 }
 

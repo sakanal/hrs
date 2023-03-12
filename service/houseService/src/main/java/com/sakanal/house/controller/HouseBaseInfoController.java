@@ -7,6 +7,7 @@ import com.sakanal.house.service.HouseBaseInfoService;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.entity.house.HouseBaseInfoEntity;
 import com.sakanal.service.vo.CityWithAreaVO;
+import com.sakanal.service.vo.PublishInfoVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -86,27 +87,9 @@ public class HouseBaseInfoController {
 
     @GetMapping("/getThirdCity/{cityId}")
     public R getThirdCity(@PathVariable("cityId")Long cityId){
-        CityWithAreaVO publishBaseInfoVO = houseBaseInfoService.getPublishBaseInfo(cityId);
+        CityWithAreaVO cityWithAreaVO = houseBaseInfoService.getCityWithAreaInfo(cityId);
 
-        return R.ok().put("data",publishBaseInfoVO);
+        return R.ok().put("data",cityWithAreaVO);
     }
 
-    @PostMapping("/submitPublishBaseInfo")
-    public R submitPublishBaseInfo(@RequestBody PublishInfoDTO publishInfoDTO) {
-        if (houseBaseInfoService.submitPublish(publishInfoDTO)) {
-            return R.ok();
-        } else {
-            return R.error(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg());
-        }
-
-    }
-
-    @GetMapping("/getPublishInfoList/{publishId}")
-    public R getPublishInfoList(@PathVariable("publishId") Long publishId,
-                                @RequestParam(value = "state", required = false) Integer state,
-                                @RequestParam(value = "current", defaultValue = "1") Integer currentPage) {
-        PageUtils page = houseBaseInfoService.getPublishInfoList(publishId, state, currentPage);
-
-        return R.ok().put("page",page);
-    }
 }

@@ -17,6 +17,10 @@ import java.util.List;
 public class PublishInfoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 发布时-发布人id
+     * 修改时-基础信息id
+     */
     private Long publishId;
     private BaseInfoDTO baseInfo;
     private RentInfoDTO rentInfo;

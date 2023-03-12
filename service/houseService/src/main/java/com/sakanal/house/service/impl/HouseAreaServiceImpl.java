@@ -161,5 +161,12 @@ public class HouseAreaServiceImpl extends ServiceImpl<HouseAreaDao, HouseAreaEnt
         }
     }
 
+    @Override
+    public Long getRelatedSuperiorIdById(Long areaId) {
+        HouseAreaEntity area = this.getById(areaId);
+        HouseAreaEntity road = this.getOne(new LambdaQueryWrapper<HouseAreaEntity>().eq(HouseAreaEntity::getId, area.getSuperiorId()).select(HouseAreaEntity::getId));
+        return road.getId();
+    }
+
 
 }

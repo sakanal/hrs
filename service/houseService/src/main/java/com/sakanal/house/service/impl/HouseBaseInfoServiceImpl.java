@@ -60,7 +60,7 @@ public class HouseBaseInfoServiceImpl extends ServiceImpl<HouseBaseInfoDao, Hous
 
     @Override
     @Cacheable(value = {"HouseBaseInfo"},key = "#root.methodName")
-    public CityWithAreaVO getPublishBaseInfo(Long cityId) {
+    public CityWithAreaVO getCityWithAreaInfo(Long cityId) {
         // 根据 市级城市id 获取 省级城市数据
         List<HouseCityEntity> cityList = houseCityService.list(new LambdaQueryWrapper<HouseCityEntity>().eq(HouseCityEntity::getSuperiorId, cityId).eq(HouseCityEntity::getLevel, CityLevelConstant.THIRD));
         // 获取交通路以及小区数据
@@ -75,136 +75,9 @@ public class HouseBaseInfoServiceImpl extends ServiceImpl<HouseBaseInfoDao, Hous
     }
 
     @Override
-    public boolean submitPublish(PublishInfoDTO publishInfoDTO) {
-        // 存储房源基础信息数据
-        CompletableFuture<Long> houseIdCompletableFuture = CompletableFuture.supplyAsync(() -> {
-            PublishInfoDTO.BaseInfoDTO baseInfo = publishInfoDTO.getBaseInfo();
-            HouseBaseInfoEntity houseBaseInfoEntity = new HouseBaseInfoEntity();
-            BeanUtils.copyProperties(baseInfo, houseBaseInfoEntity);
-            houseBaseInfoEntity.setCategoryId(0L);
-            if (this.save(houseBaseInfoEntity)) {
-                return houseBaseInfoEntity.getId();
-            } else {
-                throw new MyException(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode());
-            }
-        }, executor);
-        houseIdCompletableFuture.thenApplyAsync((houseBaseInfoId) -> {
-            // 存储 发布状态 数据
-            CompletableFuture.runAsync(()->{
-                HouseStateEntity houseStateEntity = new HouseStateEntity();
-                houseStateEntity.setBaseInfoId(houseBaseInfoId);
-                houseStateEntity.setPublisherId(publishInfoDTO.getPublishId());
-                houseStateEntity.setHousePublishState(PublishStateConstant.EXAMINE_STATE);
-                if (!stateService.save(houseStateEntity)) {
-                    throw new MyException(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode());
-                }
-            },executor);
-            // 存储 租金 信息数据
-            CompletableFuture<Void> rentInfoCompletableFuture = CompletableFuture.runAsync(() -> {
-                PublishInfoDTO.RentInfoDTO rentInfo = publishInfoDTO.getRentInfo();
-                HouseRentInfoEntity houseRentInfoEntity = new HouseRentInfoEntity();
-                BeanUtils.copyProperties(rentInfo, houseRentInfoEntity);
-                houseRentInfoEntity.setBaseInfoId(houseBaseInfoId);
-                houseRentInfoEntity.setRentContentIds(StringUtils.join(rentInfo.getRentContentIds(), "/"));
-                if (!rentInfoService.save(houseRentInfoEntity)) {
-                    throw new MyException(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode());
-                }
-            }, executor);
-            // 存储 详细 信息数据
-            CompletableFuture<Void> detailedInfoCompletableFuture = CompletableFuture.runAsync(() -> {
-                PublishInfoDTO.DetailedInfoDTO detailedInfo = publishInfoDTO.getDetailedInfo();
-                HouseDetailedInfoEntity houseDetailedInfoEntity = new HouseDetailedInfoEntity();
-                BeanUtils.copyProperties(detailedInfo,houseDetailedInfoEntity);
-                houseDetailedInfoEntity.setBaseInfoId(houseBaseInfoId);
-                houseDetailedInfoEntity.setBaseFacilitiesIds(StringUtils.join(detailedInfo.getBaseFacilitiesIds(), "/"));
-                houseDetailedInfoEntity.setBaseHighlightIds(StringUtils.join(detailedInfo.getBaseHighlightIds(),"/"));
-                houseDetailedInfoEntity.setBaseRentalRequirementIds(StringUtils.join(detailedInfo.getBaseRentalRequirementIds(),"/"));
-                if (!detailedInfoService.save(houseDetailedInfoEntity)){
-                    throw new MyException(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode());
-                }
-            }, executor);
-            // 存储 图片 信息数据
-            CompletableFuture<Void> imageInfoListCompletableFuture = CompletableFuture.runAsync(() -> {
-                List<PublishInfoDTO.ImageInfoDTO> imageInfoList = publishInfoDTO.getImageInfoList();
-                ArrayList<HouseImageEntity> houseImageEntityList = new ArrayList<>();
-                imageInfoList.forEach(imageInfoDTO -> {
-                    HouseImageEntity houseImageEntity = new HouseImageEntity();
-                    BeanUtils.copyProperties(imageInfoDTO,houseImageEntity);
-                    houseImageEntity.setBaseInfoId(houseBaseInfoId);
-                    houseImageEntityList.add(houseImageEntity);
-                });
-                if (!imageService.saveBatch(houseImageEntityList)) {
-                    throw new MyException(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode());
-                }
-                }, executor);
-            // 存储 联系人基础 信息数据
-            CompletableFuture<Void> contactInfoCompletableFuture = CompletableFuture.runAsync(() -> {
-                PublishInfoDTO.ContactInfoDTO contactInfo = publishInfoDTO.getContactInfo();
-                HouseContactInfoEntity houseContactInfoEntity = new HouseContactInfoEntity();
-                BeanUtils.copyProperties(contactInfo,houseContactInfoEntity);
-                houseContactInfoEntity.setBaseInfoId(houseBaseInfoId);
-                if (!contactInfoService.save(houseContactInfoEntity)) {
-                    throw new MyException(ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getMsg(), ErrorCodeEnum.PUBLISH_FAIL_EXCEPTION.getCode());
-                }
-                }, executor);
-
-            CompletableFuture<Void> allOf = CompletableFuture.allOf(rentInfoCompletableFuture, detailedInfoCompletableFuture, imageInfoListCompletableFuture, contactInfoCompletableFuture);
-            allOf.exceptionally((error)->{
-                System.out.println("allOf");
-                System.out.println(error.getMessage());
-                return null;
-            });
-            allOf.join();
-            return true;
-        }, executor);
-        houseIdCompletableFuture.exceptionally((error)->{
-            System.out.println("baseInfoId");
-            System.out.println(error.getMessage());
-            return null;
-        });
-
-        try {
-            return houseIdCompletableFuture.get() != null;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public List<PublishBaseInfoVO> getPublishInfoList(Long publishId, Integer state, int offset, Integer limit) {
+        return baseMapper.getPublishInfoList(publishId,state,offset,limit);
     }
 
-    @Override
-    public PageUtils getPublishInfoList(Long publishId, Integer state, Integer current) {
-        int offset = (current - 1) * PageConstant.LIMIT;
-        LambdaQueryWrapper<HouseStateEntity> totalQueryWrapper = new LambdaQueryWrapper<HouseStateEntity>().eq(HouseStateEntity::getPublisherId, publishId);
-        if (state!=null){
-            totalQueryWrapper.eq(HouseStateEntity::getHousePublishState,state);
-        }
-        long totalCount = stateService.count(totalQueryWrapper);
-        // 获取数据，当前数据没有房源所在道路名称，只有所在道路id
-        List<PublishBaseInfoVO> publishBaseInfoVOList = baseMapper.getPublishInfoList(publishId, state, offset, PageConstant.LIMIT);
-        if (publishBaseInfoVOList!=null && publishBaseInfoVOList.size()>0){
-            // 获取房源所在道路
-            Set<Long> roadIds = publishBaseInfoVOList.stream().map(PublishBaseInfoVO::getRoadId).collect(Collectors.toSet());
-            if (roadIds.size()>0){
-                HashMap<Long, String> roadMap = new HashMap<>();
-                houseAreaService.listByIds(roadIds).forEach(houseAreaEntity -> roadMap.put(houseAreaEntity.getId(),houseAreaEntity.getName()));
-                publishBaseInfoVOList.forEach(publishBaseInfoVO -> publishBaseInfoVO.setRoadName(roadMap.get(publishBaseInfoVO.getRoadId())));
-            }
-            // 获取房源的所有有关图片
-            Set<Long> baseInfoIds = publishBaseInfoVOList.stream().map(PublishBaseInfoVO::getBaseInfoId).collect(Collectors.toSet());
-            if (baseInfoIds.size()>0){
-                List<HouseImageEntity> imageList = imageService.list(new LambdaQueryWrapper<HouseImageEntity>().in(HouseImageEntity::getBaseInfoId, baseInfoIds));
-                publishBaseInfoVOList.forEach(publishBaseInfoVO -> {
-                    Long baseInfoId = publishBaseInfoVO.getBaseInfoId();
-                    List<String> needImageList = imageList.stream().filter(houseImageEntity -> Objects.equals(houseImageEntity.getBaseInfoId(), baseInfoId))
-                            .map(HouseImageEntity::getUrl)
-                            .collect(Collectors.toList());
-                    publishBaseInfoVO.setImageList(needImageList);
-                });
-            }
-
-            return new PageUtils(publishBaseInfoVOList, Math.toIntExact(totalCount),PageConstant.LIMIT,current);
-        }
-        return null;
-    }
 
 }
