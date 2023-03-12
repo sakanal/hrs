@@ -304,7 +304,7 @@
                           </div>
                         </el-row>
                         <el-row style="margin-top: 25px">
-                          <multi-upload fileDir="house/" v-model="imageForm" @multiUpload="multiUpload"></multi-upload>
+                          <multi-upload ref="multiUpload" fileDir="house/" v-model="imageForm" @multiUpload="multiUpload"></multi-upload>
                         </el-row>
                       </el-col>
                     </el-form-item>
@@ -370,6 +370,7 @@
                 </el-form>
               </el-col>
               <el-col style="text-align: center;margin-top: 20px">
+                <el-button size="medium" type="primary" style="width: 30%" @click="goBack">返回</el-button>
                 <el-button size="medium" type="danger" style="width: 30%" @click="toPublish">发布</el-button>
               </el-col>
             </el-tab-pane>
@@ -462,25 +463,32 @@ export default {
       highlightList,
       rentalRequirementsList,
       rentContentList,
-      cityWithAreaVO
+      publishInfo
     ] = await Promise.all([
       await $axios.get(`/house/baseorientation/getAll`),
       await $axios.get(`/house/basefacilities/getAll`),
       await $axios.get(`/house/basehighlight/getAll`),
       await $axios.get(`/house/baserentalrequirements/getAll`),
       await $axios.get(`/house/baserentcontent/getAll`),
-      await $axios.get(`/house/housebaseinfo/getThirdCity/${params.cityId}`),
+      await $axios.get(`/house/houseInfo/getPublishInfo/${params.baseInfoId}`),
     ])
     return {
-      cityId: params.cityId,
+      baseInfoId: params.baseInfoId,
       orientationList: orientationList.data,
       facilitiesList: facilitiesList.data,
       highlightList: highlightList.data,
       rentalRequirementsList: rentalRequirementsList.data,
       rentContentList: rentContentList.data,
-      roadList: cityWithAreaVO.data.roadList,
-      areaList: cityWithAreaVO.data.areaList,
-      cityList: cityWithAreaVO.data.cityList
+      baseForm: publishInfo.data.baseInfo,
+      cityId: publishInfo.data.baseInfo.cityId,
+      roadId: publishInfo.data.baseInfo.roadId,
+      rentForm: publishInfo.data.rentInfo,
+      detailedForm: publishInfo.data.detailedInfo,
+      imageForm: publishInfo.data.imageInfoList,
+      contactForm: publishInfo.data.contactInfo,
+      cityList: publishInfo.data.cityWithAreaVO.cityList,
+      roadList: publishInfo.data.cityWithAreaVO.roadList,
+      areaList: publishInfo.data.cityWithAreaVO.areaList
     }
   },
   data () {
@@ -489,6 +497,7 @@ export default {
       userInfo: {},
       cityId: '',
       cityList: [],
+      roadId: '',
       roadList: [],
       selectRoadList: [],
       areaList: [],
@@ -842,6 +851,20 @@ export default {
     multiUpload (value) {
       this.imageForm = value
     },
+    initRoadListAndAreaList(cityId,roadId){
+      let roadList = this.roadList
+      let areaList = this.areaList
+      for (let i = 0; i < roadList.length; i++) {
+        if (roadList[i].cityId === cityId) {
+          this.selectRoadList.push(roadList[i])
+        }
+      }
+      for (let i = 0; i < areaList.length; i++) {
+        if (areaList[i].superiorId === roadId) {
+          this.selectAreaList.push(areaList[i])
+        }
+      }
+    },
     changeRoadList (value) {
       let roadList = this.roadList
       this.selectRoadList = []
@@ -869,8 +892,8 @@ export default {
         // TODO 临时设置默认图片
         let imageForm = this.imageForm
         imageForm[0].isDefaultImage=1
-        this.$axios.post('/house/houseInfo/submitPublishBaseInfo', {
-          publishId: this.userInfo.id,
+        this.$axios.post('/house/houseInfo/updatePublishBaseInfo', {
+          publishId: this.baseInfoId,
           baseInfo: this.baseForm,
           rentInfo: this.rentForm,
           detailedInfo: this.detailedForm,
@@ -948,6 +971,9 @@ export default {
       // if(clientHeight+scrollTop > expHeight) {
       //   alert('123')
       // }
+    },
+    goBack(){
+      this.$router.go(-1)
     }
   },
   // 监听属性 类似于data概念
@@ -1003,10 +1029,16 @@ export default {
     } else {
       this.$router.push({ path: '/login' })
     }
+    // 初始化数据
+    this.initRoadListAndAreaList(this.cityId,this.roadId)
+    this.contactForm.publisherIdentity = this.contactForm.publisherIdentity.toString()
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted () {
     window.addEventListener('scroll', this.handleScroll)
+    // 初始化组件数据
+    this.$refs.multiUpload.initFileList()
+    this.validateAll()
   },
   // 生命周期 - 创建之前
   beforeCreate () {

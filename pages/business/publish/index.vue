@@ -16,7 +16,11 @@
               </el-col>
               <el-col :span="14">
                 <div>
-                  <template v-text="publishInfo.houseTitle">房源标题</template>
+                  <template>
+                    <div class="my-title">
+                      {{ publishInfo.houseTitle }}
+                    </div>
+                  </template>
                 </div>
                 <div class="div-house-info">
                   <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
@@ -61,7 +65,11 @@
               </el-col>
               <el-col :span="14">
                 <div>
-                  <template v-text="publishInfo.houseTitle">房源标题</template>
+                  <template>
+                    <div class="my-title">
+                      {{ publishInfo.houseTitle }}
+                    </div>
+                  </template>
                 </div>
                 <div class="div-house-info">
                   <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
@@ -107,7 +115,11 @@
               </el-col>
               <el-col :span="14">
                 <div>
-                  <template v-text="publishInfo.houseTitle">房源标题</template>
+                  <template>
+                    <div class="my-title">
+                      {{ publishInfo.houseTitle }}
+                    </div>
+                  </template>
                 </div>
                 <div class="div-house-info">
                   <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
@@ -131,6 +143,7 @@
                   元/月
                 </span>
                 <template v-else>面议</template>
+                <el-button type="danger" @click="toChangeHouseInfo(publishInfo.baseInfoId)">再次发布</el-button>
               </el-col>
             </el-row>
             <el-divider></el-divider>
@@ -187,7 +200,7 @@ export default {
     },
     getPublishInfoList (current, state) {
       let publishId = this.userInfo.id
-      this.$axios.get(`/house/housebaseinfo/getPublishInfoList/${publishId}`, {
+      this.$axios.get(`/house/houseInfo/getPublishInfoList/${publishId}`, {
         params: {
           state,
           current
@@ -256,9 +269,17 @@ export default {
 </script>
 
 <style scoped>
-.div-house-info{
+.div-house-info {
   color: #777;
   font-size: 12px;
   padding: 10px 0 5px 0;
 }
+.my-title {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
 </style>

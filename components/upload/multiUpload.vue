@@ -26,6 +26,8 @@ import * as imageConversion from 'image-conversion'
 export default {
   name: 'multiUpload',
   props: {
+    //图片属性数组
+    value: Array,
     // 最大上传图片数量
     maxCount: {
       type: Number,
@@ -58,6 +60,9 @@ export default {
   mounted () {
   },
   methods: {
+    initFileList() {
+      this.fileList = this.value
+    },
     getUUID () {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
         return (c === 'x' ? (Math.random() * 16 | 0) : ('r&0x3' | '0x8')).toString(16)
