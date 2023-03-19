@@ -35,18 +35,18 @@
             rent.monthly_rent monthlyRent,
             image.url,
             contact.publisher_name publisherName,
-            contact.publisher_identity publisherIdentity,
-            area.superior_id roadId,
-            base.area_id areaId,
-            area.`name` areaName
+        contact.publisher_identity publisherIdentity,
+        area.superior_id roadId,
+        base.area_id areaId,
+        area.`name` areaName
         FROM house_state state INNER JOIN house_base_info base ON state.base_info_id = base.id
-                               INNER JOIN house_rent_info rent ON state.base_info_id = rent.base_info_id
-                               INNER JOIN house_image image ON state.base_info_id = image.base_info_id
-                               INNER JOIN house_contact_info contact ON state.base_info_id = contact.base_info_id
-                               INNER JOIN house_area area ON base.area_id = area.id
+        INNER JOIN house_rent_info rent ON state.base_info_id = rent.base_info_id
+        INNER JOIN house_image image ON state.base_info_id = image.base_info_id
+        INNER JOIN house_contact_info contact ON state.base_info_id = contact.base_info_id
+        INNER JOIN house_area area ON base.area_id = area.id
         WHERE
-            image.is_default_image = 1
-          <if test="publishId != null">
+        image.is_default_image = 1 AND state.is_deleted = 0
+        <if test="publishId != null">
               AND state.publisher_id = #{publishId}
           </if>
           <if test="state != null">

@@ -33,8 +33,11 @@ public class PublishInfoVO implements Serializable {
     @NoArgsConstructor
     public static class BaseInfoVO {
         private Long cityId;
+        private String cityName;
         private Long roadId;
+        private String roadName;
         private Long areaId;
+        private String areaName;
         private String houseTitle;
         private String name;
         private Integer roomNumber;
@@ -46,6 +49,7 @@ public class PublishInfoVO implements Serializable {
         private Boolean hasElevator;
         private Boolean hasParkingPlace;
         private Long orientationId;
+        private String orientation;
 
         public void setName(String name) {
             this.name = name;
@@ -67,6 +71,7 @@ public class PublishInfoVO implements Serializable {
         private Integer payNumber;
         private Integer mortgageNumber;
         private List<Long> rentContentIds;
+        private List<String> rentContentList;
 
         public RentInfoVO(HouseRentInfoEntity rentInfo) {
             BeanUtils.copyProperties(rentInfo, this);
@@ -90,8 +95,11 @@ public class PublishInfoVO implements Serializable {
         private Integer lookingHouseTimeState;
         private Integer decorationState;
         private List<Long> baseFacilitiesIds;
+        private List<String> baseFacilitiesList;
         private List<Long> baseHighlightIds;
+        private List<String> baseHighlightList;
         private List<Long> baseRentalRequirementIds;
+        private List<String> baseRentalRequirementList;
         private String houseDetailedDescription;
 
         public DetailedInfoVO(HouseDetailedInfoEntity detailedInfo) {

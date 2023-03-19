@@ -38,5 +38,6 @@ public class PublishBaseInfoVO implements Serializable {
     private String roadName;
     private Long areaId;
     private String areaName;
+    private Integer state;
 
 }

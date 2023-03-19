@@ -2,6 +2,7 @@ package com.sakanal.house.service;
 
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.dto.PublishInfoDTO;
+import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.vo.PublishInfoVO;
 
 public interface HouseService {
@@ -9,8 +10,11 @@ public interface HouseService {
 
     boolean updatePublish(PublishInfoDTO publishInfoDTO);
 
-    PageUtils getPublishInfoList(Long publishId, Integer state, Integer current);
+    PageUtils getPublishInfoList(PublishInfoListDTO publishInfoListDTO);
 
-    PublishInfoVO getPublishInfo(String houseBaseInfoId);
+    PublishInfoVO getUpdatePublishInfo(Long houseBaseInfoId);
 
+    PublishInfoVO getPublishInfo(Long houseBaseInfoId);
+
+    boolean changePublishState(Long houseBaseInfoId, Integer state);
 }

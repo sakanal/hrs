@@ -1,13 +1,17 @@
 package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.sakanal.base.constant.CityLevelConstant;
 import com.sakanal.base.constant.PageConstant;
 import com.sakanal.base.constant.PublishStateConstant;
 import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.exception.MyException;
 import com.sakanal.base.utils.PageUtils;
+import com.sakanal.house.dao.HouseDao;
 import com.sakanal.house.service.*;
 import com.sakanal.service.dto.PublishInfoDTO;
+import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.entity.house.*;
 import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.service.vo.PublishInfoVO;
@@ -29,6 +33,8 @@ public class HouseServiceImpl implements HouseService {
     @Resource
     private ThreadPoolExecutor executor;
     @Resource
+    private HouseDao houseDao;
+    @Resource
     private HouseBaseInfoService baseInfoService;
     @Resource
     private HouseRentInfoService rentInfoService;
@@ -44,6 +50,16 @@ public class HouseServiceImpl implements HouseService {
     private HouseCityService houseCityService;
     @Resource
     private HouseAreaService houseAreaService;
+    @Resource
+    private BaseRentContentService baseRentContentService;
+    @Resource
+    private BaseFacilitiesService baseFacilitiesService;
+    @Resource
+    private BaseHighlightService baseHighlightService;
+    @Resource
+    private BaseOrientationService baseOrientationService;
+    @Resource
+    private BaseRentalRequirementsService baseRentalRequirementsService;
 
 
     @Override
@@ -212,20 +228,14 @@ public class HouseServiceImpl implements HouseService {
             contactInfoService.update(houseContactInfoEntity, new LambdaQueryWrapper<HouseContactInfoEntity>().eq(HouseContactInfoEntity::getBaseInfoId, baseInfoId));
         }, executor);
 
-        CompletableFuture.allOf(baseInfoCompletableFuture,rentInfoCompletableFuture,detailedInfoCompletableFuture,imageInfoCompletableFuture,contactInfoCompletableFuture).join();
+        CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedInfoCompletableFuture, imageInfoCompletableFuture, contactInfoCompletableFuture).join();
         return true;
     }
 
-    @Override
-    public PageUtils getPublishInfoList(Long publishId, Integer state, Integer current) {
-        int offset = (current - 1) * PageConstant.LIMIT;
-        LambdaQueryWrapper<HouseStateEntity> totalQueryWrapper = new LambdaQueryWrapper<HouseStateEntity>().eq(HouseStateEntity::getPublisherId, publishId);
-        if (state != null) {
-            totalQueryWrapper.eq(HouseStateEntity::getHousePublishState, state);
-        }
-        long totalCount = stateService.count(totalQueryWrapper);
-        // 获取数据，当前数据没有房源所在道路名称，只有所在道路id
-        List<PublishBaseInfoVO> publishBaseInfoVOList = baseInfoService.getPublishInfoList(publishId, state, offset, PageConstant.LIMIT);
+    /**
+     * 添加所有图片以及获取道路id
+     */
+    public void setPublishBaseOtherInfo(List<PublishBaseInfoVO> publishBaseInfoVOList) {
         if (publishBaseInfoVOList != null && publishBaseInfoVOList.size() > 0) {
             // 获取房源所在道路
             Set<Long> roadIds = publishBaseInfoVOList.stream().map(PublishBaseInfoVO::getRoadId).collect(Collectors.toSet());
@@ -246,23 +256,35 @@ public class HouseServiceImpl implements HouseService {
                     publishBaseInfoVO.setImageList(needImageList);
                 });
             }
-
-            return new PageUtils(publishBaseInfoVOList, Math.toIntExact(totalCount), PageConstant.LIMIT, current);
         }
-        return null;
     }
 
     @Override
-    public PublishInfoVO getPublishInfo(String houseBaseInfoId) {
+    public PageUtils getPublishInfoList(PublishInfoListDTO publishInfoListDTO) {
+        long totalCount = houseDao.countPublishList(publishInfoListDTO);
+        // 先判断cityId的层级
+        List<Long> cityIds = houseCityService.getRelatedCityIdsById(publishInfoListDTO.getCityId());
+        if (cityIds != null && cityIds.size() > 1) {
+            publishInfoListDTO.setCityId(null);
+            cityIds = houseCityService.listByIds(cityIds).stream()
+                    .filter(houseCityEntity -> Objects.equals(houseCityEntity.getLevel(), CityLevelConstant.THIRD))
+                    .map(HouseCityEntity::getId).collect(Collectors.toList());
+            publishInfoListDTO.setCityIdList(cityIds);
+        }
+        // 获取数据，当前数据没有房源所在道路名称，只有所在道路id，也没有所有图片数据，只有默认图片url
+        List<PublishBaseInfoVO> publishBaseInfoVOList = houseDao.getPublishInfoList(publishInfoListDTO);
+        setPublishBaseOtherInfo(publishBaseInfoVOList);
+        return new PageUtils(publishBaseInfoVOList, Math.toIntExact(totalCount), PageConstant.LIMIT, publishInfoListDTO.getCurrent());
+    }
+
+    public PublishInfoVO getPublishInfoFromDataBase(Long houseBaseInfoId) {
         PublishInfoVO publishInfoVO = new PublishInfoVO();
-        publishInfoVO.setHouseBaseInfoId(Long.valueOf(houseBaseInfoId));
+        publishInfoVO.setHouseBaseInfoId(houseBaseInfoId);
         // 获取基本信息
         CompletableFuture<Void> baseInfoCompletableFuture = CompletableFuture.runAsync(() -> {
             HouseBaseInfoEntity baseInfo = baseInfoService.getById(houseBaseInfoId);
             publishInfoVO.setBaseInfo(new PublishInfoVO.BaseInfoVO(baseInfo));
-        }, executor).thenRunAsync(() -> {
-            List<Long> relatedIds = houseCityService.getRelatedSuperiorIdsById(publishInfoVO.getBaseInfo().getCityId());
-            publishInfoVO.setCityWithAreaVO(baseInfoService.getCityWithAreaInfo(relatedIds.get(relatedIds.size() - 1)));
+            // 获取房源所在道路id
             Long roadId = houseAreaService.getRelatedSuperiorIdById(publishInfoVO.getBaseInfo().getAreaId());
             publishInfoVO.getBaseInfo().setRoadId(roadId);
         }, executor);
@@ -291,5 +313,86 @@ public class HouseServiceImpl implements HouseService {
 
         CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedInfoCompletableFuture, imageListCompletableFuture, contactInfoCompletableFuture).join();
         return publishInfoVO;
+
+    }
+
+    @Override
+    public PublishInfoVO getUpdatePublishInfo(Long houseBaseInfoId) {
+        PublishInfoVO publishInfoVO = getPublishInfoFromDataBase(houseBaseInfoId);
+        // 获取相关的城市id
+        List<Long> relatedIds = houseCityService.getRelatedSuperiorIdsById(publishInfoVO.getBaseInfo().getCityId());
+        publishInfoVO.setCityWithAreaVO(baseInfoService.getCityWithAreaInfo(relatedIds.get(relatedIds.size() - 1)));
+        return publishInfoVO;
+    }
+
+    @Override
+    public PublishInfoVO getPublishInfo(Long houseBaseInfoId) {
+        PublishInfoVO publishInfoVO = getPublishInfoFromDataBase(houseBaseInfoId);
+        CompletableFuture<Void> baseInfoCompletableFuture = CompletableFuture.runAsync(() -> {
+            PublishInfoVO.BaseInfoVO baseInfo = publishInfoVO.getBaseInfo();
+            // 为基础信息填充所需的数据，即从id到name
+            Long cityId = baseInfo.getCityId();
+            baseInfo.setCityName(houseCityService.getOne(new LambdaQueryWrapper<HouseCityEntity>().eq(HouseCityEntity::getId, cityId).select(HouseCityEntity::getName)).getName());
+            Long roadId = baseInfo.getRoadId();
+            baseInfo.setRoadName(houseAreaService.getOne(new LambdaQueryWrapper<HouseAreaEntity>().eq(HouseAreaEntity::getId, roadId).select(HouseAreaEntity::getName)).getName());
+            Long areaId = baseInfo.getAreaId();
+            baseInfo.setAreaName(houseAreaService.getOne(new LambdaQueryWrapper<HouseAreaEntity>().eq(HouseAreaEntity::getId, areaId).select(HouseAreaEntity::getName)).getName());
+            Long orientationId = baseInfo.getOrientationId();
+            baseInfo.setOrientation(baseOrientationService.getOne(new LambdaQueryWrapper<BaseOrientationEntity>().eq(BaseOrientationEntity::getId, orientationId).select(BaseOrientationEntity::getOrientation)).getOrientation());
+        }, executor);
+        CompletableFuture<Void> rentInfoCompletableFuture = CompletableFuture.runAsync(() -> {
+            PublishInfoVO.RentInfoVO rentInfo = publishInfoVO.getRentInfo();
+            //为租金信息填充所需数据
+            List<Long> rentContentIds = rentInfo.getRentContentIds();
+            rentInfo.setRentContentList(baseRentContentService
+                    .list(new LambdaQueryWrapper<BaseRentContentEntity>()
+                            .in(BaseRentContentEntity::getId, rentContentIds)
+                            .select(BaseRentContentEntity::getRentContentName)
+                    ).stream().map(BaseRentContentEntity::getRentContentName).collect(Collectors.toList())
+            );
+        }, executor);
+        CompletableFuture<Void> detailedCompletableFuture = CompletableFuture.runAsync(() -> {
+            PublishInfoVO.DetailedInfoVO detailedInfo = publishInfoVO.getDetailedInfo();
+            // 为详细详细填充所需数据
+            List<Long> baseFacilitiesIds = detailedInfo.getBaseFacilitiesIds();
+            if (baseFacilitiesIds.size() > 0) {
+                detailedInfo.setBaseFacilitiesList(baseFacilitiesService
+                        .list(new LambdaQueryWrapper<BaseFacilitiesEntity>()
+                                .in(BaseFacilitiesEntity::getId, baseFacilitiesIds)
+                                .select(BaseFacilitiesEntity::getName)
+                        ).stream().map(BaseFacilitiesEntity::getName).collect(Collectors.toList())
+                );
+            }
+            List<Long> baseHighlightIds = detailedInfo.getBaseHighlightIds();
+            if (baseHighlightIds.size() > 0) {
+                detailedInfo.setBaseHighlightList(baseHighlightService
+                        .list(new LambdaQueryWrapper<BaseHighlightEntity>()
+                                .in(BaseHighlightEntity::getId, baseHighlightIds)
+                                .select(BaseHighlightEntity::getName)
+                        ).stream().map(BaseHighlightEntity::getName).collect(Collectors.toList())
+                );
+            }
+            List<Long> baseRentalRequirementIds = detailedInfo.getBaseRentalRequirementIds();
+            if (baseRentalRequirementIds.size() > 0) {
+                detailedInfo.setBaseRentalRequirementList(baseRentalRequirementsService
+                        .list(new LambdaQueryWrapper<BaseRentalRequirementsEntity>()
+                                .in(BaseRentalRequirementsEntity::getId, baseRentalRequirementIds)
+                                .select(BaseRentalRequirementsEntity::getName)
+                        ).stream().map(BaseRentalRequirementsEntity::getName).collect(Collectors.toList())
+                );
+            }
+        }, executor);
+        CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedCompletableFuture).join();
+        return publishInfoVO;
+    }
+
+    @Override
+    public boolean changePublishState(Long houseBaseInfoId, Integer state) {
+        if (state >= 0 && state <= 4) {
+            return stateService.update(new LambdaUpdateWrapper<HouseStateEntity>()
+                    .eq(HouseStateEntity::getBaseInfoId, houseBaseInfoId)
+                    .set(HouseStateEntity::getHousePublishState, state));
+        }
+        return false;
     }
 }

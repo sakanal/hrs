@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sakanal.house.dao.HouseDao">
+
+    <select id="getPublishInfoList" resultType="com.sakanal.service.vo.PublishBaseInfoVO">
+        SELECT
+        base.id baseInfoId,
+        base.`name` houseTitle,
+        base.room_number roomNumber,
+        base.hall_number hallNumber,
+        base.cloakroom_number cloakroomNumber,
+        base.area_covered areaCovered,
+        rent.monthly_rent monthlyRent,
+        image.url,
+        contact.publisher_name publisherName,
+        contact.publisher_identity publisherIdentity,
+        area.superior_id roadId,
+        base.area_id areaId,
+        area.`name` areaName,
+        state.house_publish_state state
+        FROM house_state state INNER JOIN house_base_info base ON state.base_info_id = base.id
+        INNER JOIN house_rent_info rent ON state.base_info_id = rent.base_info_id
+        INNER JOIN house_image image ON state.base_info_id = image.base_info_id
+        INNER JOIN house_contact_info contact ON state.base_info_id = contact.base_info_id
+        INNER JOIN house_area area ON base.area_id = area.id
+        <where>
+            image.is_default_image = 1
+            <if test="isDeleted == null">
+                AND state.is_deleted = 0
+            </if>
+            <if test="isDeleted != null">
+                AND state.is_deleted = #{isDeleted}
+            </if>
+            <if test="publisherId !=null">
+                AND state.publisher_id=#{publisherId}
+            </if>
+            <if test="cityId!=null">
+                AND base.city_id=#{cityId}
+            </if>
+            <if test="cityIdList != null and cityIdList.size()>0">
+                AND base.city_id IN
+                <foreach collection="cityIdList" item="cityId" separator="," open="(" close=")">
+                    #{cityId}
+                </foreach>
+            </if>
+            <if test="areaId!=null">
+                AND base.area_id=#{areaId}
+            </if>
+            <if test="state!=null">
+                AND state.house_publish_state=#{state}
+            </if>
+        </where>
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="countPublishList" resultType="java.lang.Long">
+        SELECT
+        COUNT(base.id)
+        FROM house_state state INNER JOIN house_base_info base ON state.base_info_id = base.id
+        <where>
+            <if test="isDeleted == null">
+                state.is_deleted = 0
+            </if>
+            <if test="isDeleted != null">
+                state.is_deleted = #{isDeleted}
+            </if>
+            <if test="publisherId !=null">
+                AND state.publisher_id=#{publisherId}
+            </if>
+            <if test="cityId!=null">
+                AND base.city_id=#{cityId}
+            </if>
+            <if test="cityIdList != null and cityIdList.size()>0">
+                AND base.city_id IN
+                <foreach collection="cityIdList" item="cityId" separator="," open="(" close=")">
+                    #{cityId}
+                </foreach>
+            </if>
+            <if test="areaId!=null">
+                AND base.area_id=#{areaId}
+            </if>
+            <if test="state!=null">
+                AND state.house_publish_state=#{state}
+            </if>
+        </where>
+    </select>
+</mapper>
