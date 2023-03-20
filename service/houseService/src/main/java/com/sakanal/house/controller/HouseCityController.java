@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sakanal.service.vo.CityWithPinyinVO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,19 @@ public class HouseCityController {
     @GetMapping("/childrenListWithPinyin")
     public R childrenListWithPinyin(){
         List<CityWithPinyinVO> list = houseCityService.childrenWithPinyinList();
+        return R.ok().put("data",list);
+    }
+    @GetMapping("/getCityIdByCityName/{cityName}")
+    public  R getCityIdByCityName(@PathVariable String cityName){
+        // 根据城市名获取城市id
+        Long id = houseCityService.list(new LambdaQueryWrapper<HouseCityEntity>().select(HouseCityEntity::getId).like(HouseCityEntity::getName, cityName).last("limit 1")).get(0).getId();
+        return R.ok().put("data",id);
+    }
+    @GetMapping("/getNextChildrenListByCityId/{cityId}")
+    public R getNextChildrenListByCityId(@PathVariable Long cityId){
+        List<HouseCityEntity> list = houseCityService.list(new LambdaQueryWrapper<HouseCityEntity>()
+                .select(HouseCityEntity::getId,HouseCityEntity::getName)
+                .eq(HouseCityEntity::getSuperiorId, cityId));
         return R.ok().put("data",list);
     }
 
