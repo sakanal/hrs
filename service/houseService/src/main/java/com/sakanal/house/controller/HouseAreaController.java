@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.AreaLevelConstant;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +46,14 @@ public class HouseAreaController {
     public R childrenList(@RequestBody HouseAreaEntity houseAreaEntity){
         List<HouseAreaEntity> list = houseAreaService.childrenList(houseAreaEntity.getCityId());
 
+        return R.ok().put("data",list);
+    }
+    @GetMapping("/getRoadListByCityId/{cityId}")
+    public R getRoadListByCityId(@PathVariable Long cityId){
+        List<HouseAreaEntity> list = houseAreaService.list(new LambdaQueryWrapper<HouseAreaEntity>()
+                .eq(HouseAreaEntity::getCityId, cityId)
+                .eq(HouseAreaEntity::getLevel, AreaLevelConstant.SECOND)
+        );
         return R.ok().put("data",list);
     }
 
