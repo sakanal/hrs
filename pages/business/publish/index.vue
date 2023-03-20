@@ -199,13 +199,8 @@ export default {
       this.getPublishInfoList(currentPage,this.tabNumber)
     },
     getPublishInfoList (current, state) {
-      let publishId = this.userInfo.id
-      this.$axios.get(`/house/houseInfo/getPublishInfoList/${publishId}`, {
-        params: {
-          state,
-          current
-        }
-      }).then(response => {
+      let publisherId = this.userInfo.id
+      this.$axios.post(`/house/houseInfo/getPublishInfoList`,{ publisherId,state,current }).then(response => {
         if (response.page!==null){
           this.currentPage = response.page.currPage
           this.pageSize = response.page.pageSize

@@ -141,7 +141,6 @@ export default {
             'userName': this.simpleLogin.userName,
             'password': this.simpleLogin.password
           }
-          console.log(this.simpleLogin)
           this.$axios.post('/user/login/simple', data)
             .then(response => {
               if (response !== undefined) {

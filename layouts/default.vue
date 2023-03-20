@@ -1,16 +1,15 @@
 <template>
   <el-container>
     <!--  NUXT header部分  -->
-    <el-header height="30px">
+    <el-header height="120px">
       <el-row style="background-color: #fbfbfb;height: 30px;line-height: 30px" type="flex" class="row-bg" justify="center">
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            logo
-            <el-link :underline="false" href="/">首页</el-link>
+            {{cityName}} [<nuxt-link style="text-decoration: none" to="/location">切换城市</nuxt-link>]
           </div>
         </el-col>
         <el-col :span="7"/>
-        <el-col :span="6">
+        <el-col :span="6" class=" my-el-menu">
           <el-menu class="my-el-menu-header" style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">
@@ -42,12 +41,27 @@
           </el-menu>
         </el-col>
       </el-row>
+      <el-divider/>
+      <el-row style="background-color: #fbfbfb;height: 90px;line-height: 90px" type="flex" class="row-bg" justify="center">
+        <el-col :span="6">
+          <div>
+            logo
+            <el-link :underline="false" href="/">首页</el-link>
+          </div>
+        </el-col>
+        <el-col :span="7"></el-col>
+        <el-col :span="6">
+<!--          <div style="height: 100%;width: 100%">-->
+<!--            <nuxt-link to="/business/publish/toPublish">免费发布</nuxt-link>-->
+<!--          </div>-->
+        </el-col>
+      </el-row>
     </el-header>
     <!--  NUXT主体部分  -->
     <el-divider/>
     <el-main>
       <el-row type="flex" class="row-bg" justify="center">
-        <el-col :span="19">
+        <el-col :span="24">
           <Nuxt/>
         </el-col>
       </el-row>
@@ -80,7 +94,8 @@ export default {
   data () {
     // 这里存放数据
     return {
-      userInfo: {}
+      userInfo: {},
+      cityName: '',
     }
   },
   // 方法集合
@@ -92,6 +107,18 @@ export default {
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    getLocation () {
+      const key = 'SKJBZ-7SRRT-H45XT-V4KYJ-6OKUV-B7BFG'
+      const url = 'https://apis.map.qq.com/ws/location/v1/ip'
+      this.$jsonp(url, {
+        key,
+        output: 'jsonp'
+      }).then(res => {
+        this.cityName = res.result.ad_info.city
+        cookie.set('cityName',res.result.ad_info.city,{domain: 'localhost'})
+      })
+
     }
   },
   // 监听属性 类似于data概念
@@ -109,6 +136,12 @@ export default {
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted () {
+    let cityName = cookie.get('cityName')
+    if (!cityName){
+      this.getLocation()
+    }else {
+      this.cityName = cityName
+    }
   },
   // 生命周期 - 创建之前
   beforeCreate () {
@@ -148,7 +181,7 @@ export default {
   height: 30px;
   line-height: 30px ;
 }
-.el-menu--horizontal>.el-menu-item{
+.my-el-menu .el-menu--horizontal>.el-menu-item{
   height: 30px;
   line-height: 30px;
 }

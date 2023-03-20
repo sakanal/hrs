@@ -470,7 +470,7 @@ export default {
       await $axios.get(`/house/basehighlight/getAll`),
       await $axios.get(`/house/baserentalrequirements/getAll`),
       await $axios.get(`/house/baserentcontent/getAll`),
-      await $axios.get(`/house/houseInfo/getPublishInfo/${params.baseInfoId}`),
+      await $axios.get(`/house/houseInfo/getUpdatePublishInfo/${params.baseInfoId}`),
     ])
     return {
       baseInfoId: params.baseInfoId,
