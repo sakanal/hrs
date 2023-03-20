@@ -265,7 +265,9 @@ public class HouseServiceImpl implements HouseService {
         // 先判断cityId的层级
         List<Long> cityIds = houseCityService.getRelatedCityIdsById(publishInfoListDTO.getCityId());
         if (cityIds != null && cityIds.size() > 1) {
+            // 如果选中的city不是第三层数据
             publishInfoListDTO.setCityId(null);
+            // 获取选中的城市以及其下属的所有城市id
             cityIds = houseCityService.listByIds(cityIds).stream()
                     .filter(houseCityEntity -> Objects.equals(houseCityEntity.getLevel(), CityLevelConstant.THIRD))
                     .map(HouseCityEntity::getId).collect(Collectors.toList());
