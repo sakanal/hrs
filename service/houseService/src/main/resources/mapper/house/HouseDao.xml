@@ -50,7 +50,7 @@
                 AND base.area_id=#{areaId}
             </if>
             <if test="areaIdList !=null and areaIdList.size()>0">
-                AND base.areaId IN
+                AND base.area_id IN
                 <foreach collection="areaIdList" item="areaId" separator="," open="(" close=")">
                     #{areaId}
                 </foreach>
@@ -110,7 +110,7 @@
                 AND base.area_id=#{areaId}
             </if>
             <if test="areaIdList !=null and areaIdList.size()>0">
-                AND base.areaId IN
+                AND base.area_id IN
                 <foreach collection="areaIdList" item="areaId" separator="," open="(" close=")">
                     #{areaId}
                 </foreach>
