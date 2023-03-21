@@ -7,7 +7,9 @@
     </div>
     <el-row type="flex" class="row-bg" justify="center" style="margin-top: 20px">
       <el-col :span="19">
+<!--        搜索条件-->
         <div class="div-search-info">
+<!--          地区条件-->
           <div>
             <span>地区：</span>
             <el-button type="text" @click="changeChildrenCity(undefined)" :class="childrenCityQuery===undefined?'my-button-active':'my-button-unActive'">不限</el-button>
@@ -15,6 +17,7 @@
               <el-button type="text" @click="changeChildrenCity(childrenCity.id)" :class="childrenCityQuery===childrenCity.id?'my-button-active':'my-button-unActive'">{{ childrenCity.name }}</el-button>
             </template>
           </div>
+<!--          道路条件-->
           <div v-if="roadVisible">
             <span>道路：</span>
             <el-button type="text" @click="changeRoad(undefined)" :class="roadId===undefined?'my-button-active':'my-button-unActive'">不限</el-button>
@@ -22,6 +25,7 @@
               <el-button type="text" @click="changeRoad(road.id)"  :class="roadId===road.id?'my-button-active':'my-button-unActive'">{{ road.name }}</el-button>
             </template>
           </div>
+<!--          租金条件-->
           <div>
             <span>租金：</span>
             <template>
@@ -36,6 +40,7 @@
               <el-button type="text" @click="changeRent('4000_')" :class="rentQuery==='4000_'?'my-button-active':'my-button-unActive'">4000元以上</el-button>
             </template>
           </div>
+<!--          厅室条件-->
           <div>
             <span>厅室：</span>
             <template>
@@ -61,6 +66,7 @@
               </el-select>
             </template>
           </div>
+<!--          其他条件-->
           <div>
             <span>其他：</span>
             <template>
@@ -94,6 +100,7 @@
             </template>
           </el-tab-pane>
         </el-tabs>
+<!--        结果展示-->
         <div>
           <div v-for="publishInfo in publishInfoList">
             <el-row :gutter="20">
@@ -141,6 +148,7 @@
             <el-divider></el-divider>
           </div>
         </div>
+<!--        分页条-->
         <el-pagination
           :hide-on-single-page="true"
           @current-change="currentChange"
@@ -188,7 +196,7 @@ export default {
       orientation: '',
       decorationId: '',
       decoration: '',
-      roadId:'',
+      roadId:undefined,
       roadList: ''
     }
   },
@@ -264,23 +272,27 @@ export default {
     currentChange(currentPage){
       this.getPublishInfoList(currentPage)
     },
-    getRoadList(cityId){
+    getRoadList(cityId,roadId){
       this.$axios.get(`/house/housearea/getRoadListByCityId/${cityId}`)
       .then(response=>{
-        console.log(response.data)
         this.roadList=response.data
+        if (roadId){
+          this.roadId=parseInt(roadId)
+        }else {
+          this.roadId=undefined
+        }
       })
     },
     // 从url中获取数据
     setQuery (query) {
-      this.childrenCityId = query.childrenCityId
-      if (query.childrenCityId) {
+      this.childrenCityQuery = parseInt(query.childrenCityQuery)
+      if (query.childrenCityQuery) {
         // 显示交通路搜索
-        this.getRoadList(this.childrenCityId)
+        this.getRoadList(this.childrenCityQuery,query.roadId)
         this.roadVisible = true
-        this.roadId=query.roadId
       } else {
         // 隐藏交通路搜索
+        this.childrenCityQuery=undefined
         this.roadVisible = false
         this.roadId=undefined
       }
@@ -299,7 +311,7 @@ export default {
       this.$router.push({
         path: '/',
         query: {
-          childrenCityId: this.childrenCityQuery,
+          childrenCityQuery: this.childrenCityQuery,
           roadId: this.roadId,
           rentQuery: this.rentQuery,
           hallQuery: this.hallQuery,
@@ -311,10 +323,12 @@ export default {
     },
     changeChildrenCity (cityId) {
       this.childrenCityQuery = cityId
+      this.roadId=undefined
       this.toQuery()
     },
     changeRoad(roadId){
       this.roadId=roadId
+      console.log(typeof roadId)
       this.toQuery()
     },
     changeRent (rentQuery) {
