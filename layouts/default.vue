@@ -5,7 +5,7 @@
       <el-row style="background-color: #fbfbfb;height: 30px;line-height: 30px" type="flex" class="row-bg" justify="center">
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            {{cityName}} [<nuxt-link style="text-decoration: none" to="/location">切换城市</nuxt-link>]
+            {{cityName}} [<nuxt-link style="text-decoration: none" to="/house/location">切换城市</nuxt-link>]
           </div>
         </el-col>
         <el-col :span="7"/>
