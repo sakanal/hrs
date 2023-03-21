@@ -23,8 +23,8 @@
                   </template>
                 </div>
                 <div class="div-house-info">
-                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
                   <template v-if="publishInfo.hallNumber>0">{{publishInfo.hallNumber}}厅</template>
+                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
                   <template v-if="publishInfo.cloakroomNumber>0">{{publishInfo.cloakroomNumber}}卫</template>
                   <template v-if="publishInfo.areaCovered>0">{{publishInfo.areaCovered}}㎡</template>
                 </div>
@@ -72,8 +72,8 @@
                   </template>
                 </div>
                 <div class="div-house-info">
-                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
                   <template v-if="publishInfo.hallNumber>0">{{publishInfo.hallNumber}}厅</template>
+                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
                   <template v-if="publishInfo.cloakroomNumber>0">{{publishInfo.cloakroomNumber}}卫</template>
                   <template v-if="publishInfo.areaCovered>0">{{publishInfo.areaCovered}}㎡</template>
                 </div>
@@ -122,8 +122,8 @@
                   </template>
                 </div>
                 <div class="div-house-info">
-                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
                   <template v-if="publishInfo.hallNumber>0">{{publishInfo.hallNumber}}厅</template>
+                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
                   <template v-if="publishInfo.cloakroomNumber>0">{{publishInfo.cloakroomNumber}}卫</template>
                   <template v-if="publishInfo.areaCovered>0">{{publishInfo.areaCovered}}㎡</template>
                 </div>
