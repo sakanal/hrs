@@ -281,8 +281,12 @@ public class HouseServiceImpl implements HouseService {
                     .select(HouseAreaEntity::getId)
                     .eq(HouseAreaEntity::getSuperiorId, roadId)
             ).stream().map(HouseAreaEntity::getId).collect(Collectors.toList());
-            publishInfoListDTO.setRoadId(null);
-            publishInfoListDTO.setAreaIdList(areaIdList);
+            if (areaIdList.size()>0){
+                publishInfoListDTO.setRoadId(null);
+                publishInfoListDTO.setAreaIdList(areaIdList);
+            }else {
+                publishInfoListDTO.setAreaId(-1L);
+            }
         }
         // 先获取当前条件下的总记录数
         long totalCount = houseDao.countPublishList(publishInfoListDTO);
