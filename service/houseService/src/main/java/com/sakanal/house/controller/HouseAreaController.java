@@ -52,7 +52,7 @@ public class HouseAreaController {
     public R getRoadListByCityId(@PathVariable Long cityId){
         List<HouseAreaEntity> list = houseAreaService.list(new LambdaQueryWrapper<HouseAreaEntity>()
                 .eq(HouseAreaEntity::getCityId, cityId)
-                .eq(HouseAreaEntity::getLevel, AreaLevelConstant.SECOND)
+                .eq(HouseAreaEntity::getLevel, AreaLevelConstant.FIRST)
         );
         return R.ok().put("data",list);
     }
