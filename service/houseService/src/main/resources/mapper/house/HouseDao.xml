@@ -25,6 +25,7 @@
         INNER JOIN house_image image ON state.base_info_id = image.base_info_id
         INNER JOIN house_contact_info contact ON state.base_info_id = contact.base_info_id
         INNER JOIN house_area area ON base.area_id = area.id
+        INNER JOIN house_detailed_info AS detailed ON base.id = detailed.base_info_id
         <where>
             image.is_default_image = 1
             <if test="isDeleted == null">
@@ -48,17 +49,44 @@
             <if test="areaId!=null">
                 AND base.area_id=#{areaId}
             </if>
+            <if test="areaIdList !=null and areaIdList.size()>0">
+                AND base.areaId IN
+                <foreach collection="areaIdList" item="areaId" separator="," open="(" close=")">
+                    #{areaId}
+                </foreach>
+            </if>
+            <if test="minRent !=null">
+                AND rent.monthly_rent <![CDATA[>=]]> #{minRent}
+            </if>
+            <if test="maxRent !=null">
+                AND rent.monthly_rent  <![CDATA[<=]]> #{maxRent}
+            </if>
+            <if test="hallQuery!=null">
+                AND base.hall_number <![CDATA[>=]]> #{hallQuery}
+            </if>
+            <if test="roomQuery!=null">
+                AND base.room_number <![CDATA[>=]]> #{roomQuery}
+            </if>
+            <if test="orientationId!=null">
+                AND base.orientation_id=#{orientationId}
+            </if>
+            <if test="decoration!=null">
+                AND detailed.decoration_state=#{decoration}
+            </if>
             <if test="state!=null">
                 AND state.house_publish_state=#{state}
             </if>
         </where>
+        ORDER BY base.hall_number ASC ,base.room_number ASC
         LIMIT #{offset},#{limit}
     </select>
 
     <select id="countPublishList" resultType="java.lang.Long">
         SELECT
         COUNT(base.id)
-        FROM house_state state INNER JOIN house_base_info base ON state.base_info_id = base.id
+        FROM house_state AS state INNER JOIN house_base_info AS base ON state.base_info_id = base.id
+        INNER JOIN house_rent_info AS rent ON base.id = rent.base_info_id
+        INNER JOIN house_detailed_info AS detailed ON base.id = detailed.base_info_id
         <where>
             <if test="isDeleted == null">
                 state.is_deleted = 0
@@ -80,6 +108,30 @@
             </if>
             <if test="areaId!=null">
                 AND base.area_id=#{areaId}
+            </if>
+            <if test="areaIdList !=null and areaIdList.size()>0">
+                AND base.areaId IN
+                <foreach collection="areaIdList" item="areaId" separator="," open="(" close=")">
+                    #{areaId}
+                </foreach>
+            </if>
+            <if test="minRent !=null">
+                AND rent.monthly_rent <![CDATA[>=]]> #{minRent}
+            </if>
+            <if test="maxRent !=null">
+                AND rent.monthly_rent  <![CDATA[<=]]> #{maxRent}
+            </if>
+            <if test="hallQuery!=null">
+                AND base.hall_number <![CDATA[>=]]> #{hallQuery}
+            </if>
+            <if test="roomQuery!=null">
+                AND base.room_number <![CDATA[>=]]> #{roomQuery}
+            </if>
+            <if test="orientationId!=null">
+                AND base.orientation_id=#{orientationId}
+            </if>
+            <if test="decoration!=null">
+                AND detailed.decoration_state=#{decoration}
             </if>
             <if test="state!=null">
                 AND state.house_publish_state=#{state}

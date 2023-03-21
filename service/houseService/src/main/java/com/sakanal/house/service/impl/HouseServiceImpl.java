@@ -261,20 +261,34 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public PageUtils getPublishInfoList(PublishInfoListDTO publishInfoListDTO) {
-        long totalCount = houseDao.countPublishList(publishInfoListDTO);
-        // 先判断cityId的层级
+        // 搜索条件有cityId，先判断cityId的层级
+        // 如果cityId是第三层数据，则直接进行搜索，否则需要获取该该层级下的所有cityId，根据所有的cityId进行搜索
         List<Long> cityIds = houseCityService.getRelatedCityIdsById(publishInfoListDTO.getCityId());
         if (cityIds != null && cityIds.size() > 1) {
             // 如果选中的city不是第三层数据
-            publishInfoListDTO.setCityId(null);
             // 获取选中的城市以及其下属的所有城市id
             cityIds = houseCityService.listByIds(cityIds).stream()
                     .filter(houseCityEntity -> Objects.equals(houseCityEntity.getLevel(), CityLevelConstant.THIRD))
                     .map(HouseCityEntity::getId).collect(Collectors.toList());
+            publishInfoListDTO.setCityId(null);
             publishInfoListDTO.setCityIdList(cityIds);
         }
         // 获取数据，当前数据没有房源所在道路名称，只有所在道路id，也没有所有图片数据，只有默认图片url
+        if(publishInfoListDTO.getRoadId()!=null && publishInfoListDTO.getRoadId()>0){
+            // 搜索条件有道路id，获取其下的所有住宅区
+            Long roadId = publishInfoListDTO.getRoadId();
+            List<Long> areaIdList = houseAreaService.list(new LambdaQueryWrapper<HouseAreaEntity>()
+                    .select(HouseAreaEntity::getId)
+                    .eq(HouseAreaEntity::getSuperiorId, roadId)
+            ).stream().map(HouseAreaEntity::getId).collect(Collectors.toList());
+            publishInfoListDTO.setRoadId(null);
+            publishInfoListDTO.setAreaIdList(areaIdList);
+        }
+        // 先获取当前条件下的总记录数
+        long totalCount = houseDao.countPublishList(publishInfoListDTO);
+        // 再获取当前条件下的实际记录
         List<PublishBaseInfoVO> publishBaseInfoVOList = houseDao.getPublishInfoList(publishInfoListDTO);
+        // 为每条记录填充相关数据（图片，道路id）
         setPublishBaseOtherInfo(publishBaseInfoVOList);
         return new PageUtils(publishBaseInfoVOList, Math.toIntExact(totalCount), PageConstant.LIMIT, publishInfoListDTO.getCurrent());
     }

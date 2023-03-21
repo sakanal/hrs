@@ -23,6 +23,8 @@ public class PublishInfoListDTO implements Serializable {
     private List<Long> cityIdList;
     // 房源所在道路
     private Long roadId;
+    // 所在道路下的所有住宅区
+    private List<Long> areaIdList;
     // 房源所在小区
     private Long areaId;
     // 房源租金范围
@@ -31,6 +33,7 @@ public class PublishInfoListDTO implements Serializable {
     private Long maxRent;
     // 房源厅室数量
     private String hallQuery;
+    private String roomQuery;
     // 房源朝向id
     private Long orientationId;
     // 房源装修情况
