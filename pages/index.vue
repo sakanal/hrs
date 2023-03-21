@@ -103,23 +103,23 @@
 <!--        结果展示-->
         <div>
           <div v-for="publishInfo in publishInfoList">
-            <el-row :gutter="20">
-              <el-col :span="6">
+            <el-row :gutter="20" class="my-house-info">
+              <el-col :span="5">
                 <div>
                   <el-image
-                    style="width: 200px; height: 110px"
+                    style="width: 240px; height: 120px;margin-top: 5px"
                     :src="publishInfo.url"
                     :fit="'cover'"
                     :preview-src-list="publishInfo.imageList"></el-image>
                 </div>
               </el-col>
-              <el-col :span="14">
-                <div>
-                  <template>
-                    <div class="my-title">
-                      {{ publishInfo.houseTitle }}
-                    </div>
-                  </template>
+              <el-col :span="15">
+                <div class="my-title">
+                  <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
+                    <span style="font-size: 18px;text-overflow: ellipsis;">
+                    {{ publishInfo.houseTitle }}
+                    </span>
+                  </el-link>
                 </div>
                 <div class="div-house-info">
                   <template v-if="publishInfo.hallNumber>0">{{ publishInfo.hallNumber }}厅</template>
@@ -135,7 +135,7 @@
                   <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
                 </div>
               </el-col>
-              <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
+              <el-col :span="4" style="font-size: 16px;color: red">
                 <span v-if="publishInfo.monthlyRent>0">
                   <span style="font-size: 24px">
                     {{ publishInfo.monthlyRent }}
@@ -385,7 +385,7 @@ export default {
 .div-house-info {
   color: #777;
   font-size: 12px;
-  padding: 10px 0 5px 0;
+  padding: 12px 0 6px 0;
 }
 
 .my-title {
@@ -394,10 +394,22 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.my-button-active{
-  color: rgba(255,85,47,.8);
+
+.my-button-active {
+  color: rgba(255, 85, 47, .8);
 }
-.my-button-unActive{
+
+.my-button-unActive {
   color: black;
+}
+
+.el-divider--horizontal {
+  margin: 12px 0;
+}
+.my-house-info:hover{
+  background-color: rgba(204,204,204,0.1);
+}
+.my-house-info:hover span{
+  color: red;
 }
 </style>
