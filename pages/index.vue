@@ -223,11 +223,12 @@ export default {
           .then(response => {
             cookie.set('cityId', response.data, { domain: 'localhost' })
             this.cityId = response.data
-            this.getPublishInfoList(1)
+            this.initData(this.cityId)
           })
       })
     },
     initData (cityId) {
+      this.getPublishInfoList(1)
       this.getNextChildrenListByCityId(cityId)
     },
     getNextChildrenListByCityId (cityId) {
@@ -370,9 +371,8 @@ export default {
     } else {
       this.cityName = cityName
       this.cityId = cityId
-      this.getPublishInfoList(1)
+      this.initData(this.cityId)
     }
-    this.getNextChildrenListByCityId(this.cityId)
   }
 }
 </script>
