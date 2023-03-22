@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sakanal.house.dao.HousePromotionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.sakanal.house.entity.HousePromotionEntity" id="housePromotionMap">
+        <result property="baseInfoId" column="base_info_id"/>
+        <result property="visitorNumber" column="visitor_number"/>
+        <result property="promotionNumber" column="promotion_number"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+
+</mapper>
