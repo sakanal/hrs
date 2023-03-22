@@ -223,6 +223,7 @@ export default {
           .then(response => {
             cookie.set('cityId', response.data, { domain: 'localhost' })
             this.cityId = response.data
+            this.getPublishInfoList(1)
           })
       })
     },
@@ -328,7 +329,6 @@ export default {
     },
     changeRoad(roadId){
       this.roadId=roadId
-      console.log(typeof roadId)
       this.toQuery()
     },
     changeRent (rentQuery) {
@@ -361,7 +361,6 @@ export default {
   },
   created () {
     this.setQuery(this.$route.query)
-    this.getPublishInfoList(1)
   },
   mounted () {
     let cityName = cookie.get('cityName')
@@ -371,8 +370,9 @@ export default {
     } else {
       this.cityName = cityName
       this.cityId = cityId
+      this.getPublishInfoList(1)
     }
-    this.getNextChildrenListByCityId(cityId)
+    this.getNextChildrenListByCityId(this.cityId)
   }
 }
 </script>
