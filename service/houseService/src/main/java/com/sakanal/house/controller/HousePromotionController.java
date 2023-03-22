@@ -2,7 +2,7 @@ package com.sakanal.house.controller;
 
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
-import com.sakanal.house.entity.HousePromotionEntity;
+import com.sakanal.service.entity.house.HousePromotionEntity;
 import com.sakanal.house.service.HousePromotionService;
 import org.springframework.web.bind.annotation.*;
 
