@@ -24,7 +24,9 @@ public class PublishInfoVO implements Serializable {
     private PublishInfoVO.BaseInfoVO baseInfo;
     private PublishInfoVO.RentInfoVO rentInfo;
     private PublishInfoVO.DetailedInfoVO detailedInfo;
+    public List<Facilities> facilitiesList;
     private List<PublishInfoVO.ImageInfoVO> imageInfoList;
+    private List<String> previewSrcList;
     private PublishInfoVO.ContactInfoVO contactInfo;
     private CityWithAreaVO cityWithAreaVO;
 
@@ -84,6 +86,13 @@ public class PublishInfoVO implements Serializable {
             }
         }
     }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Facilities{
+        private String name;
+        private String icon;
+    }
 
     @Data
     @AllArgsConstructor
@@ -94,7 +103,9 @@ public class PublishInfoVO implements Serializable {
         private Integer livablePeopleNumber;
         private Integer lookingHouseTimeState;
         private Integer decorationState;
+        // id
         private List<Long> baseFacilitiesIds;
+        // 名字
         private List<String> baseFacilitiesList;
         private List<Long> baseHighlightIds;
         private List<String> baseHighlightList;

@@ -138,4 +138,49 @@
             </if>
         </where>
     </select>
+    <select id="getRecommendInfoList" resultType="com.sakanal.service.vo.RecommendInfoVO">
+        SELECT
+            base.id AS id,
+            base.`name` AS houseTitle,
+            base.room_number,
+            base.hall_number,
+            base.cloakroom_number,
+            base.area_covered,
+            detailed.decoration_state AS decorationState,
+            city.`name` AS childrenCityName,
+            area.`name` AS areaName,
+            area.id AS areaId,
+            rent.monthly_rent AS rent,
+            image.url,
+            promotion.promotion_number,
+            promotion.visitor_number
+        FROM house_base_info AS base LEFT JOIN house_promotion AS promotion ON base.id=promotion.base_info_id
+                                     INNER JOIN house_image AS image ON base.id=image.base_info_id
+                                     INNER JOIN house_city AS city ON base.city_id=city.id
+                                     INNER JOIN house_area AS area ON base.area_id=area.id
+                                     INNER JOIN house_detailed_info AS detailed ON base.id=detailed.base_info_id
+                                     INNER JOIN house_rent_info AS rent ON base.id=rent.base_info_id
+                                     INNER JOIN house_state AS state ON base.id=state.base_info_id
+        WHERE image.is_default_image=1 AND state.is_deleted=0 AND state.house_publish_state=2
+        <if test="childrenCityId!=null">
+            AND base.city_id = #{childrenCityId}
+        </if>
+        <if test="childrenCityIds!=null and childrenCityIds.size()>0">
+            AND base.city_id IN
+            <foreach collection="childrenCityIds" item="cityId" separator="," open="(" close=")">
+                #{cityId}
+            </foreach>
+        </if>
+        <if test="areaIds!=null and areaIds.size()>0">
+            AND base.area_id IN
+            <foreach collection="areaIds" item="areaId" separator="," open="(" close=")">
+                #{areaId}
+            </foreach>
+        </if>
+        <if test="isEmpty!=null">
+            AND base.id=-1
+        </if>
+        ORDER BY promotion.promotion_number DESC
+        LIMIT 10
+    </select>
 </mapper>

@@ -12,9 +12,11 @@ import com.sakanal.house.dao.HouseDao;
 import com.sakanal.house.service.*;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
+import com.sakanal.service.dto.RecommendInfoListDTO;
 import com.sakanal.service.entity.house.*;
 import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.service.vo.PublishInfoVO;
+import com.sakanal.service.vo.RecommendInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -60,6 +62,8 @@ public class HouseServiceImpl implements HouseService {
     private BaseOrientationService baseOrientationService;
     @Resource
     private BaseRentalRequirementsService baseRentalRequirementsService;
+    @Resource
+    private HousePromotionService promotionService;
 
 
     @Override
@@ -317,13 +321,23 @@ public class HouseServiceImpl implements HouseService {
         CompletableFuture<Void> detailedInfoCompletableFuture = CompletableFuture.runAsync(() -> {
             HouseDetailedInfoEntity detailedInfo = detailedInfoService.getOne(new LambdaQueryWrapper<HouseDetailedInfoEntity>().eq(HouseDetailedInfoEntity::getBaseInfoId, houseBaseInfoId));
             publishInfoVO.setDetailedInfo(new PublishInfoVO.DetailedInfoVO(detailedInfo));
+            // 获取该房源所拥有的设施id
+            List<Long> baseFacilitiesIds = publishInfoVO.getDetailedInfo().getBaseFacilitiesIds();
+            List<BaseFacilitiesEntity> baseFacilitiesEntities = baseFacilitiesService.listByIds(baseFacilitiesIds);
+            // 填充icon
+            List<PublishInfoVO.Facilities> facilities = new ArrayList<>();
+            baseFacilitiesEntities.forEach(baseFacilities -> facilities.add(new PublishInfoVO.Facilities(baseFacilities.getName(), baseFacilities.getIconUrl())));
+            publishInfoVO.setFacilitiesList(facilities);
         }, executor);
         // 获取图片信息
         CompletableFuture<Void> imageListCompletableFuture = CompletableFuture.runAsync(() -> {
             List<HouseImageEntity> imageList = imageService.list(new LambdaQueryWrapper<HouseImageEntity>().eq(HouseImageEntity::getBaseInfoId, houseBaseInfoId));
             List<PublishInfoVO.ImageInfoVO> imageInfoVOList = new ArrayList<>();
+            List<String> previewSrcList = new ArrayList<>();
             imageList.forEach(imageEntity -> imageInfoVOList.add(new PublishInfoVO.ImageInfoVO(imageEntity)));
+            imageList.forEach(imageEntity -> previewSrcList.add(imageEntity.getUrl()));
             publishInfoVO.setImageInfoList(imageInfoVOList);
+            publishInfoVO.setPreviewSrcList(previewSrcList);
         }, executor);
         // 获取联系人信息
         CompletableFuture<Void> contactInfoCompletableFuture = CompletableFuture.runAsync(() -> {
@@ -403,6 +417,7 @@ public class HouseServiceImpl implements HouseService {
             }
         }, executor);
         CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedCompletableFuture).join();
+        CompletableFuture.runAsync(() -> promotionService.incrVisitorNumber(houseBaseInfoId), executor);
         return publishInfoVO;
     }
 
@@ -415,4 +430,52 @@ public class HouseServiceImpl implements HouseService {
         }
         return false;
     }
+
+    @Override
+    public List<RecommendInfoVO> getRecommendList(RecommendInfoListDTO recommendInfoListDTO) {
+        if (recommendInfoListDTO.getChildrenCityId() != null) {
+            recommendInfoListDTO.setCityId(null);
+            recommendInfoListDTO.setChildrenCityIds(null);
+        } else {
+            List<Long> childrenCityIds = houseCityService.getRelatedCityIdsById(recommendInfoListDTO.getCityId());
+            recommendInfoListDTO.setChildrenCityIds(childrenCityIds);
+        }
+        if (recommendInfoListDTO.getRoadId() != null) {
+            Long roadId = recommendInfoListDTO.getRoadId();
+            List<Long> areaIds = houseAreaService.list(new LambdaQueryWrapper<HouseAreaEntity>()
+                    .select(HouseAreaEntity::getId)
+                    .eq(HouseAreaEntity::getSuperiorId, roadId)
+            ).stream().map(HouseAreaEntity::getId).collect(Collectors.toList());
+            if (areaIds.size()>0){
+                recommendInfoListDTO.setAreaIds(areaIds);
+            }else {
+                recommendInfoListDTO.setIsEmpty(0L);
+            }
+        }
+        List<RecommendInfoVO> recommendInfoVOList = houseDao.getRecommendInfoList(recommendInfoListDTO);
+        getRoadNameForRecommendInfoList(recommendInfoVOList);
+        // TODO 更新-推荐次数 可用推荐次数减少一次
+        return recommendInfoVOList;
+    }
+
+    @Override
+    public List<RecommendInfoVO> getRecommendList(Long baseInfoId) {
+        Long childrenCityId = baseInfoService.getById(baseInfoId).getCityId();
+        RecommendInfoListDTO recommendInfoListDTO = new RecommendInfoListDTO();
+        recommendInfoListDTO.setCityId(childrenCityId);
+        List<RecommendInfoVO> recommendInfoList = houseDao.getRecommendInfoList(recommendInfoListDTO);
+        getRoadNameForRecommendInfoList(recommendInfoList);
+        // TODO 更新-推荐次数 可用推荐次数减少一次
+        return recommendInfoList;
+    }
+
+    private void getRoadNameForRecommendInfoList(List<RecommendInfoVO> recommendInfoList) {
+        recommendInfoList = recommendInfoList.stream().peek(recommendInfoVO -> {
+            Long roadId = houseAreaService.getRelatedSuperiorIdById(recommendInfoVO.getAreaId());
+            String roadName = houseAreaService.getById(roadId).getName();
+            recommendInfoVO.setRoadName(roadName);
+        }).collect(Collectors.toList());
+    }
+
+
 }

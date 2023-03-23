@@ -6,10 +6,13 @@ import com.sakanal.base.utils.R;
 import com.sakanal.house.service.HouseService;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
+import com.sakanal.service.dto.RecommendInfoListDTO;
 import com.sakanal.service.vo.PublishInfoVO;
+import com.sakanal.service.vo.RecommendInfoVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -53,6 +56,29 @@ public class HouseInfoController {
         PageUtils page = houseService.getPublishInfoList(publishInfoListDTO);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 获取推荐房源
+     */
+    @PostMapping("/getRecommendListInIndex")
+    public R getRecommendListInIndex(@RequestBody RecommendInfoListDTO recommendInfoListDTO) {
+        /*
+         * cityId--首页根据城市推荐-省级
+         * childrenCityQuery--首页根据区域推荐-县级
+         * roadId--首页选中道路后，根据道路推荐 or 详细页中根据道路推荐
+         *
+         */
+        List<RecommendInfoVO> list = houseService.getRecommendList(recommendInfoListDTO);
+
+        return R.ok().put("data", list);
+    }
+
+    @PostMapping("/getRecommendListInHouseInfo/{baseInfoId}")
+    public R getRecommendListInHouseInfo(@PathVariable Long baseInfoId) {
+        List<RecommendInfoVO> list = houseService.getRecommendList(baseInfoId);
+
+        return R.ok().put("data", list);
     }
 
     /**
