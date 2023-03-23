@@ -102,51 +102,95 @@
         </el-tabs>
 <!--        结果展示-->
         <div>
-          <div v-for="publishInfo in publishInfoList">
-            <el-row :gutter="20" class="my-house-info">
-              <el-col :span="5">
-                <div>
-                  <el-image
-                    style="width: 240px; height: 120px;margin-top: 5px"
-                    :src="publishInfo.url"
-                    :fit="'cover'"
-                    :preview-src-list="publishInfo.imageList"></el-image>
-                </div>
-              </el-col>
-              <el-col :span="15">
-                <div class="my-title">
-                  <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
+          <el-row>
+            <el-col :span="20">
+              <div v-for="publishInfo in publishInfoList">
+                <el-row :gutter="20" class="my-house-info">
+                  <el-col :span="5">
+                    <div>
+                      <el-image
+                        style="width: 200px; height: 120px;margin-top: 5px"
+                        :src="publishInfo.url"
+                        :fit="'cover'"
+                        :preview-src-list="publishInfo.imageList"></el-image>
+                    </div>
+                  </el-col>
+                  <el-col :span="15">
+                    <div class="my-title">
+                      <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
                     <span style="font-size: 18px;text-overflow: ellipsis;">
                     {{ publishInfo.houseTitle }}
                     </span>
-                  </el-link>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.hallNumber>0">{{ publishInfo.hallNumber }}厅</template>
-                  <template v-if="publishInfo.roomNumber>0">{{ publishInfo.roomNumber }}室</template>
-                  <template v-if="publishInfo.cloakroomNumber>0">{{ publishInfo.cloakroomNumber }}卫</template>
-                  <template v-if="publishInfo.areaCovered>0">{{ publishInfo.areaCovered }}㎡</template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.roadName!==null">{{ publishInfo.roadName }}</template>
-                  <template v-if="publishInfo.areaName!==null">{{ publishInfo.areaName }}</template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
-                </div>
-              </el-col>
-              <el-col :span="4" style="font-size: 16px;color: red">
+                      </el-link>
+                    </div>
+                    <div class="div-house-info">
+                      <template v-if="publishInfo.hallNumber>0">{{ publishInfo.hallNumber }}厅</template>
+                      <template v-if="publishInfo.roomNumber>0">{{ publishInfo.roomNumber }}室</template>
+                      <template v-if="publishInfo.cloakroomNumber>0">{{ publishInfo.cloakroomNumber }}卫</template>
+                      <template v-if="publishInfo.areaCovered>0">{{ publishInfo.areaCovered }}㎡</template>
+                    </div>
+                    <div class="div-house-info">
+                      <template v-if="publishInfo.roadName!==null">{{ publishInfo.roadName }}</template>
+                      <template v-if="publishInfo.areaName!==null">{{ publishInfo.areaName }}</template>
+                    </div>
+                    <div class="div-house-info">
+                      <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
+                    </div>
+                  </el-col>
+                  <el-col :span="4" style="font-size: 16px;color: red">
                 <span v-if="publishInfo.monthlyRent>0">
                   <span style="font-size: 24px">
                     {{ publishInfo.monthlyRent }}
                   </span>
                   元/月
                 </span>
-                <template v-else>面议</template>
-              </el-col>
-            </el-row>
-            <el-divider></el-divider>
-          </div>
+                    <template v-else>面议</template>
+                  </el-col>
+                </el-row>
+                <el-divider></el-divider>
+              </div>
+            </el-col>
+            <el-col :span="4" v-if="recommendInfoList.length>0 && publishInfoList.length>0">
+              <div>
+                <span style="font-size: 18px">热推房源</span>
+                <el-tag type="danger" effect="plain" size="mini">HOT</el-tag>
+              </div>
+              <div  style="padding: 5px 0 5px 0">
+                <template v-for="recommendInfo in recommendInfoList" style="width: 100%">
+                  <el-link :href="`/house/${recommendInfo.id}`":underline="false" style="width: 100%">
+                    <el-card :body-style="{ padding: '0px' }" style="margin: 0 0 10px 0;width: 100%" shadow="hover">
+                      <el-image style="width:180px;height: 180px"
+                                :fit="'cover'"
+                                :src="recommendInfo.url"
+                                class="image"/>
+                      <div style="padding: 10px">
+                        <div style="font-size: 12px">
+                          <span>{{recommendInfo.childrenCityName}}</span>
+                          /
+                          <span>{{recommendInfo.roadName}}</span>
+                          /
+                          <span>{{recommendInfo.areaName}}</span>
+                        </div>
+                        <div style="font-size: 12px; color: #777">
+                          <span>{{recommendInfo.roomNumber}}室</span>
+                          <span>{{recommendInfo.hallNumber}}厅</span>
+                          <span>{{recommendInfo.areaCovered}}平</span>
+                        </div>
+                        <div>
+                        <span>
+                          <span style="color: red">
+                            {{recommendInfo.rent}}
+                          </span>
+                          元/月
+                        </span>
+                        </div>
+                      </div>
+                    </el-card>
+                  </el-link>
+                </template>
+              </div>
+            </el-col>
+          </el-row>
         </div>
 <!--        分页条-->
         <el-pagination
@@ -172,6 +216,7 @@ export default {
       cityId: 0,
       cityName: '',
       childrenCityList: [],
+      recommendInfoList: [],
       userInfo: {},
       tabNumber: '2',
       // 当前页
@@ -229,6 +274,7 @@ export default {
     },
     initData (cityId) {
       this.getPublishInfoList(1)
+      this.getRecommendInfoList()
       this.getNextChildrenListByCityId(cityId)
     },
     getNextChildrenListByCityId (cityId) {
@@ -271,16 +317,28 @@ export default {
         }
       })
     },
-    currentChange(currentPage){
+    getRecommendInfoList () {
+      let data = {
+        cityId: this.cityId,
+        childrenCityId: this.childrenCityQuery,
+        roadId: this.roadId
+      }
+      this.$axios.post(`/house/houseInfo/getRecommendListInIndex`,data).then(response=>{
+        if (response && response.code===0){
+          this.recommendInfoList = response.data
+        }
+      })
+    },
+    currentChange (currentPage) {
       this.getPublishInfoList(currentPage)
     },
-    getRoadList(cityId,roadId){
+    getRoadList (cityId, roadId) {
       this.$axios.get(`/house/housearea/getRoadListByCityId/${cityId}`)
-      .then(response=>{
-        this.roadList=response.data
-        if (roadId){
-          this.roadId=parseInt(roadId)
-        }else {
+        .then(response => {
+          this.roadList = response.data
+          if (roadId) {
+            this.roadId = parseInt(roadId)
+          } else {
           this.roadId=undefined
         }
       })
@@ -358,6 +416,9 @@ export default {
     '$route.query' (query) {
       this.setQuery(query)
       this.getPublishInfoList(1)
+      if (query.childrenCityQuery){
+        this.getRecommendInfoList()
+      }
     }
   },
   created () {

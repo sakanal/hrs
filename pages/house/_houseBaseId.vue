@@ -235,8 +235,45 @@
               </template>
             </div>
           </el-col>
-          <el-col :span="6">
-            推荐房源
+          <el-col :span="6" v-if="recommendInfoList.length>0">
+            <div>
+              <span style="font-size: 18px">热推房源</span>
+              <el-tag type="danger" effect="plain" size="mini">HOT</el-tag>
+            </div>
+            <div  style="padding: 5px 0 5px 0">
+              <template v-for="recommendInfo in recommendInfoList">
+                <el-link :href="`/house/${recommendInfo.id}`" :underline="false">
+                  <el-card :body-style="{ padding: '0px' }" style="margin: 0 0 10px 0" shadow="hover">
+                    <el-image style="width:180px;height: 180px"
+                              :fit="'cover'"
+                              :src="recommendInfo.url"
+                              class="image"/>
+                    <div style="padding: 10px">
+                      <div style="font-size: 12px">
+                        <span>{{recommendInfo.childrenCityName}}</span>
+                        /
+                        <span>{{recommendInfo.roadName}}</span>
+                        /
+                        <span>{{recommendInfo.areaName}}</span>
+                      </div>
+                      <div style="font-size: 12px; color: #777">
+                        <span>{{recommendInfo.roomNumber}}室</span>
+                        <span>{{recommendInfo.hallNumber}}厅</span>
+                        <span>{{recommendInfo.areaCovered}}平</span>
+                      </div>
+                      <div>
+                        <span>
+                          <span style="color: red">
+                            {{recommendInfo.rent}}
+                          </span>
+                          元/月
+                        </span>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-link>
+              </template>
+            </div>
           </el-col>
         </el-row>
       </el-col>
@@ -257,14 +294,17 @@ export default {
     params
   }) {
     let [
-      houseInfo
+      houseInfo,
+      recommendList
     ] = await Promise.all([
-      await $axios.get(`/house/houseInfo/getPublishInfo/${params.houseBaseId}`)
+      await $axios.get(`/house/houseInfo/getPublishInfo/${params.houseBaseId}`),
+      await $axios.post(`/house/houseInfo/getRecommendListInHouseInfo/${params.houseBaseId}`)
     ])
     return {
       houseBaseId: params.houseBaseId,
       houseInfo: houseInfo.data,
-      previewSrcList: houseInfo.data.previewSrcList
+      previewSrcList: houseInfo.data.previewSrcList,
+      recommendInfoList: recommendList.data
     }
   },
   data () {
@@ -272,11 +312,25 @@ export default {
     return {
       houseBaseId: '',
       houseInfo: {},
-      previewSrcList: []
+      previewSrcList: [],
+      recommendInfoList: [],
     }
   },
   // 方法集合
-  methods: {},
+  methods: {
+    getRecommendInfoList () {
+      let data = {
+        cityId: this.cityId,
+        childrenCityId: this.childrenCityQuery,
+        roadId: this.roadId
+      }
+      this.$axios.post(`/house/houseInfo/getRecommendList`,data).then(response=>{
+        if (response && response.code===0){
+          this.recommendInfoList = response.data
+        }
+      })
+    }
+  },
   // 监听属性 类似于data概念
   computed: {},
   // 监控data中的数据变化
