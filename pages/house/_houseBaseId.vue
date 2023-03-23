@@ -137,13 +137,25 @@
                                  :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"></el-avatar>
                     </div>
                     <span>{{ houseInfo.contactInfo.publisherName }}</span>
-                    <div>回复时间</div>
+                    <div>
+                      <el-tag>回复时间</el-tag>
+                    </div>
                     <div>
                       <span>{{ houseInfo.contactInfo.answerPeriodTimeStart }}</span>
                       -
                       <span>{{ houseInfo.contactInfo.answerPeriodTimeEnd }}</span>
                     </div>
-                    <div>获取联系方式</div>
+                    <div>
+                      <el-button style="height: 100%;width: 100%" type="text" @click="getPhone">
+                        <div style="background-color: #ff7759;
+                        color: white;
+                        font-size: 20px;
+                        height: 2em;
+                        line-height: 2em">
+                          获取联系方式
+                        </div>
+                      </el-button>
+                    </div>
                   </div>
                 </el-card>
               </el-col>
@@ -329,6 +341,9 @@ export default {
           this.recommendInfoList = response.data
         }
       })
+    },
+    getPhone(){
+      alert('phone')
     }
   },
   // 监听属性 类似于data概念
