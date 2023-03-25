@@ -27,5 +27,10 @@ public interface UserBaseInfoService extends IService<UserBaseInfoEntity> {
     String login(LoginOrRegisterSimpleDTO loginSimple);
 
     UserBaseInfoVO getUserInfoByToken(String token);
+
+    /**
+     * 更新头像，params中有redis（hash）中的item（uuid）和用户id
+     */
+    boolean updateAvatar(Map<String, Object> params);
 }
 

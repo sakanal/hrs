@@ -9,6 +9,9 @@ spring:
       config:
         namespace: b9fda02a-d2a4-4c4c-8b3e-905807233e82
         extension-configs:
+          - dataId: rabbitMQConfig.yaml
+            group: CONFIG_GROUP
+            refresh : true
           - dataId: mybatisPlusConfig.yaml
             group: CONFIG_GROUP
             refresh: true

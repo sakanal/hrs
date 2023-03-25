@@ -18,14 +18,17 @@ import com.sakanal.service.utils.RedisUtils;
 import com.sakanal.service.vo.UserBaseInfoVO;
 import com.sakanal.user.dao.UserBaseInfoDao;
 import com.sakanal.user.service.UserBaseInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
 
+@Slf4j
 @Service("userBaseInfoService")
 public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBaseInfoEntity> implements UserBaseInfoService {
     @Resource
@@ -92,12 +95,38 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
                     return userBaseInfoVO;
                 }else {
                     // token中的数据无效
-                    throw new MyException(ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getMsg(),ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getCode());
+                    throw new MyException(ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getMsg(), ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getCode());
                 }
             }
-        }else {
+        } else {
             // token无效
-            throw new MyException(ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getMsg(),ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getCode());
+            throw new MyException(ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getMsg(), ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getCode());
+        }
+    }
+
+    @Override
+    public boolean updateAvatar(Map<String, Object> params) {
+        String uuid = (String) params.get("uuid");
+        if (!StringUtils.hasText(uuid)) {
+            return false;
+        }
+        String avatarUrl = (String) redisUtils.hashGet(redisProperties.getAvatarTempPrefix(), uuid);
+        if (!StringUtils.hasText(avatarUrl)) {
+            return false;
+        }
+        long userId = Long.parseLong((String) params.get("userId"));
+        if (userId < 0) {
+            return false;
+        }
+        UserBaseInfoEntity userBaseInfoEntity = new UserBaseInfoEntity();
+        userBaseInfoEntity.setId(userId);
+        userBaseInfoEntity.setHeadPortraitUrl(avatarUrl);
+        if (this.updateById(userBaseInfoEntity)) {
+            redisUtils.hashDel(redisProperties.getAvatarTempPrefix(), uuid);
+            redisUtils.del(redisProperties.getUserInfoPrefix() + userId);
+            return true;
+        } else {
+            return false;
         }
     }
 
