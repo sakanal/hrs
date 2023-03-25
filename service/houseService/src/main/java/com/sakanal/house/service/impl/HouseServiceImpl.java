@@ -1,5 +1,6 @@
 package com.sakanal.house.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sakanal.base.constant.CityLevelConstant;
@@ -8,12 +9,15 @@ import com.sakanal.base.constant.PublishStateConstant;
 import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.exception.MyException;
 import com.sakanal.base.utils.PageUtils;
+import com.sakanal.base.utils.R;
 import com.sakanal.house.dao.HouseDao;
+import com.sakanal.house.feign.UserFeignClient;
 import com.sakanal.house.service.*;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.dto.RecommendInfoListDTO;
 import com.sakanal.service.entity.house.*;
+import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.service.vo.PublishInfoVO;
 import com.sakanal.service.vo.RecommendInfoVO;
@@ -64,6 +68,9 @@ public class HouseServiceImpl implements HouseService {
     private BaseRentalRequirementsService baseRentalRequirementsService;
     @Resource
     private HousePromotionService promotionService;
+
+    @Resource
+    private UserFeignClient userFeignClient;
 
 
     @Override
@@ -342,7 +349,17 @@ public class HouseServiceImpl implements HouseService {
         // 获取联系人信息
         CompletableFuture<Void> contactInfoCompletableFuture = CompletableFuture.runAsync(() -> {
             HouseContactInfoEntity contactInfo = contactInfoService.getOne(new LambdaQueryWrapper<HouseContactInfoEntity>().eq(HouseContactInfoEntity::getBaseInfoId, houseBaseInfoId));
-            publishInfoVO.setContactInfo(new PublishInfoVO.ContactInfoVO(contactInfo));
+            HouseStateEntity houseStateEntity = stateService.list(new LambdaQueryWrapper<HouseStateEntity>()
+                    .select(HouseStateEntity::getPublisherId)
+                    .eq(HouseStateEntity::getBaseInfoId, houseBaseInfoId)
+                    .eq(HouseStateEntity::getHousePublishState, PublishStateConstant.PUBLISH_STATE)
+                    .last("limit 1")
+            ).get(0);
+            R r = userFeignClient.info(houseStateEntity.getPublisherId());
+            UserBaseInfoEntity userBaseInfo = r.getData("userBaseInfo", new TypeReference<UserBaseInfoEntity>() {});
+            PublishInfoVO.ContactInfoVO contactInfoVO = new PublishInfoVO.ContactInfoVO(contactInfo);
+            contactInfoVO.setHeadPortraitUrl(userBaseInfo.getHeadPortraitUrl());
+            publishInfoVO.setContactInfo(contactInfoVO);
         }, executor);
 
         CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedInfoCompletableFuture, imageListCompletableFuture, contactInfoCompletableFuture).join();

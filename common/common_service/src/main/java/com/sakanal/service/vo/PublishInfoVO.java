@@ -164,6 +164,7 @@ public class PublishInfoVO implements Serializable {
         private Date answerPeriodTimeStart;
         @JsonFormat(pattern = "hh:mm")
         private Date answerPeriodTimeEnd;
+        private String headPortraitUrl;
 
         public ContactInfoVO(HouseContactInfoEntity contactInfo) {
             BeanUtils.copyProperties(contactInfo, this);
