@@ -5,10 +5,11 @@
       :data="dataObj"
       list-type="picture"
       :multiple="false"
-      :show-file-list="showFileList"
+      :show-file-list="false"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
+      :before-remove="beforeRemove"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview">
       <el-button size="small" type="primary">点击上传</el-button>
@@ -20,6 +21,8 @@
   </div>
 </template>
 <script>
+
+import * as imageConversion from 'image-conversion'
 
 export default {
   name: 'singleUpload',
@@ -76,30 +79,66 @@ export default {
       })
     },
     emitInput (val) {
-      this.$emit('input', val)
+      this.$emit('singleUpload', val)
     },
     handleRemove (file, fileList) {
       this.emitInput('')
+    },
+    beforeRemove (file, fileList) {
+      // 删除oss中的文件
+      let data = { fileUrl: file.url }
+      let result = false
+      return this.$axios.delete(`/thirdParty/OSS/remove`, { data })
+        .then(response => {
+          if (response === undefined){
+            return Promise.reject();
+          }
+        })
     },
     handlePreview (file) {
       this.dialogVisible = true
     },
     beforeUpload (file) {
       let _self = this
-      return new Promise((resolve, reject) => {
-        this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`).then(response => {
-          console.log(response)
-          _self.dataObj.policy = response.data.policy
-          _self.dataObj.signature = response.data.signature
-          _self.dataObj.ossaccessKeyId = response.data.accessKey
-          _self.dataObj.key = response.data.dir + this.getUUID() + '_${filename}'
-          _self.dataObj.dir = response.data.dir
-          _self.dataObj.host = response.data.host
-          resolve(true)
-          console.log(_self.dataObj)
-        }).catch(error => {
-          console.log(error)
-          reject(false)
+      // return new Promise((resolve, reject) => {
+      //   this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`).then(response => {
+      //     console.log(response)
+      //     _self.dataObj.policy = response.data.policy
+      //     _self.dataObj.signature = response.data.signature
+      //     _self.dataObj.ossaccessKeyId = response.data.accessKey
+      //     _self.dataObj.key = response.data.dir + this.getUUID() + '_${filename}'
+      //     _self.dataObj.dir = response.data.dir
+      //     _self.dataObj.host = response.data.host
+      //     resolve(true)
+      //     console.log(_self.dataObj)
+      //   }).catch(error => {
+      //     console.log(error)
+      //     reject(false)
+      //   })
+      // })
+      return this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`).then(response => {
+        console.log(response)
+        _self.dataObj.policy = response.data.policy
+        _self.dataObj.signature = response.data.signature
+        _self.dataObj.ossaccessKeyId = response.data.accessKey
+        _self.dataObj.key = response.data.dir + this.getUUID() + '_${filename}'
+        _self.dataObj.dir = response.data.dir
+        _self.dataObj.host = response.data.host
+        // 判断图片基础情况
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+        if (!isJpgOrPng) {
+          this.$message.error('上传图片只能是 JPG 或 PNG 格式!')
+        }
+        const isLt2M = file.size / 1024 / 1024 < 2
+        return new Promise((resolve) => {
+          // 小于2M 不压缩
+          if (isLt2M) {
+            resolve(file)
+          }
+          // 压缩到400KB,这里的400就是要压缩的大小,可自定义
+          imageConversion.compressAccurately(file, 400).then((res) => {
+            resolve(res)
+          })
         })
       })
     },

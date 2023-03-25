@@ -63,20 +63,20 @@
                 <el-col :span="22" style="height: 100%;">
                   <el-menu :router="true"
                            style="min-height: 1000px"
-                           default-active="/user/info"
+                           default-active="/user"
                            active-text-color="#ffd04b"
                            background-color="#545c64"
                            text-color="#fff">
+                    <el-menu-item index="/user">用户中心</el-menu-item>
                     <el-submenu index="/user/info">
                       <template slot="title">
                         <span>账户设置</span>
                       </template>
-                      <el-menu-item index="/user/info">个人资料</el-menu-item>
                       <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>
                       <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>
                       <el-menu-item index="/user/info/messageManagement">消息管理</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="/user">
+                    <el-submenu index="/user/collection">
                       <template slot="title">
                         <span>我的收藏</span>
                       </template>
