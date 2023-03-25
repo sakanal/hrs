@@ -134,7 +134,7 @@
                   <div class="block" style="text-align: center">
                     <div style="margin-bottom: 10px">
                       <el-avatar :size="100"
-                                 :src="'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"></el-avatar>
+                                 :src="houseInfo.contactInfo.headPortraitUrl"></el-avatar>
                     </div>
                     <span>{{ houseInfo.contactInfo.publisherName }}</span>
                     <div>
@@ -398,5 +398,9 @@ export default {
 }
 .my-house-image{
   margin: 20px 0 50px 0;
+}
+.el-avatar--circle /deep/ img {
+  height: 100%;
+  width: 100%;
 }
 </style>
