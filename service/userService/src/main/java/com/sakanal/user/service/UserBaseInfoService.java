@@ -2,6 +2,7 @@ package com.sakanal.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
+import com.sakanal.service.dto.ChangePasswordDTO;
 import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
 import com.sakanal.service.vo.UserBaseInfoVO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
@@ -34,5 +35,7 @@ public interface UserBaseInfoService extends IService<UserBaseInfoEntity> {
     boolean updateAvatar(Map<String, Object> params);
 
     boolean updateUserInfo(Map<String, Object> params);
+
+    boolean changePassword(ChangePasswordDTO changePasswordDTO);
 }
 

@@ -10,6 +10,7 @@ import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.exception.MyException;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
+import com.sakanal.service.dto.ChangePasswordDTO;
 import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.service.properties.MyCommonRedisProperties;
@@ -29,6 +30,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Slf4j
@@ -74,7 +76,11 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
             //登录成功 创建token，保存到redis中
             String token = JwtUtils.getUserToken(userBaseInfoEntity.getId());
             if (!redisUtils.hasKey(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId())) {
+                String desensitizedEmail = DesensitizedUtil.email(userBaseInfoEntity.getEmail());
+                String desensitizedPhone = DesensitizedUtil.mobilePhone(String.valueOf(userBaseInfoEntity.getPhone()));
                 UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
+                userBaseInfoVO.setPhone(desensitizedPhone);
+                userBaseInfoVO.setEmail(desensitizedEmail);
                 // token作为key，userInfo作为value，token中的有效数据为userId
                 redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
             }
@@ -92,20 +98,8 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
                 // 缓存未过期
                 return (UserBaseInfoVO) redisUtils.stringGet(redisProperties.getUserInfoPrefix() + userId);
             }else {
-                // 缓存过期，查询数据库并更新缓存
-                UserBaseInfoEntity userBaseInfo = this.getById(userId);
-                if (userBaseInfo!=null){
-                    UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfo);
-                    String desensitizedEmail = DesensitizedUtil.email(userBaseInfo.getEmail());
-                    String desensitizedPhone = DesensitizedUtil.mobilePhone(String.valueOf(userBaseInfo.getPhone()));
-                    userBaseInfoVO.setPhone(desensitizedPhone);
-                    userBaseInfoVO.setEmail(desensitizedEmail);
-                    redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userId, userBaseInfoVO, redisProperties.getExpireTime());
-                    return userBaseInfoVO;
-                }else {
-                    // token中的数据无效
-                    throw new MyException(ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getMsg(), ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getCode());
-                }
+                // 缓存过期，登录失效
+                throw new MyException(ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getMsg(), ErrorCodeEnum.TOKEN_EXPIRE_EXCEPTION.getCode());
             }
         } else {
             // token无效
@@ -201,6 +195,37 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+        Long userId = changePasswordDTO.getUserId();
+        String oldPassword = changePasswordDTO.getOldPassword();
+        String newPassword = changePasswordDTO.getNewPassword();
+        String checkPassword = changePasswordDTO.getCheckPassword();
+        if (Objects.equals(newPassword,checkPassword)){
+            UserBaseInfoEntity userBaseInfoEntity = this.getById(userId);
+            String password = userBaseInfoEntity.getPassword();
+            if (PasswordUtils.matches(oldPassword,password)){
+                // 旧密码正确
+                if (!PasswordUtils.matches(newPassword,password)){
+                    UserBaseInfoEntity userBaseInfo = new UserBaseInfoEntity(userId,changePasswordDTO);
+                    if (this.updateById(userBaseInfo)){
+                        // 删除redis中的数据
+                        redisUtils.del(redisProperties.getUserInfoPrefix()+userId);
+                        return true;
+                    }else {
+                        throw new MyException("修改密码失败");
+                    }
+                }else {
+                    throw new MyException("新密码与旧密码不能相同");
+                }
+            }else {
+                throw new MyException("旧密码不正确");
+            }
+        }else {
+            throw new MyException("密码不一致");
+        }
     }
 
 }

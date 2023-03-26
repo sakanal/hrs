@@ -5,6 +5,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.base.exception.ErrorCodeEnum;
+import com.sakanal.service.dto.ChangePasswordDTO;
 import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
 import com.sakanal.service.vo.UserBaseInfoVO;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +95,14 @@ public class UserBaseInfoController {
     @PutMapping("/updateUserInfo")
     public R updateUserInfo(@RequestBody Map<String,Object> params){
         if (userBaseInfoService.updateUserInfo(params)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
+    @PutMapping("/changePassword")
+    public R changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO){
+        if (userBaseInfoService.changePassword(changePasswordDTO)){
             return R.ok();
         }else {
             return R.error();

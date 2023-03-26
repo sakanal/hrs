@@ -2,6 +2,7 @@ package com.sakanal.service.entity.user;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sakanal.service.dto.ChangePasswordDTO;
 import com.sakanal.service.utils.PasswordUtils;
 import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
 import lombok.AllArgsConstructor;
@@ -80,5 +81,10 @@ public class UserBaseInfoEntity implements Serializable {
         // 对密码加密
         registerSimple.setPassword(PasswordUtils.encode(registerSimple.getPassword()));
         BeanUtils.copyProperties(registerSimple,this);
+    }
+
+    public UserBaseInfoEntity(Long userId, ChangePasswordDTO changePasswordDTO) {
+        this.id=userId;
+        this.password=PasswordUtils.encode(changePasswordDTO.getNewPassword());
     }
 }
