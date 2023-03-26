@@ -49,11 +49,12 @@
             <el-link :underline="false" href="/business">商家中心logo</el-link>
           </div>
         </el-col>
-        <el-col :span="5"/>
-        <el-col :span="8">
+        <el-col :span="2"/>
+        <el-col :span="11">
           <el-menu style="border: 0" mode="horizontal" :router="true" default-active="/business">
             <el-menu-item index="/business">首页</el-menu-item>
-            <el-menu-item index="/business/info">账户资料</el-menu-item>
+            <el-menu-item index="/user">账户资料</el-menu-item>
+            <el-menu-item index="/business/publish">我的发布</el-menu-item>
             <el-menu-item index="/business/fund">我的资金</el-menu-item>
             <el-menu-item index="/business/service">订购服务</el-menu-item>
             <el-menu-item index="/business/publish/toPublish">一键发布</el-menu-item>

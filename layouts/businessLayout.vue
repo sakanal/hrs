@@ -49,11 +49,12 @@
             <el-link :underline="false" href="/business">商家中心logo</el-link>
           </div>
         </el-col>
-        <el-col :span="5"/>
-        <el-col :span="8">
+        <el-col :span="2"/>
+        <el-col :span="11">
           <el-menu style="border: 0" mode="horizontal" :router="true" default-active="/business">
             <el-menu-item index="/business">首页</el-menu-item>
-            <el-menu-item index="/business/info">账户资料</el-menu-item>
+            <el-menu-item index="/user">账户资料</el-menu-item>
+            <el-menu-item index="/business/publish">我的发布</el-menu-item>
             <el-menu-item index="/business/fund">我的资金</el-menu-item>
             <el-menu-item index="/business/service">订购服务</el-menu-item>
             <el-menu-item index="/business/publish/toPublish">一键发布</el-menu-item>
@@ -75,31 +76,33 @@
                            active-text-color="#ffd04b"
                            background-color="#545c64"
                            text-color="#fff">
-                    <el-submenu index="/business">
-                      <template slot="title">
-                        <span>首页</span>
-                      </template>
-                      <el-menu-item index="/business">商家中心</el-menu-item>
-                      <el-menu-item index="/business/publish">我的发布</el-menu-item>
-                      <el-menu-item index="/business/info">我的资料</el-menu-item>
-                      <el-menu-item index="/business/fund">我的资金</el-menu-item>
-                      <el-menu-item index="/business/service">我的服务</el-menu-item>
+<!--                    <el-submenu index="/business">-->
+<!--                      <template slot="title">-->
+<!--                        <span>首页</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="/business">商家中心</el-menu-item>-->
+<!--                      <el-menu-item index="/business/publish">我的发布</el-menu-item>-->
+<!--                      <el-menu-item index="/business/info">我的资料</el-menu-item>-->
+<!--                      <el-menu-item index="/business/fund">我的资金</el-menu-item>-->
+<!--                      <el-menu-item index="/business/service">我的服务</el-menu-item>-->
 <!--                      <el-menu-item index="/business">推广管理</el-menu-item>-->
 <!--                      <el-menu-item index="/business">交易管理</el-menu-item>-->
-                    </el-submenu>
-                    <el-submenu index="/business/publish">
-                      <template slot="title">
-                        <span>我的发布</span>
-                      </template>
-                      <el-menu-item index="/business/publish">我的发布</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="/business/info">
+<!--                    </el-submenu>-->
+                    <el-menu-item index="/business">首页</el-menu-item>
+                    <el-menu-item index="/business/publish">我的发布</el-menu-item>
+<!--                    <el-submenu index="/business/publish">-->
+<!--                      <template slot="title">-->
+<!--                        <span>我的发布</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="/business/publish">我的发布</el-menu-item>-->
+<!--                    </el-submenu>-->
+                    <el-submenu index="/user">
                       <template slot="title">
                         <span>账户资料</span>
                       </template>
-                      <el-menu-item index="/business/info">个人资料</el-menu-item>
-                      <el-menu-item index="/business/info/accountBinding">账户绑定</el-menu-item>
-                      <el-menu-item index="/business/info/changePassword">修改密码</el-menu-item>
+                      <el-menu-item index="/user">个人资料</el-menu-item>
+                      <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>
+                      <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>
                     </el-submenu>
                     <el-submenu index="/business/fund">
                       <template slot="title">

@@ -18,7 +18,7 @@
               </template>
             </el-result>
           </el-col>
-          <el-col :sm="12" :lg="6">
+          <el-col v-if="avatarPreview" :sm="12" :lg="6">
             <el-result>
               <template slot="icon" v-if="avatarImage===''">
                 <el-avatar :size="160" :src="userInfo.headPortraitUrl"></el-avatar>
@@ -33,8 +33,110 @@
             </el-result>
           </el-col>
         </el-row>
-        {{ userInfo }}
       </div>
+      <el-tabs>
+        <el-tab-pane label="修改个人信息"></el-tab-pane>
+      </el-tabs>
+      <div>
+        <el-row>
+          <el-col :span="12">
+            <el-form ref="userInfoFromRef" :model="userInfoFrom" :rules="rules" label-width="100px"
+                     label-position="left">
+              <el-form-item label="用户名" prop="userName">
+                <span class="my-form-item-span">
+                  <template v-if="userNameChangeFlag">
+                    <el-input v-model="userInfoFrom.userName"></el-input>
+                  </template>
+                  <template v-else>
+                    <span style="padding-left: 15px;">
+                      {{ userInfo.userName }}
+                    </span>
+                  </template>
+                </span>
+                <template v-if="userNameChangeFlag">
+                  <el-button type="text" @click="userNameChange(true)">确认</el-button>
+                  <el-button type="text" @click="userNameChange(false)">取消</el-button>
+                </template>
+                <template v-else>
+                  <el-button type="text" @click="userNameChangeFlag=true">修改</el-button>
+                </template>
+              </el-form-item>
+              <el-form-item label="昵称" prop="nickName">
+                <span class="my-form-item-span">
+                  <template v-if="nickNameChangeFlag">
+                    <el-input v-model="userInfoFrom.nickName"></el-input>
+                  </template>
+                  <template v-else>
+                    <span style="padding-left: 15px">
+                      {{ userInfo.nickName }}
+                    </span>
+                  </template>
+                </span>
+                <template v-if="nickNameChangeFlag">
+                  <el-button type="text" @click="nickNameChange(true)">确认</el-button>
+                  <el-button type="text" @click="nickNameChange(false)">取消</el-button>
+                </template>
+                <template v-else>
+                  <el-button type="text" @click="nickNameChangeFlag=true">修改</el-button>
+                </template>
+              </el-form-item>
+              <el-form-item label="手机">
+                <template v-if="userInfo.phone">
+                  <span class="my-form-item-span">
+                  <template v-if="phoneChangeFlag">
+                    <el-input v-model="userInfoFrom.phone"></el-input>
+                  </template>
+                  <template v-else>
+                    <span style="padding-left: 15px">
+                      {{ userInfo.phone }}
+                    </span>
+                  </template>
+                </span>
+                  <template v-if="phoneChangeFlag">
+                    <el-button type="text" @click="phoneChange(true)">确认</el-button>
+                    <el-button type="text" @click="phoneChange(false)">取消</el-button>
+                  </template>
+                  <template v-else>
+                    <el-button type="text" @click="phoneChangeFlag=true">修改</el-button>
+                  </template>
+                </template>
+                <template v-else>
+                  <span style="padding-left: 15px">
+                    <el-button type="text">前往绑定手机</el-button>
+                  </span>
+                </template>
+              </el-form-item>
+              <el-form-item label="邮箱">
+                <template v-if="userInfo.email">
+                  <span class="my-form-item-span">
+                  <template v-if="emailChangeFlag">
+                    <el-input v-model="userInfoFrom.email"></el-input>
+                  </template>
+                  <template v-else>
+                    <span style="padding-left: 15px">
+                      {{ userInfo.email }}
+                    </span>
+                  </template>
+                </span>
+                  <template v-if="emailChangeFlag">
+                    <el-button type="text" @click="emailChange(true)">确认</el-button>
+                    <el-button type="text" @click="emailChange(false)">取消</el-button>
+                  </template>
+                  <template v-else>
+                    <el-button type="text" @click="emailChangeFlag=true">修改</el-button>
+                  </template>
+                </template>
+                <template v-else>
+                  <span style="padding-left: 15px">
+                    <el-button type="text">前往绑定邮箱</el-button>
+                  </span>
+                </template>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+      </div>
+      {{ userInfo }}
     </div>
   </div>
 </template>
@@ -51,20 +153,77 @@ export default {
   // import引入的组件需要注入到对象中才能使用
   components: { singleUpload },
   data () {
+    const validateName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入用户名'))
+      } else {
+        const pattern = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/
+        if (pattern.test(value)){
+          this.$axios.get(`/user/register/checkUserName/${value}`)
+            .then(response => {
+              if (!response.result) {
+                callback(new Error('用户名重复'))
+              } else {
+                callback()
+              }
+            })
+        }else {
+          callback(new Error('请输入以字母开头，由字母数字下划线组成5-16位的用户名'))
+        }
+      }
+    }
+    const validateNickName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入昵称'))
+      } else {
+        const pattern = /^[\u4E00-\u9FA5A-Za-z0-9_]+$/
+        if (pattern.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入中文、英文、数字或下划线组成的昵称'))
+        }
+      }
+    }
     // 这里存放数据
     return {
       userInfo: {},
+      avatarPreview: false,
       avatarImage: '',
-      avatarTempUUID: ''
+      avatarTempUUID: '',
+      userInfoFrom: {
+        userName: '',
+        nickName: '',
+        phone: '',
+        email: ''
+      },
+      rules: {
+        userName: [{
+          validator: validateName
+        }],
+        nickName: [{
+          validator: validateNickName
+        }]
+      },
+      userNameChangeFlag: false,
+      nickNameChangeFlag: false,
+      phoneChangeFlag: false,
+      emailChangeFlag: false
     }
   },
   // 方法集合
   methods: {
+    getUserInfo(){
+      this.$axios.get('/user/login/userInfoByToken')
+        .then(response => {
+          this.userInfo = response.userInfo
+        })
+    },
     tabClick (event) {
       this.tabNumber = event.name
       console.log(event.name)
     },
     singleUpload (value) {
+      this.avatarPreview = true
       this.avatarImage = value
       this.$axios.post(`/user/avatar/temp`,{fileUrl: value}).then(response=>{
         this.avatarTempUUID=response.data
@@ -73,12 +232,79 @@ export default {
     },
     saveAvatar() {
       this.$axios.post('/user/avatar/save', {uuid: this.avatarTempUUID,userId: this.userInfo.id.toString()}).then(response=>{
-        if (response && response.code===0){
+        if (response && response.code === 0) {
           this.$message.success('修改成功')
-        }else {
+          this.avatarPreview = false
+          this.getUserInfo()
+        } else {
           this.$message.error('修改失败')
         }
       })
+    },
+    updateUserInfo(data){
+      return this.$axios.put('/user/userbaseinfo/updateUserInfo',data)
+    },
+    userNameChange (flag) {
+      if (flag) {
+        this.$refs.userInfoFromRef.validateField('userName',(valid) => {
+          if (!valid) {
+            let data={
+              userId: this.userInfo.id.toString(),
+              userName: this.userInfoFrom.userName
+            }
+            this.updateUserInfo(data).then(response=>{
+              if (response && response.code === 0){
+                this.userNameChangeFlag=false
+                this.getUserInfo()
+                this.$message.success('修改用户名成功')
+              }
+            })
+          }
+        })
+      } else {
+        this.userNameChangeFlag = false
+        this.$refs.userInfoFromRef.clearValidate()
+      }
+    },
+    nickNameChange (flag) {
+      if (flag) {
+        this.$refs.userInfoFromRef.validateField('nickName',(valid) => {
+          if (!valid){
+            let data={
+              userId: this.userInfo.id.toString(),
+              nickName: this.userInfoFrom.nickName
+            }
+            this.updateUserInfo(data).then(response=>{
+              if (response && response.code === 0){
+                this.nickNameChangeFlag = false
+                this.getUserInfo()
+                this.$message.success('修改昵称成功')
+              }
+            })
+          }
+        })
+      } else {
+        this.nickNameChangeFlag = false
+        this.$refs.userInfoFromRef.clearValidate()
+      }
+    },
+    phoneChange (flag) {
+      if (flag) {
+        this.phoneChangeFlag = false
+        alert('phone change')
+      } else {
+        this.phoneChangeFlag = false
+        this.$refs.userInfoFromRef.clearValidate()
+      }
+    },
+    emailChange (flag) {
+      if (flag) {
+        this.emailChangeFlag = false
+        alert('email change')
+      } else {
+        this.emailChangeFlag = false
+        this.$refs.userInfoFromRef.clearValidate()
+      }
     }
   },
   // 监听属性 类似于data概念
@@ -91,6 +317,10 @@ export default {
       this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
           this.userInfo = response.userInfo
+          this.userInfoFrom.userName = response.userInfo.userName
+          this.userInfoFrom.nickName = response.userInfo.nickName
+          this.userInfoFrom.phone = response.userInfo.phone
+          this.userInfoFrom.email = response.userInfo.email
         })
     } else {
       this.$message.info('请先登录')
@@ -128,5 +358,11 @@ export default {
 .el-avatar--circle /deep/ img {
   height: 100%;
   width: 100%;
+}
+
+.my-form-item-span {
+  display: inline-block;
+  width: 65%;
+  margin-right: 5%;
 }
 </style>
