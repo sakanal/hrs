@@ -34,6 +34,12 @@
             <if test="isDeleted != null">
                 AND state.is_deleted = #{isDeleted}
             </if>
+            <if test="baseInfoIdList !=null and baseInfoIdList.size()>0">
+                AND base.id IN
+                <foreach collection="baseInfoIdList" item="baseInfoId" separator="," open="(" close=")">
+                    #{baseInfoId}
+                </foreach>
+            </if>
             <if test="publisherId !=null">
                 AND state.publisher_id=#{publisherId}
             </if>
@@ -93,6 +99,12 @@
             </if>
             <if test="isDeleted != null">
                 state.is_deleted = #{isDeleted}
+            </if>
+            <if test="baseInfoIdList !=null and baseInfoIdList.size()>0">
+                AND base.id IN
+                <foreach collection="baseInfoIdList" item="baseInfoId" separator="," open="(" close=")">
+                    #{baseInfoId}
+                </foreach>
             </if>
             <if test="publisherId !=null">
                 AND state.publisher_id=#{publisherId}

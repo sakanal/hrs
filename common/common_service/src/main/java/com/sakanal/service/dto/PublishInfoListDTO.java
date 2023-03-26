@@ -15,6 +15,8 @@ import java.util.List;
 public class PublishInfoListDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    // 房源id
+    private List<Long> baseInfoIdList;
     // 发布人id
     private Long publisherId;
     // 房源所在城市
