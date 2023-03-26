@@ -11,6 +11,7 @@ import com.sakanal.base.utils.Query;
 import com.sakanal.house.dao.HouseContactInfoDao;
 import com.sakanal.service.entity.house.HouseContactInfoEntity;
 import com.sakanal.house.service.HouseContactInfoService;
+import org.springframework.util.StringUtils;
 
 
 @Service("houseContactInfoService")
@@ -21,6 +22,19 @@ public class HouseContactInfoServiceImpl extends ServiceImpl<HouseContactInfoDao
         IPage<HouseContactInfoEntity> page = this.page(new Query<HouseContactInfoEntity>().getPage(params), new QueryWrapper<HouseContactInfoEntity>());
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public boolean updatePublisherNameByUserId(Map<String, Object> params) {
+        String userIdString = (String) params.get("userId");
+        if (StringUtils.hasText(userIdString)){
+            long userId = Long.parseLong(userIdString);
+            String nickName = (String) params.get("nickName");
+            if (StringUtils.hasText(nickName)){
+                return baseMapper.updatePublisherNameByUserId(userId,nickName);
+            }
+        }
+        return false;
     }
 
 }

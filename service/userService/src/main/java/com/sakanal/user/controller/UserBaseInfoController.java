@@ -90,4 +90,13 @@ public class UserBaseInfoController {
 
         return R.ok();
     }
+
+    @PutMapping("/updateUserInfo")
+    public R updateUserInfo(@RequestBody Map<String,Object> params){
+        if (userBaseInfoService.updateUserInfo(params)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
 }

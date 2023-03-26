@@ -3,6 +3,7 @@ package com.sakanal.house.dao;
 import com.sakanal.service.entity.house.HouseContactInfoEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 房源联系电话表
@@ -14,4 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface HouseContactInfoDao extends BaseMapper<HouseContactInfoEntity> {
 
+    boolean updatePublisherNameByUserId(@Param("userId") Long userId, @Param("nickName") String nickName);
 }

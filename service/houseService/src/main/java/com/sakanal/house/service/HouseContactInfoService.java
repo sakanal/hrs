@@ -16,5 +16,7 @@ import java.util.Map;
 public interface HouseContactInfoService extends IService<HouseContactInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    boolean updatePublisherNameByUserId(Map<String, Object> params);
 }
 

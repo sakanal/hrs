@@ -32,5 +32,7 @@ public interface UserBaseInfoService extends IService<UserBaseInfoEntity> {
      * 更新头像，params中有redis（hash）中的item（uuid）和用户id
      */
     boolean updateAvatar(Map<String, Object> params);
+
+    boolean updateUserInfo(Map<String, Object> params);
 }
 

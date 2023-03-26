@@ -16,6 +16,14 @@
         <result property="createdTime" column="created_time"/>
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
+    <update id="updatePublisherNameByUserId">
+        UPDATE house_state AS state,
+            house_contact_info AS contact
+        SET contact.publisher_name=#{nickName}
+        WHERE
+            state.base_info_id = contact.base_info_id
+          AND state.publisher_id=#{userId}
+    </update>
 
 
 </mapper>

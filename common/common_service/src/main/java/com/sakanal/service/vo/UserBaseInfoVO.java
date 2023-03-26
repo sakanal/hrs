@@ -18,7 +18,7 @@ public class UserBaseInfoVO implements Serializable {
     private String userName;
     private String nickName;
     private String headPortraitUrl;
-    private Long phone;
+    private String phone;
     private String email;
 
     public UserBaseInfoVO(UserBaseInfoEntity userBaseInfoEntity) {
