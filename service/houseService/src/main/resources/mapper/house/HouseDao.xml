@@ -181,7 +181,7 @@
             AND base.id=-1
         </if>
         ORDER BY promotion.promotion_number DESC
-        LIMIT 10
+        LIMIT 5
     </select>
     <select id="getMyBrowseList" resultType="com.sakanal.service.vo.PublishBaseInfoVO">
         SELECT
