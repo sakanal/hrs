@@ -13,6 +13,8 @@ public interface HouseDao {
 
     List<PublishBaseInfoVO> getPublishInfoList(PublishInfoListDTO publishInfoListDTO);
 
+    List<PublishBaseInfoVO> getMyBrowseList(PublishInfoListDTO publishInfoListDTO);
+
     long countPublishList(PublishInfoListDTO publishInfoListDTO);
 
     List<RecommendInfoVO> getRecommendInfoList(RecommendInfoListDTO recommendInfoListDTO);

@@ -308,6 +308,13 @@ public class HouseServiceImpl implements HouseService {
         return new PageUtils(publishBaseInfoVOList, Math.toIntExact(totalCount), PageConstant.LIMIT, publishInfoListDTO.getCurrent());
     }
 
+    @Override
+    public List<PublishBaseInfoVO> getBrowsePublishInfoList(PublishInfoListDTO publishInfoListDTO) {
+        List<PublishBaseInfoVO> publishInfoList = houseDao.getMyBrowseList(publishInfoListDTO);
+        setPublishBaseOtherInfo(publishInfoList);
+        return publishInfoList;
+    }
+
     public PublishInfoVO getPublishInfoFromDataBase(Long houseBaseInfoId) {
         PublishInfoVO publishInfoVO = new PublishInfoVO();
         publishInfoVO.setHouseBaseInfoId(houseBaseInfoId);

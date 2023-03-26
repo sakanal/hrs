@@ -7,6 +7,7 @@ import com.sakanal.house.service.HouseService;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.dto.RecommendInfoListDTO;
+import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.service.vo.PublishInfoVO;
 import com.sakanal.service.vo.RecommendInfoVO;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,11 @@ public class HouseInfoController {
         PageUtils page = houseService.getPublishInfoList(publishInfoListDTO);
 
         return R.ok().put("page", page);
+    }
+    @PostMapping("/getBrowsePublishInfoList")
+    public R getBrowsePublishInfoList(@RequestBody PublishInfoListDTO publishInfoListDTO){
+        List<PublishBaseInfoVO> list = houseService.getBrowsePublishInfoList(publishInfoListDTO);
+        return R.ok().put("data",list);
     }
 
     /**

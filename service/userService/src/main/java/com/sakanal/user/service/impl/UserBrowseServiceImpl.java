@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sakanal.base.constant.PageConstant;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 import com.sakanal.base.utils.R;
 import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.entity.user.UserBrowseEntity;
 import com.sakanal.service.utils.JwtUtils;
+import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.user.dao.UserBrowseDao;
 import com.sakanal.user.feign.HouseFeignClient;
 import com.sakanal.user.service.UserBrowseService;
@@ -18,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -62,19 +62,40 @@ public class UserBrowseServiceImpl extends ServiceImpl<UserBrowseDao, UserBrowse
     }
 
     @Override
-    public PageUtils getMyBrowse(String token) {
+    public PageUtils getMyBrowse(String token,Integer current) {
         String userId = JwtUtils.getUserIdByToken(token);
         if (StringUtils.hasText(userId)) {
-            List<Long> baseInfoIdList = this.list(new LambdaQueryWrapper<UserBrowseEntity>()
-                    .select(UserBrowseEntity::getBaseInfoId)
+            List<UserBrowseEntity> list = this.list(new LambdaQueryWrapper<UserBrowseEntity>()
+                    .select(UserBrowseEntity::getBaseInfoId,UserBrowseEntity::getLastBrowseTime)
                     .eq(UserBrowseEntity::getUserId, userId)
                     .orderByDesc(UserBrowseEntity::getLastBrowseTime)
-            ).stream().map(UserBrowseEntity::getBaseInfoId).collect(Collectors.toList());
+                    .last("limit "+((current-1)*PageConstant.LIMIT)+","+PageConstant.LIMIT)
+            );
+            long total = this.count(new LambdaQueryWrapper<UserBrowseEntity>()
+                    .eq(UserBrowseEntity::getUserId, userId)
+            );
+            List<Long> baseInfoIdList = list.stream().map(UserBrowseEntity::getBaseInfoId).collect(Collectors.toList());
             if (baseInfoIdList.size()>0){
+                // 构建搜索条件
                 PublishInfoListDTO publishInfoListDTO = new PublishInfoListDTO();
                 publishInfoListDTO.setBaseInfoIdList(baseInfoIdList);
-                R r = houseFeignClient.getPublishInfoList(publishInfoListDTO);
-                return r.getData("page",new TypeReference<PageUtils>(){});
+                publishInfoListDTO.setCurrent(current);
+                R r = houseFeignClient.getBrowsePublishInfoList(publishInfoListDTO);
+                List<PublishBaseInfoVO> publishBaseInfoVOList = r.getData("data", new TypeReference<List<PublishBaseInfoVO>>() {
+                });
+                List<PublishBaseInfoVO> result = new ArrayList<>();
+                // 重构结果，按照时间倒序排列
+                for (UserBrowseEntity userBrowseEntity : list) {
+                    Long baseInfoId = userBrowseEntity.getBaseInfoId();
+                    Date lastBrowseTime = userBrowseEntity.getLastBrowseTime();
+                    publishBaseInfoVOList.forEach(publishBaseInfoVO -> {
+                        if (Objects.equals(baseInfoId, publishBaseInfoVO.getBaseInfoId())) {
+                            publishBaseInfoVO.setLastBrowseTime(lastBrowseTime);
+                            result.add(publishBaseInfoVO);
+                        }
+                    });
+                }
+                return new PageUtils(result,Math.toIntExact(total), PageConstant.LIMIT,current);
             }
         }
         return null;

@@ -34,12 +34,6 @@
             <if test="isDeleted != null">
                 AND state.is_deleted = #{isDeleted}
             </if>
-            <if test="baseInfoIdList !=null and baseInfoIdList.size()>0">
-                AND base.id IN
-                <foreach collection="baseInfoIdList" item="baseInfoId" separator="," open="(" close=")">
-                    #{baseInfoId}
-                </foreach>
-            </if>
             <if test="publisherId !=null">
                 AND state.publisher_id=#{publisherId}
             </if>
@@ -99,12 +93,6 @@
             </if>
             <if test="isDeleted != null">
                 state.is_deleted = #{isDeleted}
-            </if>
-            <if test="baseInfoIdList !=null and baseInfoIdList.size()>0">
-                AND base.id IN
-                <foreach collection="baseInfoIdList" item="baseInfoId" separator="," open="(" close=")">
-                    #{baseInfoId}
-                </foreach>
             </if>
             <if test="publisherId !=null">
                 AND state.publisher_id=#{publisherId}
@@ -194,5 +182,46 @@
         </if>
         ORDER BY promotion.promotion_number DESC
         LIMIT 10
+    </select>
+    <select id="getMyBrowseList" resultType="com.sakanal.service.vo.PublishBaseInfoVO">
+        SELECT
+        base.id baseInfoId,
+        base.`name` houseTitle,
+        base.room_number roomNumber,
+        base.hall_number hallNumber,
+        base.cloakroom_number cloakroomNumber,
+        base.area_covered areaCovered,
+        rent.monthly_rent monthlyRent,
+        image.url,
+        contact.publisher_name publisherName,
+        contact.publisher_identity publisherIdentity,
+        area.superior_id roadId,
+        base.area_id areaId,
+        area.`name` areaName,
+        state.house_publish_state state
+        FROM house_state state INNER JOIN house_base_info base ON state.base_info_id = base.id
+        INNER JOIN house_rent_info rent ON state.base_info_id = rent.base_info_id
+        INNER JOIN house_image image ON state.base_info_id = image.base_info_id
+        INNER JOIN house_contact_info contact ON state.base_info_id = contact.base_info_id
+        INNER JOIN house_area area ON base.area_id = area.id
+        INNER JOIN house_detailed_info AS detailed ON base.id = detailed.base_info_id
+        <where>
+            image.is_default_image = 1
+            <if test="isDeleted == null">
+                AND state.is_deleted = 0
+            </if>
+            <if test="isDeleted != null">
+                AND state.is_deleted = #{isDeleted}
+            </if>
+            <if test="baseInfoIdList !=null and baseInfoIdList.size()>0">
+                AND base.id IN
+                <foreach collection="baseInfoIdList" item="baseInfoId" separator="," open="(" close=")">
+                    #{baseInfoId}
+                </foreach>
+            </if>
+            <if test="state!=null">
+                AND state.house_publish_state=#{state}
+            </if>
+        </where>
     </select>
 </mapper>

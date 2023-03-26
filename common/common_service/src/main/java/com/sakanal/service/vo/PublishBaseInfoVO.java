@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -39,5 +40,6 @@ public class PublishBaseInfoVO implements Serializable {
     private Long areaId;
     private String areaName;
     private Integer state;
+    private Date lastBrowseTime;
 
 }

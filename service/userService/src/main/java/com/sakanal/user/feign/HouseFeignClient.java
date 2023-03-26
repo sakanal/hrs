@@ -16,4 +16,6 @@ public interface HouseFeignClient {
 
     @PostMapping("/house/houseInfo/getPublishInfoList")
     public R getPublishInfoList(@RequestBody PublishInfoListDTO publishInfoListDTO);
+    @PostMapping("/house/houseInfo/getBrowsePublishInfoList")
+    public R getBrowsePublishInfoList(@RequestBody PublishInfoListDTO publishInfoListDTO);
 }

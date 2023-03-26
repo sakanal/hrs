@@ -88,9 +88,10 @@ public class UserBrowseController {
         return R.ok();
     }
 
-    @GetMapping("/myBrowse")
-    public R myBrowse(@RequestHeader(value = "token") String token) {
-        PageUtils page = userBrowseService.getMyBrowse(token);
+    @GetMapping("/myBrowse/{current}")
+    public R myBrowse(@RequestHeader(value = "token") String token,
+                      @PathVariable Integer current) {
+        PageUtils page = userBrowseService.getMyBrowse(token,current);
         return R.ok().put("page", page);
     }
 

@@ -4,6 +4,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.dto.RecommendInfoListDTO;
+import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.service.vo.PublishInfoVO;
 import com.sakanal.service.vo.RecommendInfoVO;
 
@@ -15,6 +16,7 @@ public interface HouseService {
     boolean updatePublish(PublishInfoDTO publishInfoDTO);
 
     PageUtils getPublishInfoList(PublishInfoListDTO publishInfoListDTO);
+    List<PublishBaseInfoVO> getBrowsePublishInfoList(PublishInfoListDTO publishInfoListDTO);
 
     PublishInfoVO getUpdatePublishInfo(Long houseBaseInfoId);
 
@@ -25,4 +27,5 @@ public interface HouseService {
     List<RecommendInfoVO> getRecommendList(RecommendInfoListDTO recommendInfoListDTO);
 
     List<RecommendInfoVO> getRecommendList(Long baseInfoId);
+
 }
