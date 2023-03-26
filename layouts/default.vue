@@ -13,9 +13,9 @@
           <el-menu class="my-el-menu-header" style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">
-                <el-link :underline="false" href="login">登录</el-link>
+                <el-link :underline="false" href="/login">登录</el-link>
                 <template>/</template>
-                <el-link :underline="false" href="register">注册</el-link>
+                <el-link :underline="false" href="/register">注册</el-link>
               </template>
               <template v-else>
                 <el-link :underline="false" v-text="userInfo.nickName"></el-link>

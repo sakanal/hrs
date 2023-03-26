@@ -214,7 +214,12 @@ export default {
     getUserInfo(){
       this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
-          this.userInfo = response.userInfo
+          if (response && response.code===0){
+            this.userInfo = response.userInfo
+          }else {
+            this.$message.error(response.msg)
+            this.$router.push({path:'/login'})
+          }
         })
     },
     tabClick (event) {
@@ -315,11 +320,16 @@ export default {
     if (cookie.get('userToken')) {
       this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
-          this.userInfo = response.userInfo
-          this.userInfoFrom.userName = response.userInfo.userName
-          this.userInfoFrom.nickName = response.userInfo.nickName
-          this.userInfoFrom.phone = response.userInfo.phone
-          this.userInfoFrom.email = response.userInfo.email
+          if (response && response.code===0){
+            this.userInfo = response.userInfo
+            this.userInfoFrom.userName = response.userInfo.userName
+            this.userInfoFrom.nickName = response.userInfo.nickName
+            this.userInfoFrom.phone = response.userInfo.phone
+            this.userInfoFrom.email = response.userInfo.email
+          }else {
+            this.$message.error(response.msg)
+            this.$router.push({path:'/login'})
+          }
         })
     } else {
       this.$message.info('请先登录')

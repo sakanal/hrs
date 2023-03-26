@@ -995,10 +995,15 @@ export default {
     if (cookie.get('userToken')) {
       this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
-          let userInfo = response.userInfo
-          this.contactForm.publisherName = userInfo.nickName
-          this.contactForm.contactPhone = userInfo.phone
-          this.userInfo = userInfo
+          if (response && response.code===0){
+            let userInfo = response.userInfo
+            this.contactForm.publisherName = userInfo.nickName
+            this.contactForm.contactPhone = userInfo.phone
+            this.userInfo = userInfo
+          }else {
+            this.$message.error(response.msg)
+            this.$router.push({path:'/login'})
+          }
         })
     } else {
       this.$router.push({ path: '/login' })

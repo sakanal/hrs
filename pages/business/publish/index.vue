@@ -227,10 +227,16 @@ export default {
   // 生命周期 - 创建完成（可以访问当前this实例）
   created () {
     if (cookie.get('userToken')) {
+
       this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
-          this.userInfo = response.userInfo
-          this.getPublishInfoList(1,2)
+          if (response && response.code===0){
+            this.userInfo = response.userInfo
+            this.getPublishInfoList(1,2)
+          }else {
+            this.$message.error(response.msg)
+            this.$router.push({path:'/login'})
+          }
         })
     } else {
       this.$router.push({ path: '/login' })

@@ -180,7 +180,12 @@ export default {
     if (cookie.get('userToken')) {
       this.$axios.get('/user/login/userInfoByToken')
         .then(response => {
-          this.userInfo = response.userInfo
+          if (response && response.code===0){
+            this.userInfo = response.userInfo
+          }else {
+            this.$message.error(response.msg)
+            this.$router.push({path:'/login'})
+          }
         })
     }else {
       this.$message.info('请先登录')
