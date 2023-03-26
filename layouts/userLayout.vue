@@ -68,7 +68,7 @@
                            background-color="#545c64"
                            text-color="#fff">
                     <el-menu-item index="/user">用户中心</el-menu-item>
-                    <el-submenu index="/user/info">
+                    <el-submenu index="/user">
                       <template slot="title">
                         <span>账户设置</span>
                       </template>

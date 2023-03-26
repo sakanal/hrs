@@ -136,7 +136,6 @@
           </el-col>
         </el-row>
       </div>
-      {{ userInfo }}
     </div>
   </div>
 </template>
