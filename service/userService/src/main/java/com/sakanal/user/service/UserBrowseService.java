@@ -18,5 +18,7 @@ public interface UserBrowseService extends IService<UserBrowseEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     void browse(String token, Long houseBaseId);
+
+    PageUtils getMyBrowse(String token);
 }
 

@@ -57,15 +57,17 @@ public class PublishInfoListDTO implements Serializable {
     }
 
     public void setRentQuery(String rentQuery) {
-        String[] split = rentQuery.split("_");
-        if (split.length==1){
-            this.minRent= Long.valueOf(split[0]);
-        }else {
-            if (StringUtils.hasText(split[0])){
-                this.minRent = Long.valueOf(split[0]);
-            }
-            if (StringUtils.hasText(split[1])){
-                this.maxRent = Long.valueOf(split[1]);
+        if (StringUtils.hasText(rentQuery)){
+            String[] split = rentQuery.split("_");
+            if (split.length==1){
+                this.minRent= Long.valueOf(split[0]);
+            }else {
+                if (StringUtils.hasText(split[0])){
+                    this.minRent = Long.valueOf(split[0]);
+                }
+                if (StringUtils.hasText(split[1])){
+                    this.maxRent = Long.valueOf(split[1]);
+                }
             }
         }
         this.rentQuery = rentQuery;
