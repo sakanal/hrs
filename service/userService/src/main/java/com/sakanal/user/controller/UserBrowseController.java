@@ -1,21 +1,14 @@
 package com.sakanal.user.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.sakanal.service.entity.user.UserBrowseEntity;
-import com.sakanal.user.service.UserBrowseService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
+import com.sakanal.service.entity.user.UserBrowseEntity;
+import com.sakanal.user.service.UserBrowseService;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -82,9 +75,16 @@ public class UserBrowseController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("user:userbrowse:delete")
-    public R delete(@RequestBody Long[] ids){
-		userBrowseService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] ids) {
+        userBrowseService.removeByIds(Arrays.asList(ids));
 
+        return R.ok();
+    }
+
+    @PostMapping("/browse/{houseBaseId}")
+    public R browse(@RequestHeader(value = "token") String token,
+                    @PathVariable Long houseBaseId) {
+        userBrowseService.browse(token, houseBaseId);
         return R.ok();
     }
 

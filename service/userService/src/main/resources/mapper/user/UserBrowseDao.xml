@@ -9,8 +9,6 @@
         <result property="userId" column="user_id"/>
         <result property="baseInfoId" column="base_info_id"/>
         <result property="lastBrowseTime" column="last_browse_time"/>
-        <result property="houseCategoryId" column="house_category_id"/>
-        <result property="houseStateId" column="house_state_id"/>
         <result property="isDeleted" column="is_deleted"/>
         <result property="createdTime" column="created_time"/>
         <result property="modifyTime" column="modify_time"/>

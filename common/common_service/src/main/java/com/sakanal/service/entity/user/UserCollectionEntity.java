@@ -34,14 +34,6 @@ public class UserCollectionEntity implements Serializable {
      */
     private Long baseInfoId;
     /**
-     * 房源类别id
-     */
-    private Long houseCategoryId;
-    /**
-     * 房源状态id
-     */
-    private Long houseStateId;
-    /**
      * 是否删除 0-未删除 1-已删除
      */
     @TableLogic
