@@ -44,6 +44,7 @@
                   元/月
                 </span>
                 <template v-else>面议</template>
+                <el-button type="danger" size="small" @click="setHouseOff(publishInfo.baseInfoId)">我要下架</el-button>
               </el-col>
             </el-row>
             <el-divider></el-divider>
@@ -93,7 +94,7 @@
                   元/月
                 </span>
                 <template v-else>面议</template>
-                <el-button type="danger" @click="toChangeHouseInfo(publishInfo.baseInfoId)">我要修改</el-button>
+                <el-button type="danger" size="small" @click="toChangeHouseInfo(publishInfo.baseInfoId)">我要修改</el-button>
               </el-col>
             </el-row>
             <el-divider></el-divider>
@@ -143,7 +144,7 @@
                   元/月
                 </span>
                 <template v-else>面议</template>
-                <el-button type="danger" @click="toChangeHouseInfo(publishInfo.baseInfoId)">再次发布</el-button>
+                <el-button type="danger" size="small" @click="toChangeHouseInfo(publishInfo.baseInfoId)">再次发布</el-button>
               </el-col>
             </el-row>
             <el-divider></el-divider>
@@ -218,6 +219,14 @@ export default {
     },
     toChangeHouseInfo(houseBaseInfoId){
       this.$router.push({path:`/business/publish/update/${houseBaseInfoId}`})
+    },
+    setHouseOff(houseBaseInfoId){
+      this.$axios.delete(`/house/housestate/setHouseOff/${houseBaseInfoId}`).then(response=>{
+        if (response && response.data){
+          this.$message.success('下架成功')
+          this.getPublishInfoList(1,2)
+        }
+      })
     }
   },
   // 监听属性 类似于data概念
