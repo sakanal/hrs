@@ -4,11 +4,9 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.PublishStateConstant;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.HouseStateEntity;
 import com.sakanal.house.service.HouseStateService;
@@ -86,6 +84,14 @@ public class HouseStateController {
 		houseStateService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @DeleteMapping("/setHouseOff/{houseBaseInfoId}")
+    public R setHouseOff(@PathVariable Long houseBaseInfoId){
+        HouseStateEntity houseStateEntity = new HouseStateEntity();
+        houseStateEntity.setHousePublishState(PublishStateConstant.PUBLISH_END_STATE);
+        boolean update = houseStateService.update(houseStateEntity, new LambdaQueryWrapper<HouseStateEntity>().eq(HouseStateEntity::getBaseInfoId, houseBaseInfoId));
+        return R.ok().put("data",update);
     }
 
 }
