@@ -24,20 +24,20 @@
                 <el-link :underline="false" @click="toLogout">退出</el-link>
               </template>
             </el-menu-item>
-            <el-submenu index="2">
+            <el-submenu index="/user">
               <template slot="title">
                 <el-link :underline="false" href="/user">个人中心</el-link>
               </template>
               <el-menu-item index="/user">我的信息</el-menu-item>
-              <el-menu-item index="2-2">我的收藏</el-menu-item>
-              <el-menu-item index="2-3">我的浏览</el-menu-item>
+              <el-menu-item index="/user/collection">我的收藏</el-menu-item>
+              <el-menu-item index="/user/browse">我的浏览</el-menu-item>
             </el-submenu>
-            <el-submenu index="3">
+            <el-submenu index="/business">
               <template slot="title">
                 <el-link :underline="false" href="/business">商家中心</el-link>
               </template>
               <el-menu-item index="/business">我的发布</el-menu-item>
-              <el-menu-item index="3-2">账户资料</el-menu-item>
+              <el-menu-item index="/user">账户资料</el-menu-item>
             </el-submenu>
           </el-menu>
         </el-col>
