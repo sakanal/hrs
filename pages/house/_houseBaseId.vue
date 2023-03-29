@@ -9,13 +9,13 @@
             </div>
           </el-col>
           <el-col :span="4">
-            <template>
-              <el-button type="text" icon="el-icon-star-off">
+            <template v-if="!isMyCollection">
+              <el-button type="text" icon="el-icon-star-off" @click="addCollection">
                 <div style="font-size: 12px;margin-top: 8px">加入收藏</div>
               </el-button>
             </template>
-            <template>
-              <el-button type="text" icon="el-icon-star-on">
+            <template v-else>
+              <el-button type="text" icon="el-icon-star-on" @click="removeCollection">
                 <div style="font-size: 12px;margin-top: 8px">取消收藏</div>
               </el-button>
             </template>
@@ -327,6 +327,7 @@ export default {
       houseInfo: {},
       previewSrcList: [],
       recommendInfoList: [],
+      isMyCollection: false
     }
   },
   // 方法集合
@@ -343,6 +344,22 @@ export default {
         }
       })
     },
+    addCollection(){
+      this.$axios.post(`/user/usercollection/addCollection/${this.houseBaseId}`).then(response=>{
+        if (response && response.code===0){
+          this.$message.success('加入收藏成功')
+          this.isMyCollection=true
+        }
+      })
+    },
+    removeCollection(){
+      this.$axios.delete(`/user/usercollection/removeCollection/${this.houseBaseId}`).then(response=>{
+        if (response && response.code===0){
+          this.$message.success('取消收藏成功')
+          this.isMyCollection=false
+        }
+      })
+    },
     getPhone(){
       alert('phone')
     }
@@ -355,6 +372,11 @@ export default {
   created () {
     if (cookie.get('userToken')) {
       this.$axios.post(`/user/userbrowse/browse/${this.houseBaseId}`)
+      this.$axios.get(`/user/usercollection/isMyCollection/${this.houseBaseId}`).then(response=>{
+        if (response && response.code===0){
+          this.isMyCollection=response.data
+        }
+      })
     }
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）

@@ -76,13 +76,14 @@
                       <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>
                       <el-menu-item index="/user/info/messageManagement">消息管理</el-menu-item>
                     </el-submenu>
-                    <el-submenu index="/user/collection">
-                      <template slot="title">
-                        <span>我的收藏</span>
-                      </template>
-                      <el-menu-item index="/user/collection/who">谁收藏我的信息</el-menu-item>
-                      <el-menu-item index="/user/collection/my">我收藏的信息</el-menu-item>
-                    </el-submenu>
+<!--                    <el-submenu index="/user/collection">-->
+<!--                      <template slot="title">-->
+<!--                        <span>我的收藏</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="/user/collection/who">谁收藏我的信息</el-menu-item>-->
+<!--                      <el-menu-item index="/user/collection/my">我收藏的信息</el-menu-item>-->
+<!--                    </el-submenu>-->
+                    <el-menu-item index="/user/collection">我的收藏</el-menu-item>
                     <el-menu-item index="/user/browse">我的浏览</el-menu-item>
                   </el-menu>
                 </el-col>
