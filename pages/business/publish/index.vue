@@ -18,7 +18,11 @@
                 <div>
                   <template>
                     <div class="my-title">
-                      {{ publishInfo.houseTitle }}
+                      <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
+                        <span style="font-size: 18px;text-overflow: ellipsis;">
+                          {{ publishInfo.houseTitle }}
+                        </span>
+                      </el-link>
                     </div>
                   </template>
                 </div>
