@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.user.UserCollectionEntity;
 import com.sakanal.user.service.UserCollectionService;
@@ -86,6 +82,38 @@ public class UserCollectionController {
 		userCollectionService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @GetMapping("/myCollection/{current}")
+    public R myBrowse(@RequestHeader(value = "token") String token,
+                      @PathVariable Integer current) {
+        PageUtils page = userCollectionService.getMyCollection(token,current);
+        return R.ok().put("page", page);
+    }
+
+    @GetMapping("/isMyCollection/{houseBaseId}")
+    public R isMyCollection(@RequestHeader(value = "token") String token,
+                            @PathVariable Long houseBaseId){
+        if (userCollectionService.isMyCollection(token,houseBaseId)){
+            return R.ok().put("data",true);
+        }
+        return R.ok().put("data",false);
+    }
+    @PostMapping("/addCollection/{houseBaseId}")
+    public R addCollection(@RequestHeader(value = "token") String token,
+                           @PathVariable Long houseBaseId){
+        if (userCollectionService.addCollection(token,houseBaseId)){
+            return R.ok().put("data",true);
+        }
+        return R.ok().put("data",false);
+    }
+    @DeleteMapping("/removeCollection/{houseBaseId}")
+    public R removeCollection(@RequestHeader(value = "token") String token,
+                           @PathVariable Long houseBaseId){
+        if (userCollectionService.removeCollection(token,houseBaseId)){
+            return R.ok().put("data",true);
+        }
+        return R.ok().put("data",false);
     }
 
 }

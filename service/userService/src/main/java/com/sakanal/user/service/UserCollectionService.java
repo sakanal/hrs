@@ -16,5 +16,13 @@ import java.util.Map;
 public interface UserCollectionService extends IService<UserCollectionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils getMyCollection(String token, Integer current);
+
+    boolean isMyCollection(String token, Long houseBaseId);
+
+    boolean addCollection(String token, Long houseBaseId);
+
+    boolean removeCollection(String token, Long houseBaseId);
 }
 
