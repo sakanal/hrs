@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("common.redis")
 public class MyCommonRedisProperties {
-    private Long expireTime = 1000L * 60 * 60 * 24 * 7;
-    private Long visitorExpireTime = 1000L * 60 * 60;
+    private Long expireTime = (long) 60 * 60 * 24 * 7;
+    private Long visitorExpireTime = (long) 60 * 60;
+    private Long codeExpireTime = (long) 60 * 5;
     private String userInfoPrefix = "userInfo::";
     private String visitorPrefix = "visitor::";
     private String avatarTempPrefix = "avatar::temp";
+    private String codePrefix = "code::";
 }
