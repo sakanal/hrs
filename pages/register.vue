@@ -18,7 +18,23 @@
             <span>logo</span>
           </div>
           <div>
-            <el-form ref="registerForm" :model="register" :rules="rules" status-icon label-width="0px" class="demo-ruleForm">
+            <el-form ref="registerForm" :model="register" :rules="rules" status-icon label-width="0px"
+                     class="demo-ruleForm">
+              <el-form-item prop="phone">
+                <el-input v-model="register.phone" placeholder="手机号" auto-complete="false">
+                  <template slot="append">
+                    <template v-if="!hasCode">
+                      <el-button @click="getCode">获取动态码</el-button>
+                    </template>
+                    <template v-else>
+                      <span>重新获取({{time}})</span>
+                    </template>
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="code">
+                <el-input v-model="register.code" placeholder="动态码" auto-complete="false"></el-input>
+              </el-form-item>
               <el-form-item prop="userName">
                 <el-input v-model="register.userName" placeholder="用户名" autocomplete="off"/>
               </el-form-item>
@@ -65,7 +81,7 @@ export default {
         callback(new Error('请输入姓名'))
       }else{
         this.$axios.get(`/user/register/checkUserName/${value}`)
-          .then(response=>{
+          .then(response => {
             if (!response.result) {
               callback(new Error('用户名重复'))
             } else {
@@ -74,15 +90,61 @@ export default {
           })
       }
     }
+    const validatePhone = (rule, value, callback) => {
+      const pattern = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+      if (value === '') {
+        callback(new Error('请输入手机号'))
+      } else if (!pattern.test(value)) {
+        callback(new Error('请输入有效手机号'))
+      } else {
+        callback()
+      }
+    }
+    const validateCode = (rule, value, callback) => {
+      const pattern = /^\d{6}$/
+      if (value === '') {
+        callback(new Error('请输入动态码'))
+      } else if (!pattern.test(value)) {
+        callback(new Error('请输入有效动态码'))
+      } else {
+        callback()
+      }
+    }
     return {
       imgSrc: require('../static/image/login.jpg'),
       checkUserName: false,
+      hasCode: false,
+      time: 60,
       register: {
+        phone: '',
+        code: '',
         userName: '',
         password: '',
         checkPassword: ''
       },
       rules: {
+        phone: [
+          {
+            required: true,
+            message: '请输入手机号',
+            trigger: 'blur'
+          },
+          {
+            validator: validatePhone,
+            trigger: 'blur'
+          }
+        ],
+        code: [
+          {
+            required: true,
+            message: '请输入动态码',
+            trigger: 'blur'
+          },
+          {
+            validator: validateCode,
+            trigger: 'blur'
+          }
+        ],
         userName: [
           {
             required: true,
@@ -128,10 +190,38 @@ export default {
     }
   },
   methods: {
+    getCode () {
+      this.$refs.registerForm.validateField('phone', (valid) => {
+        if (!valid && !this.hasCode) {
+          this.$axios.get(`/user/register/sendCode/${this.register.phone}`).then(response => {
+            if (response && response.code === 0) {
+              this.$message.success('动态码发送成功')
+              this.time=60
+              this.timer()
+              this.hasCode = true
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        }
+      })
+    },
+    //发送手机验证码倒计时
+    timer() {
+      if (this.time > 1) {
+        this.time--;
+        setTimeout(this.timer, 1000);
+      } else{
+        this.time=0;
+        this.hasCode=false
+      }
+    },
     toRegister () {
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
           let data = {
+            'phone': this.register.phone,
+            'code': this.register.code,
             'userName': this.register.userName,
             'password': this.register.password
           }
