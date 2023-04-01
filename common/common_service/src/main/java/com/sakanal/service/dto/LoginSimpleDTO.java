@@ -4,10 +4,11 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 @Data
-public class LoginOrRegisterSimpleDTO implements Serializable {
+public class LoginSimpleDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     @NotNull(message = "用户名不能为空")
     private String userName;

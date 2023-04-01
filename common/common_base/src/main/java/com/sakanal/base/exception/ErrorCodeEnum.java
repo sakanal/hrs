@@ -3,6 +3,9 @@ package com.sakanal.base.exception;
 public enum ErrorCodeEnum {
     REGISTER_FAIL_EXCEPTION(10000,"注册失败"),
     REPEAT_USERNAME_EXCEPTION(10001,"重复的用户名"),
+    REPEAT_PHONE_EXCEPTION(10002,"重复的手机号"),
+    SMS_FAIL_EXCEPTION(10003,"短信发送失败"),
+    SMS_INVALID_EXCEPTION(10004,"无效的验证码"),
     LOGIN_FAIL_EXCEPTION(10010,"登录失败"),
     TOKEN_EXPIRE_EXCEPTION(10011,"登录失效"),
     TOKEN_INVALID_EXCEPTION(10012,"用户无效"),

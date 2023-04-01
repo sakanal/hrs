@@ -11,7 +11,8 @@ import com.sakanal.base.exception.MyException;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 import com.sakanal.service.dto.ChangePasswordDTO;
-import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
+import com.sakanal.service.dto.LoginSimpleDTO;
+import com.sakanal.service.dto.RegisterDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.service.properties.MyCommonRedisProperties;
 import com.sakanal.service.utils.JwtUtils;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,13 +53,22 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
     }
 
     @Override
-    public boolean register(LoginOrRegisterSimpleDTO registerSimple) {
-        UserBaseInfoEntity userBaseInfo = new UserBaseInfoEntity(registerSimple);
-        // 设置随机nickName
-        userBaseInfo.setNickName(RandomUtil.randomString(8));
-        // 设置默认头像
-        userBaseInfo.setHeadPortraitUrl(defaultAvatar);
-        return this.save(userBaseInfo);
+    public boolean register(RegisterDTO registerSimple) {
+        Long phone = Long.valueOf(registerSimple.getPhone());
+        String redisCode = (String) redisUtils.stringGet(redisProperties.getCodePrefix() + phone);
+        if (Objects.equals(registerSimple.getCode(), redisCode)) {
+            if (userOnly(phone, registerSimple.getUserName())) {
+                UserBaseInfoEntity userBaseInfo = new UserBaseInfoEntity(registerSimple);
+                // 设置随机nickName
+                userBaseInfo.setNickName(RandomUtil.randomString(8));
+                // 设置默认头像
+                userBaseInfo.setHeadPortraitUrl(defaultAvatar);
+                return this.save(userBaseInfo);
+            }
+        } else {
+            throw new MyException(ErrorCodeEnum.SMS_INVALID_EXCEPTION.getMsg(), ErrorCodeEnum.SMS_INVALID_EXCEPTION.getCode());
+        }
+        return false;
     }
 
     @Override
@@ -69,7 +78,17 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
     }
 
     @Override
-    public String login(LoginOrRegisterSimpleDTO loginSimple) {
+    public boolean userOnly(Long phone, String userName) {
+        LambdaQueryWrapper<UserBaseInfoEntity> lambdaQueryWrapper = new LambdaQueryWrapper<UserBaseInfoEntity>();
+        lambdaQueryWrapper.eq(UserBaseInfoEntity::getPhone, phone);
+        if (StringUtils.hasText(userName)) {
+            lambdaQueryWrapper.or().eq(UserBaseInfoEntity::getUserName, userName);
+        }
+        return this.count(lambdaQueryWrapper) == 0;
+    }
+
+    @Override
+    public String login(LoginSimpleDTO loginSimple) {
         UserBaseInfoEntity userBaseInfoEntity = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()).last("limit 1")).get(0);
         boolean matches = PasswordUtils.matches(loginSimple.getPassword(), userBaseInfoEntity.getPassword());
         if (matches) {

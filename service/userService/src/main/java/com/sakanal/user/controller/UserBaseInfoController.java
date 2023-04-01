@@ -1,25 +1,17 @@
 package com.sakanal.user.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
-import com.sakanal.base.exception.ErrorCodeEnum;
-import com.sakanal.service.dto.ChangePasswordDTO;
-import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
-import com.sakanal.service.vo.UserBaseInfoVO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
-import com.sakanal.service.entity.user.UserBaseInfoEntity;
-import com.sakanal.user.service.UserBaseInfoService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
+import com.sakanal.service.dto.ChangePasswordDTO;
+import com.sakanal.service.entity.user.UserBaseInfoEntity;
+import com.sakanal.user.service.UserBaseInfoService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Map;
 
 
 /**

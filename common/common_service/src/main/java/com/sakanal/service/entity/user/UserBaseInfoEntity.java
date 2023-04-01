@@ -3,8 +3,8 @@ package com.sakanal.service.entity.user;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sakanal.service.dto.ChangePasswordDTO;
+import com.sakanal.service.dto.RegisterDTO;
 import com.sakanal.service.utils.PasswordUtils;
-import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -77,10 +77,11 @@ public class UserBaseInfoEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
 
-    public UserBaseInfoEntity(LoginOrRegisterSimpleDTO registerSimple) {
+    public UserBaseInfoEntity(RegisterDTO registerSimple) {
         // 对密码加密
         registerSimple.setPassword(PasswordUtils.encode(registerSimple.getPassword()));
         BeanUtils.copyProperties(registerSimple,this);
+        this.phone= Long.valueOf(registerSimple.getPhone());
     }
 
     public UserBaseInfoEntity(Long userId, ChangePasswordDTO changePasswordDTO) {

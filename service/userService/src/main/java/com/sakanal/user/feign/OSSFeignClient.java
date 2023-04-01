@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Map;
 
 @Service
-@FeignClient(value = "thirdParty")
+@FeignClient(value = "thirdParty",contextId = "OSS")
 public interface OSSFeignClient {
 
     @DeleteMapping(value = "/thirdParty/OSS/remove")

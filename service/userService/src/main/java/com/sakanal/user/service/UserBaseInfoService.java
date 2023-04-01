@@ -3,11 +3,11 @@ package com.sakanal.user.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.service.dto.ChangePasswordDTO;
-import com.sakanal.service.dto.LoginOrRegisterSimpleDTO;
-import com.sakanal.service.vo.UserBaseInfoVO;
+import com.sakanal.service.dto.LoginSimpleDTO;
+import com.sakanal.service.dto.RegisterDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
+import com.sakanal.service.vo.UserBaseInfoVO;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -21,11 +21,13 @@ public interface UserBaseInfoService extends IService<UserBaseInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    boolean register(LoginOrRegisterSimpleDTO registerSimple);
+    boolean register(RegisterDTO registerSimple);
 
     boolean checkUserName(String userName);
 
-    String login(LoginOrRegisterSimpleDTO loginSimple);
+    boolean userOnly(Long phone,String userName);
+
+    String login(LoginSimpleDTO loginSimple);
 
     UserBaseInfoVO getUserInfoByToken(String token);
 
