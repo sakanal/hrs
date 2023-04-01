@@ -63,15 +63,19 @@ public class LoginController {
 
     @RequestMapping("/sendCode/{phone}")
     public R sendCode(@PathVariable String phone) {
-        if (!redisUtils.hasKey(redisProperties.getLoginCodePrefix() + phone)) {
-            String code = RandomUtil.randomNumbers(6);
-            Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {
-            });
-            if (result == 0) {
-                redisUtils.stringSet(redisProperties.getLoginCodePrefix() + phone, code, redisProperties.getCodeExpireTime());
-            } else {
-                return R.error(ErrorCodeEnum.SMS_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.SMS_FAIL_EXCEPTION.getMsg());
+        if (userBaseInfoService.userOnly(Long.valueOf(phone),null)){
+            if (!redisUtils.hasKey(redisProperties.getLoginCodePrefix() + phone)) {
+                String code = RandomUtil.randomNumbers(6);
+                Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {
+                });
+                if (result == 0) {
+                    redisUtils.stringSet(redisProperties.getLoginCodePrefix() + phone, code, redisProperties.getCodeExpireTime());
+                } else {
+                    return R.error(ErrorCodeEnum.SMS_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.SMS_FAIL_EXCEPTION.getMsg());
+                }
             }
+        }else {
+            return R.error(ErrorCodeEnum.PHONE_INVALID_EXCEPTION.getCode(), ErrorCodeEnum.PHONE_INVALID_EXCEPTION.getMsg());
         }
         return R.ok();
     }
