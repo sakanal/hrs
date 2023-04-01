@@ -7,11 +7,15 @@
     <el-form-item label="设施名字" prop="name">
       <el-input v-model="dataForm.name" placeholder="设施名字"></el-input>
     </el-form-item>
-    <el-form-item label="设施图标url" prop="iconUrl">
+    <el-form-item label="设施图标" prop="iconUrl">
       <el-input v-model="dataForm.iconUrl" placeholder="设施图标url"></el-input>
     </el-form-item>
-    <el-form-item label="设施类别 0-公共设施 1-卧室设施" prop="category">
-      <el-input v-model="dataForm.category" placeholder="设施类别 0-公共设施 1-卧室设施"></el-input>
+    <el-form-item label="设施类别" prop="category">
+<!--      <el-input v-model="dataForm.category" placeholder="设施类别 0-公共设施 1-卧室设施"></el-input>-->
+      <template>
+        <el-radio v-model="dataForm.category" label="0">公共设施</el-radio>
+        <el-radio v-model="dataForm.category" label="1">卧室设施</el-radio>
+      </template>
     </el-form-item>
 <!--    <el-form-item label="是否显示 0-不显示 1-显示" prop="showState">-->
 <!--      <el-input v-model="dataForm.showState" placeholder="是否显示 0-不显示 1-显示"></el-input>-->
@@ -42,8 +46,8 @@
           id: 0,
           name: '',
           iconUrl: '',
-          category: '',
-          showState: '',
+          category: '0',
+          showState: '1',
           isDeleted: '',
           createdTime: '',
           modifyTime: ''

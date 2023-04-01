@@ -7,18 +7,6 @@
     <el-form-item label="亮点" prop="name">
       <el-input v-model="dataForm.name" placeholder="亮点"></el-input>
     </el-form-item>
-<!--    <el-form-item label="是否显示 0-不显示 1-显示" prop="showState">-->
-<!--      <el-input v-model="dataForm.showState" placeholder="是否显示 0-不显示 1-显示"></el-input>-->
-<!--    </el-form-item>-->
-<!--    <el-form-item label="是否删除 0-未删除 1-已删除" prop="isDeleted">-->
-<!--      <el-input v-model="dataForm.isDeleted" placeholder="是否删除 0-未删除 1-已删除"></el-input>-->
-<!--    </el-form-item>-->
-<!--    <el-form-item label="创建时间" prop="createdTime">-->
-<!--      <el-input v-model="dataForm.createdTime" placeholder="创建时间"></el-input>-->
-<!--    </el-form-item>-->
-<!--    <el-form-item label="修改时间" prop="modifyTime">-->
-<!--      <el-input v-model="dataForm.modifyTime" placeholder="修改时间"></el-input>-->
-<!--    </el-form-item>-->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -35,7 +23,7 @@
         dataForm: {
           id: 0,
           name: '',
-          showState: '',
+          showState: '1',
           isDeleted: '',
           createdTime: '',
           modifyTime: ''

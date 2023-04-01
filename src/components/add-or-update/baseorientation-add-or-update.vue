@@ -7,9 +7,6 @@
     <el-form-item label="房屋朝向" prop="orientation">
       <el-input v-model="dataForm.orientation" placeholder="房屋朝向"></el-input>
     </el-form-item>
-    <el-form-item label="是否显示 0-不显示 1-显示" prop="showState">
-      <el-input v-model="dataForm.showState" placeholder="是否显示 0-不显示 1-显示"></el-input>
-    </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
