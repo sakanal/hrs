@@ -11,6 +11,7 @@ import com.sakanal.base.exception.MyException;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 import com.sakanal.service.dto.ChangePasswordDTO;
+import com.sakanal.service.dto.LoginPhoneDTO;
 import com.sakanal.service.dto.LoginSimpleDTO;
 import com.sakanal.service.dto.RegisterDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
@@ -55,7 +56,7 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
     @Override
     public boolean register(RegisterDTO registerSimple) {
         Long phone = Long.valueOf(registerSimple.getPhone());
-        String redisCode = (String) redisUtils.stringGet(redisProperties.getCodePrefix() + phone);
+        String redisCode = (String) redisUtils.stringGet(redisProperties.getRegisterCodePrefix() + phone);
         if (Objects.equals(registerSimple.getCode(), redisCode)) {
             if (userOnly(phone, registerSimple.getUserName())) {
                 UserBaseInfoEntity userBaseInfo = new UserBaseInfoEntity(registerSimple);
@@ -107,6 +108,32 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
         } else {
             return null;
         }
+    }
+
+    @Override
+    public String login(LoginPhoneDTO loginPhone) {
+        List<UserBaseInfoEntity> list = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getPhone, loginPhone.getPhone()));
+        if (list.size()==1){
+            String redisCode = (String) redisUtils.stringGet(redisProperties.getLoginCodePrefix() + loginPhone.getPhone());
+            if (Objects.equals(redisCode,loginPhone.getCode())){
+                UserBaseInfoEntity userBaseInfoEntity = list.get(0);
+                //登录成功 创建token，保存到redis中
+                String token = JwtUtils.getUserToken(userBaseInfoEntity.getId());
+                if (!redisUtils.hasKey(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId())) {
+                    String desensitizedEmail = DesensitizedUtil.email(userBaseInfoEntity.getEmail());
+                    String desensitizedPhone = DesensitizedUtil.mobilePhone(String.valueOf(userBaseInfoEntity.getPhone()));
+                    UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
+                    userBaseInfoVO.setPhone(desensitizedPhone);
+                    userBaseInfoVO.setEmail(desensitizedEmail);
+                    // token作为key，userInfo作为value，token中的有效数据为userId
+                    redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
+                }
+                return token;
+            } else {
+                throw new MyException(ErrorCodeEnum.SMS_INVALID_EXCEPTION.getMsg(), ErrorCodeEnum.SMS_INVALID_EXCEPTION.getCode());
+            }
+        }
+        return null;
     }
 
     @Override

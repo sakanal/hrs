@@ -52,12 +52,12 @@ public class RegisterController {
     @RequestMapping("/sendCode/{phone}")
     public R sendCode(@PathVariable String phone) {
         if (userBaseInfoService.userOnly(Long.valueOf(phone), null)) {
-            if (!redisUtils.hasKey(redisProperties.getCodePrefix() + phone)) {
+            if (!redisUtils.hasKey(redisProperties.getRegisterCodePrefix() + phone)) {
                 String code = RandomUtil.randomNumbers(6);
                 Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {
                 });
                 if (result == 0) {
-                    redisUtils.stringSet(redisProperties.getCodePrefix() + phone, code, redisProperties.getCodeExpireTime());
+                    redisUtils.stringSet(redisProperties.getRegisterCodePrefix() + phone, code, redisProperties.getCodeExpireTime());
                 } else {
                     return R.error(ErrorCodeEnum.SMS_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.SMS_FAIL_EXCEPTION.getMsg());
                 }

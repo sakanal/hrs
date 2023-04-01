@@ -14,5 +14,6 @@ public class MyCommonRedisProperties {
     private String userInfoPrefix = "userInfo::";
     private String visitorPrefix = "visitor::";
     private String avatarTempPrefix = "avatar::temp";
-    private String codePrefix = "code::";
+    private String registerCodePrefix = "register::code::";
+    private String loginCodePrefix = "login::code::";
 }
