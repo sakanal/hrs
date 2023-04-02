@@ -1,43 +1,47 @@
 <template>
   <div class=''>
-    <el-card style="margin: 20px 0 20px 0">
-      <el-steps :active="0" finish-status="success" simple>
-        <el-step icon="el-icon-map-location" title="房源定位"></el-step>
-        <el-step icon="el-icon-edit" title="填写信息"></el-step>
-        <el-step icon="el-icon-upload" title="等待审核"></el-step>
-      </el-steps>
-      <div style="background-color: #fffbe4; color: #ec4514; padding: 10px;margin-top: 10px">
-        为共建真实可信的生活服务平台，所有新发布的信息需要进行认证才能展现，认证方式包括：支付认证或芝麻信用认证
-        <br>
-        请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚
-      </div>
-    </el-card>
+    <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="19">
+        <el-card style="margin: 20px 0 20px 0">
+          <el-steps :active="0" finish-status="success" simple>
+            <el-step icon="el-icon-map-location" title="房源定位"></el-step>
+            <el-step icon="el-icon-edit" title="填写信息"></el-step>
+            <el-step icon="el-icon-upload" title="等待审核"></el-step>
+          </el-steps>
+          <div style="background-color: #fffbe4; color: #ec4514; padding: 10px;margin-top: 10px">
+            为共建真实可信的生活服务平台，所有新发布的信息需要进行认证才能展现，认证方式包括：支付认证或芝麻信用认证
+            <br>
+            请如实填写信息，如有虚假会有账号封禁及扣除保证金等处罚
+          </div>
+        </el-card>
 
-    <el-row :gutter="20">
-      <el-col>
-        <el-table :data="cityList" border :show-header="false">
-          <el-table-column prop="pinyin" width="50px" align="center"></el-table-column>
-          <el-table-column prop="cityList">
-            <template slot-scope="props">
-              <div class="my-table-no-border">
-                <el-table :data="props.row.cityList" :show-header="false">
-                  <el-table-column prop="name" width="80px"></el-table-column>
-                  <el-table-column prop="childrenList">
-                    <template slot-scope="props">
-                      <template v-for="children in props.row.childrenList">
+        <el-row :gutter="20">
+          <el-col>
+            <el-table :data="cityList" border :show-header="false">
+              <el-table-column prop="pinyin" width="50px" align="center"></el-table-column>
+              <el-table-column prop="cityList">
+                <template slot-scope="props">
+                  <div class="my-table-no-border">
+                    <el-table :data="props.row.cityList" :show-header="false">
+                      <el-table-column prop="name" width="80px"></el-table-column>
+                      <el-table-column prop="childrenList">
+                        <template slot-scope="props">
+                          <template v-for="children in props.row.childrenList">
                         <span style="margin-right: 25px">
                           <el-link :underline="false" @click="toInfo(children.id)">
                             {{ children.name }}
                           </el-link>
                         </span>
-                      </template>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
+                          </template>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
   </div>
