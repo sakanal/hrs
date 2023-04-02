@@ -6,7 +6,7 @@
     </el-form>
     <el-card class="box-card">
       <div slot="header" class="clearfix" style="text-align: center">
-        <span>房屋亮点</span>
+        <span>房屋朝向</span>
       </div>
       <div>
         <template  v-for="orientation in dataList">

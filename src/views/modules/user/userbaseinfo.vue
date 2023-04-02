@@ -26,7 +26,8 @@
         prop="id"
         header-align="center"
         align="center"
-        label="">
+        width="50"
+        label="id">
       </el-table-column>
       <el-table-column
         prop="userName"
@@ -44,7 +45,10 @@
         prop="headPortraitUrl"
         header-align="center"
         align="center"
-        label="头像url">
+        label="用户头像">
+        <template slot-scope="scope">
+          <img height="100px" width="100px" :src="scope.row.headPortraitUrl">
+        </template>
       </el-table-column>
       <el-table-column
         prop="phone"
@@ -57,30 +61,6 @@
         header-align="center"
         align="center"
         label="邮箱">
-      </el-table-column>
-      <el-table-column
-        prop="password"
-        header-align="center"
-        align="center"
-        label="密码">
-      </el-table-column>
-      <el-table-column
-        prop="isDeleted"
-        header-align="center"
-        align="center"
-        label="是否删除 0-未删除 1-已删除">
-      </el-table-column>
-      <el-table-column
-        prop="createdTime"
-        header-align="center"
-        align="center"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="modifyTime"
-        header-align="center"
-        align="center"
-        label="修改时间">
       </el-table-column>
       <el-table-column
         fixed="right"
