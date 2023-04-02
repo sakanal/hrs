@@ -121,16 +121,16 @@
                           <el-col :span="6">
                             <el-form-item prop="hasElevator">
                               <el-select v-model="baseForm.hasElevator" placeholder="有/无电梯">
-                                <el-option label="有电梯" :value="true"></el-option>
-                                <el-option label="没有电梯" :value="false"></el-option>
+                                <el-option label="有电梯" :value="1"></el-option>
+                                <el-option label="没有电梯" :value="0"></el-option>
                               </el-select>
                             </el-form-item>
                           </el-col>
                           <el-col :span="6">
                             <el-form-item prop="hasParkingPlace">
                               <el-select v-model="baseForm.hasParkingPlace" placeholder="有/无车位">
-                                <el-option label="有车位" :value="true"></el-option>
-                                <el-option label="没有车位" :value="false"></el-option>
+                                <el-option label="有车位" :value="1"></el-option>
+                                <el-option label="没有车位" :value="0"></el-option>
                               </el-select>
                             </el-form-item>
                           </el-col>
