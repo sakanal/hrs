@@ -5,18 +5,21 @@
       :visible.sync="visible"
       center>
       <div>
-        <el-form :label-position="'left'" label-width="80px">
+        <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.baseInfo">
           <el-form-item label="房源地区">
-            <div>{{ houseInfo.baseInfo.cityName }}-{{ houseInfo.baseInfo.roadName }}-{{ houseInfo.baseInfo.areaName }}
+            <div>
+              {{ houseInfo.baseInfo.cityName }}-{{ houseInfo.baseInfo.roadName }}-{{ houseInfo.baseInfo.areaName }}
             </div>
           </el-form-item>
           <el-form-item label="房源标题">
-            <div>{{ houseInfo.baseInfo.houseTitle }}</div>
+            <div>
+              {{ houseInfo.baseInfo.houseTitle }}
+            </div>
           </el-form-item>
         </el-form>
         <el-row>
           <el-col :span="12">
-            <el-form :label-position="'left'" label-width="80px">
+            <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.baseInfo">
               <el-form-item label="房源样式">
                 <div>
                   <el-tag>{{ houseInfo.baseInfo.roomNumber }}室</el-tag>
@@ -39,7 +42,7 @@
             </el-form>
           </el-col>
           <el-col :span="12">
-            <el-form :label-position="'left'" label-width="80px">
+            <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.rentInfo">
               <el-form-item label="基本租金">
                 <div>
                   <el-tag>{{ houseInfo.rentInfo.monthlyRent }}元/月</el-tag>
@@ -59,7 +62,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form :label-position="'left'" label-width="80px">
+            <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.detailedInfo">
               <el-form-item label="装修情况">
                 <div>
                   <el-tag>
@@ -87,7 +90,7 @@
             </el-form>
           </el-col>
           <el-col :span="12">
-            <el-form :label-position="'left'" label-width="80px">
+            <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.detailedInfo">
               <el-form-item label="看房时间">
                 <div>
                   <el-tag>
@@ -117,7 +120,7 @@
             </el-form>
           </el-col>
         </el-row>
-        <el-form :label-position="'left'" label-width="80px">
+        <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.detailedInfo">
           <el-form-item label="房源设施">
             <div v-if="houseInfo.detailedInfo.baseFacilitiesList.length>0">
               <template v-for="facilities in houseInfo.detailedInfo.baseFacilitiesList">
@@ -135,7 +138,7 @@
         </el-form>
         <el-row>
           <el-col :span="12">
-            <el-form :label-position="'left'" label-width="80px">
+            <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.contactInfo">
               <el-form-item label="发布人">
                 <div>{{houseInfo.contactInfo.publisherName}}</div>
               </el-form-item>
@@ -145,7 +148,7 @@
             </el-form>
           </el-col>
           <el-col :span="12">
-            <el-form :label-position="'left'" label-width="80px">
+            <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.contactInfo">
               <el-form-item label="发布身份">
                 <div>
                   <template v-if="houseInfo.contactInfo.publisherIdentity===0">
@@ -167,7 +170,7 @@
             </el-form>
           </el-col>
         </el-row>
-        <el-form :label-position="'left'" label-width="80px">
+        <el-form :label-position="'left'" label-width="80px" v-if="houseInfo.imageInfoList">
           <el-form-item label="房源图片">
             <div v-if="houseInfo.imageInfoList.length>0">
               <template v-for="image in houseInfo.imageInfoList">
@@ -208,10 +211,10 @@ export default {
       examine: false,
       houseInfo: {
         baseInfo: {
-          cityName: '',
-          roadName: '',
-          areaName: '',
-          houseTitle: '',
+          cityName: '城市',
+          roadName: '交通路',
+          areaName: '住宅区',
+          houseTitle: '标题',
           roomNumber: 10,
           hallNumber: 20,
           cloakroomNumber: 30,
