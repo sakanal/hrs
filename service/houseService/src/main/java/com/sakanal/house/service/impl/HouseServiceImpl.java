@@ -359,7 +359,6 @@ public class HouseServiceImpl implements HouseService {
             HouseStateEntity houseStateEntity = stateService.list(new LambdaQueryWrapper<HouseStateEntity>()
                     .select(HouseStateEntity::getPublisherId)
                     .eq(HouseStateEntity::getBaseInfoId, houseBaseInfoId)
-                    .eq(HouseStateEntity::getHousePublishState, PublishStateConstant.PUBLISH_STATE)
                     .last("limit 1")
             ).get(0);
             R r = userFeignClient.info(houseStateEntity.getPublisherId());
