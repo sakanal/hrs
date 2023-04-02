@@ -43,8 +43,8 @@ public class PublishInfoDTO implements Serializable {
         private BigDecimal areaCovered;
         private Integer totalFloor;
         private Integer floor;
-        private Boolean hasElevator;
-        private Boolean hasParkingPlace;
+        private Integer hasElevator;
+        private Integer hasParkingPlace;
         private Long orientationId;
 
         public void setHouseTitle(String houseTitle) {
