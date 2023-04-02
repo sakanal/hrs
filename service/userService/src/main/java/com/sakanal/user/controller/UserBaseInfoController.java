@@ -4,6 +4,7 @@ import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 import com.sakanal.service.dto.ChangePasswordDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
+import com.sakanal.service.vo.UserBaseInfoVO;
 import com.sakanal.user.service.UserBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -97,6 +98,16 @@ public class UserBaseInfoController {
         if (userBaseInfoService.changePassword(changePasswordDTO)){
             return R.ok();
         }else {
+            return R.error();
+        }
+    }
+
+    @GetMapping("/getPhone/{userId}")
+    public R userInfoByToken(@PathVariable Long userId) {
+        UserBaseInfoEntity userBaseInfo = userBaseInfoService.getById(userId);
+        if (userBaseInfo != null) {
+            return R.ok().put("phone", userBaseInfo.getPhone());
+        } else {
             return R.error();
         }
     }
