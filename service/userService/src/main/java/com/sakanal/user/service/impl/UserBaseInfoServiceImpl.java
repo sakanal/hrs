@@ -88,23 +88,24 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
         return this.count(lambdaQueryWrapper) == 0;
     }
 
+
+    private String createToken(UserBaseInfoEntity userBaseInfoEntity) {
+        String token = JwtUtils.getUserToken(userBaseInfoEntity.getId());
+        if (!redisUtils.hasKey(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId())) {
+            UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
+            // token作为key，userInfo作为value，token中的有效数据为userId
+            redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
+        }
+        return token;
+    }
+
     @Override
     public String login(LoginSimpleDTO loginSimple) {
         UserBaseInfoEntity userBaseInfoEntity = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()).last("limit 1")).get(0);
         boolean matches = PasswordUtils.matches(loginSimple.getPassword(), userBaseInfoEntity.getPassword());
         if (matches) {
             //登录成功 创建token，保存到redis中
-            String token = JwtUtils.getUserToken(userBaseInfoEntity.getId());
-            if (!redisUtils.hasKey(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId())) {
-                String desensitizedEmail = DesensitizedUtil.email(userBaseInfoEntity.getEmail());
-                String desensitizedPhone = DesensitizedUtil.mobilePhone(String.valueOf(userBaseInfoEntity.getPhone()));
-                UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
-                userBaseInfoVO.setPhone(desensitizedPhone);
-                userBaseInfoVO.setEmail(desensitizedEmail);
-                // token作为key，userInfo作为value，token中的有效数据为userId
-                redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
-            }
-            return token;
+            return createToken(userBaseInfoEntity);
         } else {
             return null;
         }
@@ -118,17 +119,7 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
             if (Objects.equals(redisCode,loginPhone.getCode())){
                 UserBaseInfoEntity userBaseInfoEntity = list.get(0);
                 //登录成功 创建token，保存到redis中
-                String token = JwtUtils.getUserToken(userBaseInfoEntity.getId());
-                if (!redisUtils.hasKey(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId())) {
-                    String desensitizedEmail = DesensitizedUtil.email(userBaseInfoEntity.getEmail());
-                    String desensitizedPhone = DesensitizedUtil.mobilePhone(String.valueOf(userBaseInfoEntity.getPhone()));
-                    UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(userBaseInfoEntity);
-                    userBaseInfoVO.setPhone(desensitizedPhone);
-                    userBaseInfoVO.setEmail(desensitizedEmail);
-                    // token作为key，userInfo作为value，token中的有效数据为userId
-                    redisUtils.stringSet(redisProperties.getUserInfoPrefix() + userBaseInfoEntity.getId(), userBaseInfoVO, redisProperties.getExpireTime());
-                }
-                return token;
+                return createToken(userBaseInfoEntity);
             } else {
                 throw new MyException(ErrorCodeEnum.SMS_INVALID_EXCEPTION.getMsg(), ErrorCodeEnum.SMS_INVALID_EXCEPTION.getCode());
             }
@@ -172,7 +163,10 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
         userBaseInfoEntity.setHeadPortraitUrl(avatarUrl);
         if (this.updateById(userBaseInfoEntity)) {
             redisUtils.hashDel(redisProperties.getAvatarTempPrefix(), uuid);
-            redisUtils.del(redisProperties.getUserInfoPrefix() + userId);
+//            redisUtils.del(redisProperties.getUserInfoPrefix() + userId);
+            UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(this.getById(userId));
+            long expire = redisUtils.getExpire(redisProperties.getUserInfoPrefix() + userId);
+            redisUtils.stringSet(redisProperties.getUserInfoPrefix()+userId,userBaseInfoVO,expire);
             return true;
         } else {
             return false;
@@ -235,7 +229,10 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
                         // 修改房源发布人昵称
                         houseFeignClient.updatePublisherNameByUserId(params);
                     }
-                    redisUtils.del(redisProperties.getUserInfoPrefix()+userId);
+//                    redisUtils.del(redisProperties.getUserInfoPrefix()+userId);
+                    UserBaseInfoVO userBaseInfoVO = new UserBaseInfoVO(this.getById(userId));
+                    long expire = redisUtils.getExpire(redisProperties.getUserInfoPrefix() + userId);
+                    redisUtils.stringSet(redisProperties.getUserInfoPrefix()+userId,userBaseInfoVO,expire);
                     return true;
                 }
             }

@@ -1,5 +1,6 @@
 package com.sakanal.service.vo;
 
+import cn.hutool.core.util.DesensitizedUtil;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +24,7 @@ public class UserBaseInfoVO implements Serializable {
 
     public UserBaseInfoVO(UserBaseInfoEntity userBaseInfoEntity) {
         BeanUtils.copyProperties(userBaseInfoEntity, this);
+        this.email = DesensitizedUtil.email(userBaseInfoEntity.getEmail());
+        this.phone = DesensitizedUtil.mobilePhone(String.valueOf(userBaseInfoEntity.getPhone()));
     }
 }
