@@ -10,6 +10,7 @@
         <result property="description" column="description"/>
         <result property="number" column="number"/>
         <result property="price" column="price"/>
+        <result property="showState" column="show_state"/>
         <result property="isDeleted" column="is_deleted"/>
         <result property="createdTime" column="created_time"/>
         <result property="modifyTime" column="modify_time"/>

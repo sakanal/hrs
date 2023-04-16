@@ -34,6 +34,15 @@ public class HousePromotionFunctionController {
 
         return R.ok().put("page", page);
     }
+    @PutMapping("/changeState/{promotionId}/{showState}")
+    public R changeState(@PathVariable Long promotionId,
+                         @PathVariable Integer showState){
+        if(housePromotionFunctionService.changeState(promotionId,showState)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
 
 
     /**

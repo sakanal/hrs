@@ -16,5 +16,7 @@ import java.util.Map;
 public interface HousePromotionFunctionService extends IService<HousePromotionFunctionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    boolean changeState(Long promotionId, Integer showState);
 }
 

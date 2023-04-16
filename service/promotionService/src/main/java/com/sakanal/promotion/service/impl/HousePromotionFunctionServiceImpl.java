@@ -23,4 +23,12 @@ public class HousePromotionFunctionServiceImpl extends ServiceImpl<HousePromotio
         return new PageUtils(page);
     }
 
+    @Override
+    public boolean changeState(Long promotionId, Integer showState) {
+        HousePromotionFunctionEntity housePromotionFunctionEntity = new HousePromotionFunctionEntity();
+        housePromotionFunctionEntity.setId(promotionId);
+        housePromotionFunctionEntity.setShowState(showState);
+        return this.updateById(housePromotionFunctionEntity);
+    }
+
 }

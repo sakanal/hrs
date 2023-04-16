@@ -43,6 +43,10 @@ public class HousePromotionFunctionEntity implements Serializable {
      */
     private BigDecimal price;
     /**
+     * 是否显示
+     */
+    private Integer showState;
+    /**
      * 0-未删除 1-已删除
      */
     @TableLogic
