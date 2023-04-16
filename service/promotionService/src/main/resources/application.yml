@@ -22,7 +22,7 @@
 
 logging:
   level:
-    com.sakanal.house: debug
+    com.sakanal.promotion: debug
 system:
   thread:
     core-size: 20

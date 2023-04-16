@@ -33,7 +33,7 @@ public class HousePromotionFunctionEntity implements Serializable {
     /**
      * 推广描述
      */
-    private String describe;
+    private String description;
     /**
      * 推广次数
      */
