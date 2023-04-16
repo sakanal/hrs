@@ -63,7 +63,7 @@ public class LoginController {
 
     @RequestMapping("/sendCode/{phone}")
     public R sendCode(@PathVariable String phone) {
-        if (userBaseInfoService.userOnly(Long.valueOf(phone),null)){
+        if (userBaseInfoService.userCount(Long.valueOf(phone),null)==1){
             if (!redisUtils.hasKey(redisProperties.getLoginCodePrefix() + phone)) {
                 String code = RandomUtil.randomNumbers(6);
                 Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {

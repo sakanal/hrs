@@ -58,7 +58,7 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
         Long phone = Long.valueOf(registerSimple.getPhone());
         String redisCode = (String) redisUtils.stringGet(redisProperties.getRegisterCodePrefix() + phone);
         if (Objects.equals(registerSimple.getCode(), redisCode)) {
-            if (userOnly(phone, registerSimple.getUserName())) {
+            if (userCount(phone, registerSimple.getUserName())==0) {
                 UserBaseInfoEntity userBaseInfo = new UserBaseInfoEntity(registerSimple);
                 // 设置随机nickName
                 userBaseInfo.setNickName(RandomUtil.randomString(8));
@@ -79,13 +79,13 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
     }
 
     @Override
-    public boolean userOnly(Long phone, String userName) {
+    public long userCount(Long phone, String userName) {
         LambdaQueryWrapper<UserBaseInfoEntity> lambdaQueryWrapper = new LambdaQueryWrapper<UserBaseInfoEntity>();
         lambdaQueryWrapper.eq(UserBaseInfoEntity::getPhone, phone);
         if (StringUtils.hasText(userName)) {
             lambdaQueryWrapper.or().eq(UserBaseInfoEntity::getUserName, userName);
         }
-        return this.count(lambdaQueryWrapper) == 0;
+        return this.count(lambdaQueryWrapper);
     }
 
 
@@ -118,6 +118,8 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
             String redisCode = (String) redisUtils.stringGet(redisProperties.getLoginCodePrefix() + loginPhone.getPhone());
             if (Objects.equals(redisCode,loginPhone.getCode())){
                 UserBaseInfoEntity userBaseInfoEntity = list.get(0);
+                // 删除缓存中的验证码--保证验证码一次有效
+                redisUtils.del(redisProperties.getLoginCodePrefix() + loginPhone.getPhone());
                 //登录成功 创建token，保存到redis中
                 return createToken(userBaseInfoEntity);
             } else {

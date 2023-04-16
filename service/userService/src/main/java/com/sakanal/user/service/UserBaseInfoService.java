@@ -26,7 +26,7 @@ public interface UserBaseInfoService extends IService<UserBaseInfoEntity> {
 
     boolean checkUserName(String userName);
 
-    boolean userOnly(Long phone,String userName);
+    long userCount(Long phone, String userName);
 
     String login(LoginSimpleDTO loginSimple);
 
