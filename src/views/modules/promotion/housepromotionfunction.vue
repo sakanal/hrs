@@ -50,6 +50,23 @@
         label="推广价格">
       </el-table-column>
       <el-table-column
+        prop="showState"
+        header-align="center"
+        align="center"
+        width="100"
+        label="是否显示">
+        <template slot-scope="prop">
+          <el-switch
+            v-model="prop.row.showState"
+            @change="switchChange(prop.row)"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            :active-value="1"
+            :inactive-value="0">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column
         fixed="right"
         header-align="center"
         align="center"
@@ -171,6 +188,26 @@
               this.$message.error(data.msg)
             }
           })
+        })
+      },
+      // 更改显示状态
+      switchChange (row) {
+        this.$http({
+          url: this.$http.adornUrl(`/promotion/housepromotionfunction/changeState/${row.id}/${row.showState}`),
+          method: 'put'
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '修改成功',
+              type: 'success',
+              duration: 500,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
         })
       }
     }
