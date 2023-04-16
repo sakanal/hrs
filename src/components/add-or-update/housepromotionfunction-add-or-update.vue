@@ -7,23 +7,18 @@
     <el-form-item label="推广标题" prop="name">
       <el-input v-model="dataForm.name" placeholder="推广标题"></el-input>
     </el-form-item>
-    <el-form-item label="推广描述" prop="describe">
-      <el-input v-model="dataForm.describe" placeholder="推广描述"></el-input>
+    <el-form-item label="推广备注" prop="description">
+      <el-input
+        type="textarea"
+        placeholder="请输入内容"
+        v-model="dataForm.description"
+      />
     </el-form-item>
     <el-form-item label="推广次数" prop="number">
-      <el-input v-model="dataForm.number" placeholder="推广次数"></el-input>
+      <el-input-number v-model="dataForm.number" :min="0" :step="100"></el-input-number>
     </el-form-item>
     <el-form-item label="推广价格" prop="price">
-      <el-input v-model="dataForm.price" placeholder="推广价格"></el-input>
-    </el-form-item>
-    <el-form-item label="0-未删除 1-已删除" prop="isDeleted">
-      <el-input v-model="dataForm.isDeleted" placeholder="0-未删除 1-已删除"></el-input>
-    </el-form-item>
-    <el-form-item label="创建时间" prop="createdTime">
-      <el-input v-model="dataForm.createdTime" placeholder="创建时间"></el-input>
-    </el-form-item>
-    <el-form-item label="修改时间" prop="modifyTime">
-      <el-input v-model="dataForm.modifyTime" placeholder="修改时间"></el-input>
+      <el-input-number v-model="dataForm.price" :precision="2" :min="0"></el-input-number>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -41,18 +36,15 @@
         dataForm: {
           id: 0,
           name: '',
-          describe: '',
+          description: '购买成功后，推广功能会作用到所有已发布的房源中。',
           number: '',
-          price: '',
-          isDeleted: '',
-          createdTime: '',
-          modifyTime: ''
+          price: ''
         },
         dataRule: {
           name: [
             { required: true, message: '推广标题不能为空', trigger: 'blur' }
           ],
-          describe: [
+          description: [
             { required: true, message: '推广描述不能为空', trigger: 'blur' }
           ],
           number: [
@@ -60,15 +52,6 @@
           ],
           price: [
             { required: true, message: '推广价格不能为空', trigger: 'blur' }
-          ],
-          isDeleted: [
-            { required: true, message: '0-未删除 1-已删除不能为空', trigger: 'blur' }
-          ],
-          createdTime: [
-            { required: true, message: '创建时间不能为空', trigger: 'blur' }
-          ],
-          modifyTime: [
-            { required: true, message: '修改时间不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -87,12 +70,10 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.name = data.housePromotionFunction.name
-                this.dataForm.describe = data.housePromotionFunction.describe
+                this.dataForm.description = data.housePromotionFunction.description
                 this.dataForm.number = data.housePromotionFunction.number
                 this.dataForm.price = data.housePromotionFunction.price
                 this.dataForm.isDeleted = data.housePromotionFunction.isDeleted
-                this.dataForm.createdTime = data.housePromotionFunction.createdTime
-                this.dataForm.modifyTime = data.housePromotionFunction.modifyTime
               }
             })
           }
@@ -108,12 +89,9 @@
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
                 'name': this.dataForm.name,
-                'describe': this.dataForm.describe,
+                'description': this.dataForm.description,
                 'number': this.dataForm.number,
-                'price': this.dataForm.price,
-                'isDeleted': this.dataForm.isDeleted,
-                'createdTime': this.dataForm.createdTime,
-                'modifyTime': this.dataForm.modifyTime
+                'price': this.dataForm.price
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

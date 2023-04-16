@@ -23,52 +23,31 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        label="">
-      </el-table-column>
-      <el-table-column
         prop="name"
         header-align="center"
         align="center"
+        min-width="25%"
         label="推广标题">
       </el-table-column>
       <el-table-column
-        prop="describe"
+        prop="description"
         header-align="center"
         align="center"
-        label="推广描述">
+        label="推广备注">
       </el-table-column>
       <el-table-column
         prop="number"
         header-align="center"
         align="center"
+        width="100"
         label="推广次数">
       </el-table-column>
       <el-table-column
         prop="price"
         header-align="center"
         align="center"
+        width="100"
         label="推广价格">
-      </el-table-column>
-      <el-table-column
-        prop="isDeleted"
-        header-align="center"
-        align="center"
-        label="0-未删除 1-已删除">
-      </el-table-column>
-      <el-table-column
-        prop="createdTime"
-        header-align="center"
-        align="center"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="modifyTime"
-        header-align="center"
-        align="center"
-        label="修改时间">
       </el-table-column>
       <el-table-column
         fixed="right"
