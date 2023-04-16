@@ -8,6 +8,7 @@
         <module>houseService</module>
         <module>userService</module>
         <module>thirdParty</module>
+        <module>promotionService</module>
     </modules>
     <parent>
         <artifactId>hrs</artifactId>
