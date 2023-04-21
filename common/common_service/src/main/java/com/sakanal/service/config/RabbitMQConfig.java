@@ -100,7 +100,23 @@ public class RabbitMQConfig {
                 .deadLetterExchange(MyCommonRabbitMQProperties.IMG_OSS_DELAY_EXCHANGE)
                 .deadLetterRoutingKey(MyCommonRabbitMQProperties.IMG_OSS_DELAY_ROUTING_KEY)
 //                .ttl(1000 * 60 * 60)//一小时
-                .ttl(1000 * 60 )
+                .ttl(1000 * 60)
+                .build();
+    }
+
+    @Bean("orderReleaseQueue")
+    public Queue orderReleaseQueue() {
+        return QueueBuilder.durable(MyCommonRabbitMQProperties.ORDER_RELEASE_QUEUE)
+                .deadLetterExchange(MyCommonRabbitMQProperties.IMG_OSS_DELAY_EXCHANGE)
+                .deadLetterRoutingKey(MyCommonRabbitMQProperties.ORDER_DELAY_ROUTING_KEY)
+//                .ttl(1000 * 60 * 30)// 三十分钟
+                .ttl(1000 * 60)
+                .build();
+    }
+
+    @Bean
+    public Queue orderDelayQueue(){
+        return QueueBuilder.durable(MyCommonRabbitMQProperties.ORDER_DELAY_QUEUE)
                 .build();
     }
 
@@ -120,5 +136,20 @@ public class RabbitMQConfig {
                 .with(MyCommonRabbitMQProperties.IMG_OSS_DELAY_ROUTING_KEY);
     }
 
+    @Bean
+    public Binding orderQueueReleaseBinging(TopicExchange imgReleaseExchange, Queue orderReleaseQueue){
+        return BindingBuilder
+                .bind(orderReleaseQueue)
+                .to(imgReleaseExchange)
+                .with(MyCommonRabbitMQProperties.ORDER_RELEASE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding orderQueueDelayBinging(TopicExchange imgDelayExchange,Queue orderDelayQueue){
+        return BindingBuilder
+                .bind(orderDelayQueue)
+                .to(imgDelayExchange)
+                .with(MyCommonRabbitMQProperties.ORDER_DELAY_ROUTING_KEY);
+    }
 
 }

@@ -14,7 +14,11 @@ public class MyCommonRabbitMQProperties {
 
     public static final String IMG_OSS_DELAY_QUEUE="imgDelayQueue";
     public static final String IMG_OSS_RELEASE_QUEUE="imgReleaseQueue";
+    public static final String ORDER_DELAY_QUEUE="orderDelayQueue";
+    public static final String ORDER_RELEASE_QUEUE="orderReleaseQueue";
 
     public static final String IMG_OSS_DELAY_ROUTING_KEY = "img.delay.routingKey";
     public static final String IMG_OSS_RELEASE_ROUTING_KEY = "img.release.routingKey";
+    public static final String ORDER_RELEASE_ROUTING_KEY="order.release.routingKey";
+    public static final String ORDER_DELAY_ROUTING_KEY="order.delay.routingKey";
 }
