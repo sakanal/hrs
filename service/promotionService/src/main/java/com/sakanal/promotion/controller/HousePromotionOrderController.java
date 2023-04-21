@@ -6,17 +6,14 @@ import java.util.Map;
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.sakanal.service.dto.PromotionOrderDTO;
+import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.promotion.HousePromotionOrderEntity;
 import com.sakanal.promotion.service.HousePromotionOrderService;
 
 import javax.annotation.Resource;
-
+import javax.validation.Valid;
 
 
 /**
@@ -86,6 +83,15 @@ public class HousePromotionOrderController {
 		housePromotionOrderService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @PostMapping("/createOrder")
+    public R createOrder(@RequestBody @Valid PromotionOrderDTO promotionOrderDTO){
+        if (housePromotionOrderService.createOrder(promotionOrderDTO)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
     }
 
 }

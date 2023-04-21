@@ -8,6 +8,9 @@
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="promotionId" column="promotion_id"/>
+        <result property="baseInfoId" column="base_info_id"/>
+        <result property="number" column="number"/>
+        <result property="totalMoney" column="total_money"/>
         <result property="state" column="state"/>
         <result property="isDeleted" column="is_deleted"/>
         <result property="createdTime" column="created_time"/>

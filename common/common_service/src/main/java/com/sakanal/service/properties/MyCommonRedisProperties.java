@@ -13,7 +13,8 @@ public class MyCommonRedisProperties {
     private Long codeExpireTime = (long) 60 * 5;
     private String userInfoPrefix = "userInfo::";
     private String visitorPrefix = "visitor::";
-    private String avatarTempPrefix = "avatar::temp";
+    private String avatarTempPrefix = "avatar::temp::";
     private String registerCodePrefix = "register::code::";
     private String loginCodePrefix = "login::code::";
+    private String orderPrefix = "order::temp::";
 }
