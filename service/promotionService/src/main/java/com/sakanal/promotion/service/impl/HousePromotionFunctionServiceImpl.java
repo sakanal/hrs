@@ -1,5 +1,6 @@
 package com.sakanal.promotion.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sakanal.promotion.dao.HousePromotionFunctionDao;
 import com.sakanal.service.entity.promotion.HousePromotionFunctionEntity;
 import com.sakanal.promotion.service.HousePromotionFunctionService;
+import org.springframework.util.StringUtils;
 
 
 @Service("housePromotionFunctionService")
@@ -18,7 +20,12 @@ public class HousePromotionFunctionServiceImpl extends ServiceImpl<HousePromotio
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<HousePromotionFunctionEntity> page = this.page(new Query<HousePromotionFunctionEntity>().getPage(params), new QueryWrapper<>());
+        LambdaQueryWrapper<HousePromotionFunctionEntity> queryWrapper = new LambdaQueryWrapper<>();
+        String showState = (String)params.get("showState");
+        if (StringUtils.hasText(showState)){
+            queryWrapper.eq(HousePromotionFunctionEntity::getShowState,Integer.valueOf(showState));
+        }
+        IPage<HousePromotionFunctionEntity> page = this.page(new Query<HousePromotionFunctionEntity>().getPage(params),queryWrapper);
 
         return new PageUtils(page);
     }
