@@ -43,12 +43,13 @@
               <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
                 <span v-if="publishInfo.monthlyRent>0">
                   <span style="font-size: 24px">
-                    {{publishInfo.monthlyRent}}
+                    {{ publishInfo.monthlyRent }}
                   </span>
                   元/月
                 </span>
                 <template v-else>面议</template>
-                <el-button type="danger" size="small" @click="setHouseOff(publishInfo.baseInfoId)">我要下架</el-button>
+                <el-button type="primary" size="small" @click="toPay(publishInfo.baseInfoId)">推广</el-button>
+                <el-button type="danger" size="small" @click="setHouseOff(publishInfo.baseInfoId)">下架</el-button>
               </el-col>
             </el-row>
             <el-divider></el-divider>
@@ -165,6 +166,57 @@
         :total="totalCount">
       </el-pagination>
     </el-tabs>
+
+    <el-drawer
+      title="推广列表"
+      size="35%"
+      :visible.sync="drawerVisit"
+      :direction="'rtl'">
+      <el-row type="flex" justify="center">
+        <el-col :span="22">
+          <div>
+            <div>
+              <template v-for="promotion in promotion.promotionList">
+                <el-col :span="8" style="margin-bottom: 10px">
+                  <el-button @click="clickButton(promotion)" :type="promotion.id===selectButtonId?'primary':''">
+                    {{ promotion.name }}
+                  </el-button>
+                </el-col>
+              </template>
+            </div>
+            <div>
+              <el-col v-if="selectButtonId" class="my-promotion-div">
+                <el-divider></el-divider>
+                <div>
+                  <span>购买次数</span>
+                  <el-input-number v-model="promotionHouseInfo.number" :min="1" size="small"></el-input-number>
+                </div>
+                <div>
+                  <el-row>
+                    <el-col :span="12">
+                      <span>单价：</span>
+                      <span>{{ promotionHouseInfo.price }}</span>
+                    </el-col>
+                    <el-col :span="12">
+                      <span>推广次数：</span>
+                      <span>{{ multi(promotionHouseInfo.promotionNumber,promotionHouseInfo.number) }}</span>
+                    </el-col>
+                  </el-row>
+                </div>
+                <div>
+                  <span>总价：</span>
+                  <span>{{ multi(promotionHouseInfo.price, promotionHouseInfo.number) }}</span>
+                </div>
+                <div>
+                  <el-button size="small" type="danger" @click="toBuy">立即下单</el-button>
+                </div>
+              </el-col>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </el-drawer>
+    <div ref="alipayWap" v-html="alipay"/>
   </div>
 </template>
 
@@ -192,6 +244,31 @@ export default {
       // 总记录数
       totalCount: 0,
       publishInfoList: [],
+      drawerVisit: false,
+      // 最终数据
+      promotionHouseInfo: {
+        userId: 0,
+        promotionId: 0,
+        baseInfoId: 0,
+        number: 1,
+        // 临时数据
+        price: 0,
+        promotionNumber: 0
+      },
+      // 需要推广的房源信息
+      publishHouseInfo: {},
+      selectButtonId: 0,
+      // 所有推广活动列表以及相关数据
+      promotion: {
+        // 页面尺寸
+        pageSize: 0,
+        // 总页数
+        totalPage: 0,
+        // 总记录数
+        totalCount: 0,
+        promotionList: [],
+      },
+      alipay: ''
     }
   },
   // 方法集合
@@ -212,7 +289,7 @@ export default {
           this.totalPage = response.page.totalPage
           this.totalCount = response.page.totalCount
           this.publishInfoList = response.page.list
-        }else {
+        } else {
           this.currentPage = 0
           this.pageSize = 0
           this.totalPage = 0
@@ -221,15 +298,83 @@ export default {
         }
       })
     },
-    toChangeHouseInfo(houseBaseInfoId){
-      this.$router.push({path:`/business/publish/update/${houseBaseInfoId}`})
+    toChangeHouseInfo (houseBaseInfoId) {
+      this.$router.push({ path: `/business/publish/update/${houseBaseInfoId}` })
     },
-    setHouseOff(houseBaseInfoId){
-      this.$axios.delete(`/house/housestate/setHouseOff/${houseBaseInfoId}`).then(response=>{
-        if (response && response.data){
+    setHouseOff (houseBaseInfoId) {
+      this.$axios.delete(`/house/housestate/setHouseOff/${houseBaseInfoId}`).then(response => {
+        if (response && response.data) {
           this.$message.success('下架成功')
-          this.getPublishInfoList(1,2)
+          this.getPublishInfoList(1, 2)
         }
+      })
+    },
+    // 乘法-解决number类型使用（*）导致的精度丢失问题
+    multi (num1, num2) {
+      let str1 = num1.toString(), str2 = num2.toString(), result, str1Length, str2Length
+      //解决整数没有小数点方法
+      try {
+        str1Length = str1.split('.')[1].length
+      } catch (error) {
+        str1Length = 0
+      }
+      try {
+        str2Length = str2.split('.')[1].length
+      } catch (error) {
+        str2Length = 0
+      }
+      let step = Math.pow(10, Math.max(str1Length, str2Length))
+      result = ((num1 * step) * (num2 * step)) / step / step
+      return result
+    },
+    toPay (baseInfoId) {
+      this.drawerVisit = true
+      this.promotionHouseInfo.baseInfoId = baseInfoId
+      this.promotionHouseInfo.userId = this.userInfo.id
+      // 获取推广活动数据
+      this.$axios.get(`/promotion/housepromotionfunction/list`, {
+        params: {
+          showState: 1,
+          page: 1,
+          limit: 20
+        }
+      }).then(response => {
+        this.promotion.totalCount = response.page.totalCount
+        this.promotion.totalPage = response.page.totalPage
+        this.promotion.pageSize = response.page.pageSize
+        this.promotion.promotionList = response.page.list
+      })
+      // 获取选中的房源数据
+      this.publishInfoList.forEach(publishHouseInfo => {
+        if (publishHouseInfo.baseInfoId === baseInfoId) {
+          this.publishHouseInfo = publishHouseInfo
+        }
+      })
+    },
+    clickButton (promotion) {
+      this.promotionHouseInfo.promotionId = promotion.id
+      this.promotionHouseInfo.price = promotion.price
+      this.selectButtonId = promotion.id
+      this.promotionHouseInfo.promotionNumber=promotion.number
+    },
+    toBuy () {
+      // 调用支付接口
+      this.$axios.post(`/promotion/housepromotionorder/createOrder`, {
+        userId: this.userInfo.id,
+        promotionId: this.promotionHouseInfo.promotionId,
+        baseInfoId: this.promotionHouseInfo.baseInfoId,
+        number: this.promotionHouseInfo.number
+      }).then((res) => {
+        // 渲染支付页面
+        this.alipay = res.pay
+        // 防抖避免重复支付
+        this.$nextTick(() => {
+          // 提交支付表单
+          this.$refs.alipayWap.children[0].submit()
+          setTimeout(() => {
+            // this.toPayFlag = false;
+          }, 500)
+        })
       })
     }
   },
@@ -294,6 +439,8 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
+.my-promotion-div div{
+  margin: 0 0 15px 0;
+}
 
 </style>

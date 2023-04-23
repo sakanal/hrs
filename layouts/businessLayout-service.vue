@@ -56,7 +56,7 @@
             <el-menu-item index="/user">账户资料</el-menu-item>
             <el-menu-item index="/business/publish">我的发布</el-menu-item>
             <el-menu-item index="/business/fund">我的资金</el-menu-item>
-            <el-menu-item index="/business/service">订购服务</el-menu-item>
+            <el-menu-item index="/business/service/promotionList">订购服务</el-menu-item>
             <el-menu-item index="/business/publish/toPublish">一键发布</el-menu-item>
           </el-menu>
         </el-col>
@@ -72,16 +72,16 @@
                 <el-col :span="22" style="height: 100%;">
                   <el-menu :router="true"
                            style="min-height: 1000px"
-                           default-active="/business/service"
+                           default-active="/business/service/promotionList"
                            active-text-color="#ffd04b"
                            background-color="#545c64"
                            text-color="#fff">
-                    <el-submenu index="/business/service">
+                    <el-submenu index="/business/service/promotionList">
                       <template slot="title">
                         <span>订购服务</span>
                       </template>
-                      <el-menu-item index="/business/service">我的服务</el-menu-item>
-                      <el-menu-item index="/business/service/order">我的订单</el-menu-item>
+                      <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>
+                      <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>
                     </el-submenu>
                   </el-menu>
                 </el-col>

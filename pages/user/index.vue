@@ -83,21 +83,21 @@
               <el-form-item label="手机">
                 <template v-if="userInfo.phone">
                   <span class="my-form-item-span">
-                  <template v-if="phoneChangeFlag">
-                    <el-input v-model="userInfoFrom.phone"></el-input>
-                  </template>
-                  <template v-else>
-                    <span style="padding-left: 15px">
-                      {{ userInfo.phone }}
-                    </span>
-                  </template>
-                </span>
+                    <template v-if="phoneChangeFlag">
+                      <el-input v-model="userInfoFrom.phone"></el-input>
+                    </template>
+                    <template v-else>
+                      <span style="padding-left: 15px">
+                        {{ userInfo.phone }}
+                      </span>
+                    </template>
+                  </span>
                   <template v-if="phoneChangeFlag">
                     <el-button type="text" @click="phoneChange(true)">确认</el-button>
                     <el-button type="text" @click="phoneChange(false)">取消</el-button>
                   </template>
                   <template v-else>
-                    <el-button type="text" @click="phoneChangeFlag=true">修改</el-button>
+                    <el-button type="text" @click="phoneChangeFlag=true">换绑</el-button>
                   </template>
                 </template>
                 <template v-else>
@@ -123,7 +123,7 @@
                     <el-button type="text" @click="emailChange(false)">取消</el-button>
                   </template>
                   <template v-else>
-                    <el-button type="text" @click="emailChangeFlag=true">修改</el-button>
+                    <el-button type="text" @click="emailChangeFlag=true">换绑</el-button>
                   </template>
                 </template>
                 <template v-else>
