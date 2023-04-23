@@ -3,7 +3,7 @@
 
 <mapper namespace="com.sakanal.house.dao.HousePromotionDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.sakanal.service.entity.house.HousePromotionEntity" id="housePromotionMap">
         <result property="baseInfoId" column="base_info_id"/>
         <result property="visitorNumber" column="visitor_number"/>
@@ -12,6 +12,18 @@
         <result property="createdTime" column="created_time"/>
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
-
-
+    <update id="addPromotionNumber">
+        UPDATE house_promotion
+        SET promotion_number = promotion_number + #{promotionNumber}
+        WHERE base_info_id = #{baseInfoId};
+    </update>
+    <update id="reducePromotionNumber">
+        UPDATE house_promotion
+        SET promotion_number = promotion_number - 1
+        WHERE
+        base_info_id IN
+        <foreach collection="baseInfoIdList" item="baseInfoId" open="(" close=")" separator=",">
+            #{baseInfoId}
+        </foreach>
+    </update>
 </mapper>

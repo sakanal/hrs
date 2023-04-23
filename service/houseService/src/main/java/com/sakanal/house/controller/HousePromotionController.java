@@ -2,6 +2,7 @@ package com.sakanal.house.controller;
 
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
+import com.sakanal.service.dto.PromotionNumberDTO;
 import com.sakanal.service.entity.house.HousePromotionEntity;
 import com.sakanal.house.service.HousePromotionService;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,15 @@ public class HousePromotionController {
         housePromotionService.removeByIds(Arrays.asList(baseInfoIds));
 
         return R.ok();
+    }
+
+    @PutMapping("/addPromotionNumber")
+    public R addPromotion(@RequestBody PromotionNumberDTO promotionNumberDTO){
+        if (housePromotionService.addPromotionNumber(promotionNumberDTO)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
     }
 
 }

@@ -475,10 +475,8 @@ public class HouseServiceImpl implements HouseService {
                 recommendInfoListDTO.setIsEmpty(0L);
             }
         }
-        List<RecommendInfoVO> recommendInfoVOList = houseDao.getRecommendInfoList(recommendInfoListDTO);
-        getRoadNameForRecommendInfoList(recommendInfoVOList);
-        // TODO 更新-推荐次数 可用推荐次数减少一次
-        return recommendInfoVOList;
+
+        return setAttribute(recommendInfoListDTO);
     }
 
     @Override
@@ -486,18 +484,25 @@ public class HouseServiceImpl implements HouseService {
         Long childrenCityId = baseInfoService.getById(baseInfoId).getCityId();
         RecommendInfoListDTO recommendInfoListDTO = new RecommendInfoListDTO();
         recommendInfoListDTO.setCityId(childrenCityId);
-        List<RecommendInfoVO> recommendInfoList = houseDao.getRecommendInfoList(recommendInfoListDTO);
-        getRoadNameForRecommendInfoList(recommendInfoList);
-        // TODO 更新-推荐次数 可用推荐次数减少一次
-        return recommendInfoList;
+        return setAttribute(recommendInfoListDTO);
     }
 
-    private void getRoadNameForRecommendInfoList(List<RecommendInfoVO> recommendInfoList) {
-        recommendInfoList = recommendInfoList.stream().peek(recommendInfoVO -> {
-            Long roadId = houseAreaService.getRelatedSuperiorIdById(recommendInfoVO.getAreaId());
-            String roadName = houseAreaService.getById(roadId).getName();
-            recommendInfoVO.setRoadName(roadName);
-        }).collect(Collectors.toList());
+    private List<RecommendInfoVO> setAttribute(RecommendInfoListDTO recommendInfoListDTO) {
+        List<RecommendInfoVO> recommendInfoVOList = houseDao.getRecommendInfoList(recommendInfoListDTO);
+        CompletableFuture<Void> setAttributeCompletableFuture = CompletableFuture.runAsync(() -> {
+            recommendInfoVOList.forEach(recommendInfoVO -> {
+                Long roadId = houseAreaService.getRelatedSuperiorIdById(recommendInfoVO.getAreaId());
+                String roadName = houseAreaService.getById(roadId).getName();
+                recommendInfoVO.setRoadName(roadName);
+            });
+        }, executor);
+        // 更新-推荐次数 可用推荐次数减少一次
+        CompletableFuture<Void> updatePromotionNumberCompletableFuture = CompletableFuture.runAsync(() -> {
+            List<Long> baseInfoIdList = recommendInfoVOList.stream().map(RecommendInfoVO::getId).collect(Collectors.toList());
+            promotionService.decrPromotionNumber(baseInfoIdList);
+        }, executor);
+        CompletableFuture.allOf(setAttributeCompletableFuture,updatePromotionNumberCompletableFuture).join();
+        return recommendInfoVOList;
     }
 
 

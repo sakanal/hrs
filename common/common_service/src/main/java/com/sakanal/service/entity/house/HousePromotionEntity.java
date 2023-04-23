@@ -2,7 +2,9 @@ package com.sakanal.service.entity.house;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -16,6 +18,8 @@ import java.util.Date;
  * @date 2023-03-22 16:19:43
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("house_promotion")
 public class HousePromotionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -52,4 +56,10 @@ public class HousePromotionEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date modifyTime;
+
+    public HousePromotionEntity(Long baseInfoId, Long promotionNumber) {
+        this.baseInfoId=baseInfoId;
+        this.promotionNumber= Math.toIntExact(promotionNumber);
+        this.visitorNumber=0;
+    }
 }

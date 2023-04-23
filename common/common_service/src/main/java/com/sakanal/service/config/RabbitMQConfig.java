@@ -99,8 +99,8 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(MyCommonRabbitMQProperties.IMG_OSS_RELEASE_QUEUE)
                 .deadLetterExchange(MyCommonRabbitMQProperties.IMG_OSS_DELAY_EXCHANGE)
                 .deadLetterRoutingKey(MyCommonRabbitMQProperties.IMG_OSS_DELAY_ROUTING_KEY)
-//                .ttl(1000 * 60 * 60)//一小时
-                .ttl(1000 * 60)
+                .ttl(1000 * 60 * 60)//一小时
+//                .ttl(1000 * 60)
                 .build();
     }
 
@@ -109,8 +109,8 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(MyCommonRabbitMQProperties.ORDER_RELEASE_QUEUE)
                 .deadLetterExchange(MyCommonRabbitMQProperties.IMG_OSS_DELAY_EXCHANGE)
                 .deadLetterRoutingKey(MyCommonRabbitMQProperties.ORDER_DELAY_ROUTING_KEY)
-//                .ttl(1000 * 60 * 30)// 三十分钟
-                .ttl(1000 * 60)
+                .ttl(1000 * 60 * 30)// 三十分钟
+//                .ttl(1000 * 60)
                 .build();
     }
 

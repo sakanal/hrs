@@ -34,10 +34,10 @@ public class orderUselessListener {
             // 30分钟内未支付订单
             HousePromotionOrderEntity housePromotionOrderEntity = new HousePromotionOrderEntity();
             housePromotionOrderEntity.setId(orderId);
-            housePromotionOrderEntity.setState(OrderStateConstant.FAIL);
+            housePromotionOrderEntity.setShowState(OrderStateConstant.FAIL);
             if (promotionOrderService.updateById(housePromotionOrderEntity)) {
                 log.info("订单取消成功");
-                redisUtils.del(String.valueOf(orderId));
+                redisUtils.del(redisProperties.getOrderPrefix()+orderId);
             }
         }
 //        try {

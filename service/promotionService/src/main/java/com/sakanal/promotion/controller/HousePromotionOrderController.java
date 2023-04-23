@@ -1,19 +1,23 @@
 package com.sakanal.promotion.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.alibaba.fastjson.TypeReference;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
+import com.sakanal.promotion.feign.AliPayFeignClient;
+import com.sakanal.promotion.service.HousePromotionOrderService;
+import com.sakanal.service.dto.PayAsyncDTO;
+import com.sakanal.service.dto.PayDTO;
 import com.sakanal.service.dto.PromotionOrderDTO;
+import com.sakanal.service.entity.promotion.HousePromotionOrderEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.sakanal.service.entity.promotion.HousePromotionOrderEntity;
-import com.sakanal.promotion.service.HousePromotionOrderService;
-
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -28,13 +32,15 @@ import javax.validation.Valid;
 public class HousePromotionOrderController {
     @Resource
     private HousePromotionOrderService housePromotionOrderService;
+    @Resource
+    private AliPayFeignClient aliPayFeignClient;
 
     /**
      * 列表
      */
     @RequestMapping("/list")
     //@RequiresPermissions("promotion:housepromotionorder:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = housePromotionOrderService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -87,7 +93,19 @@ public class HousePromotionOrderController {
 
     @PostMapping("/createOrder")
     public R createOrder(@RequestBody @Valid PromotionOrderDTO promotionOrderDTO){
-        if (housePromotionOrderService.createOrder(promotionOrderDTO)){
+        PayDTO order = housePromotionOrderService.createOrder(promotionOrderDTO);
+        if (order!=null){
+            R r = aliPayFeignClient.simplePay(order);
+            String pay = r.getData("pay", new TypeReference<String>() {
+            });
+            return R.ok().put("pay",pay);
+        }
+        return R.error();
+    }
+
+    @PutMapping("/handlePayResult")
+    public R handlePayResult(@RequestBody PayAsyncDTO payAsyncDTO){
+        if (housePromotionOrderService.handlePayResult(payAsyncDTO)){
             return R.ok();
         }else {
             return R.error();

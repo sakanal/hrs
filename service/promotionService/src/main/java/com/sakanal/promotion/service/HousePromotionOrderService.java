@@ -2,6 +2,8 @@ package com.sakanal.promotion.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
+import com.sakanal.service.dto.PayAsyncDTO;
+import com.sakanal.service.dto.PayDTO;
 import com.sakanal.service.dto.PromotionOrderDTO;
 import com.sakanal.service.entity.promotion.HousePromotionOrderEntity;
 
@@ -18,6 +20,8 @@ public interface HousePromotionOrderService extends IService<HousePromotionOrder
 
     PageUtils queryPage(Map<String, Object> params);
 
-    boolean createOrder(PromotionOrderDTO promotionOrderDTO);
+    PayDTO createOrder(PromotionOrderDTO promotionOrderDTO);
+
+    boolean handlePayResult(PayAsyncDTO payAsyncDTO);
 }
 

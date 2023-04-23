@@ -2,8 +2,10 @@ package com.sakanal.house.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sakanal.base.utils.PageUtils;
+import com.sakanal.service.dto.PromotionNumberDTO;
 import com.sakanal.service.entity.house.HousePromotionEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,5 +28,13 @@ public interface HousePromotionService extends IService<HousePromotionEntity> {
      * 更新redis中的浏览人数-->（+1）
      */
     boolean incrVisitorNumber(Long baseInfoId);
+
+    /**
+     * 更新数据库中的浏览人数-->（-1）
+     */
+    void decrPromotionNumber(List<Long> baseInfoIdList);
+
+    boolean addPromotionNumber(PromotionNumberDTO promotionNumberDTO);
+
 }
 

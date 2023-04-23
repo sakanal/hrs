@@ -1,12 +1,16 @@
 package com.sakanal.house.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.PublishStateConstant;
 import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 import com.sakanal.house.service.HouseService;
+import com.sakanal.house.service.HouseStateService;
 import com.sakanal.service.dto.PublishInfoDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
 import com.sakanal.service.dto.RecommendInfoListDTO;
+import com.sakanal.service.entity.house.HouseStateEntity;
 import com.sakanal.service.vo.PublishBaseInfoVO;
 import com.sakanal.service.vo.PublishInfoVO;
 import com.sakanal.service.vo.RecommendInfoVO;
@@ -28,6 +32,8 @@ import java.util.List;
 public class HouseInfoController {
     @Resource
     private HouseService houseService;
+    @Resource
+    private HouseStateService stateService;
 
     @PostMapping("/submitPublishBaseInfo")
     public R submitPublishBaseInfo(@RequestBody PublishInfoDTO publishInfoDTO) {
@@ -112,5 +118,13 @@ public class HouseInfoController {
             return R.ok();
         }
         return R.error();
+    }
+
+    @RequestMapping("/countPublish/{userId}")
+    public R countPublish(@PathVariable Long userId){
+        LambdaQueryWrapper<HouseStateEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(HouseStateEntity::getPublisherId,userId)
+                .eq(HouseStateEntity::getHousePublishState, PublishStateConstant.PUBLISH_STATE);
+        return R.ok().put("count",stateService.count(queryWrapper));
     }
 }

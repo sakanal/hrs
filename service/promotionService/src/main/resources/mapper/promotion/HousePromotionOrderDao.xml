@@ -11,7 +11,7 @@
         <result property="baseInfoId" column="base_info_id"/>
         <result property="number" column="number"/>
         <result property="totalMoney" column="total_money"/>
-        <result property="state" column="state"/>
+        <result property="showState" column="show_state"/>
         <result property="isDeleted" column="is_deleted"/>
         <result property="createdTime" column="created_time"/>
         <result property="modifyTime" column="modify_time"/>

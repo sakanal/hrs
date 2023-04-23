@@ -55,7 +55,7 @@ public class HousePromotionOrderEntity implements Serializable {
     /**
      * 订单状态 0-未支付 1-已支付 2-取消订单
      */
-    private Integer state;
+    private Integer showState;
     /**
      * 0-未删除 1-已删除
      */
@@ -82,6 +82,6 @@ public class HousePromotionOrderEntity implements Serializable {
         this.baseInfoId= promotionOrderDTO.getBaseInfoId();
         this.totalMoney=promotionOrderDTO.getTotalMoney();
         this.number=promotionOrderDTO.getNumber();
-        this.state= OrderStateConstant.DEFAULT;
+        this.showState= OrderStateConstant.DEFAULT;
     }
 }
