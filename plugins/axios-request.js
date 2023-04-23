@@ -1,6 +1,5 @@
 import { Message } from 'element-ui'
 import cookie from 'js-cookie'
-import jsCookie from 'js-cookie'
 
 export default function ({
   $axios,
@@ -22,9 +21,22 @@ export default function ({
       return response.data
     } else {
       switch (response.data.code) {
-        case 10011:
+        case 10010: {
           // token过期失效
-          return history.push('/login')
+          cookie.remove('userToken')
+          redirect('/login')
+          break
+        }
+        case 10011: {
+          cookie.remove('userToken')
+          redirect('/login')
+          break
+        }
+        case 10012: {
+          cookie.remove('userToken')
+          redirect('/login')
+          break
+        }
       }
       Message.error(response.data.msg)
     }
