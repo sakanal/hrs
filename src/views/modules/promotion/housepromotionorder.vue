@@ -2,12 +2,13 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="订单号" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('promotion:housepromotionorder:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('promotion:housepromotionorder:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button @click="getAll()">查看所有</el-button>
+<!--        <el-button v-if="isAuth('promotion:housepromotionorder:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
+<!--        <el-button v-if="isAuth('promotion:housepromotionorder:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>-->
       </el-form-item>
     </el-form>
     <el-table
@@ -16,17 +17,17 @@
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        type="selection"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        width="50">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="id"
         header-align="center"
         align="center"
-        label="">
+        label="推广订单号">
       </el-table-column>
       <el-table-column
         prop="userId"
@@ -35,46 +36,77 @@
         label="用户id">
       </el-table-column>
       <el-table-column
-        prop="promotionId"
+        prop="promotionName"
         header-align="center"
         align="center"
-        label="推广id">
+        label="推广套餐">
       </el-table-column>
       <el-table-column
-        prop="state"
+        prop="baseInfoTitle"
         header-align="center"
         align="center"
-        label="订单状态 0-未支付 1-已支付 2-取消订单">
+        label="推广房源">
+        <template slot-scope="prop">
+          <template v-if="parseInt(prop.row.baseInfoId)<0">
+            <el-tag>所有房源</el-tag>
+          </template>
+          <template>
+            <span>{{prop.row.baseInfoTitle}}</span>
+          </template>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="isDeleted"
+        prop="number"
         header-align="center"
         align="center"
-        label="0-未删除 1-已删除">
+        label="购买数量">
       </el-table-column>
+      <el-table-column
+        prop="totalMoney"
+        header-align="center"
+        align="center"
+        label="总金额">
+      </el-table-column>
+      <el-table-column
+        prop="showState"
+        header-align="center"
+        align="center"
+        label="订单状态">
+        <template slot-scope="prop">
+          <el-tag v-if="prop.row.showState===0">未支付</el-tag>
+          <el-tag v-if="prop.row.showState===1" type="success">已支付</el-tag>
+          <el-tag v-if="prop.row.showState===2" type="danger">超时未支付</el-tag>
+        </template>
+      </el-table-column>
+<!--      <el-table-column-->
+<!--        prop="isDeleted"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        label="0-未删除 1-已删除">-->
+<!--      </el-table-column>-->
       <el-table-column
         prop="createdTime"
         header-align="center"
         align="center"
-        label="创建时间">
+        label="订单创建时间">
       </el-table-column>
       <el-table-column
         prop="modifyTime"
         header-align="center"
         align="center"
-        label="修改时间">
+        label="收单时间">
       </el-table-column>
-      <el-table-column
-        fixed="right"
-        header-align="center"
-        align="center"
-        width="150"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        fixed="right"-->
+<!--        header-align="center"-->
+<!--        align="center"-->
+<!--        width="150"-->
+<!--        label="操作">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>-->
+<!--          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -135,6 +167,11 @@
           }
           this.dataListLoading = false
         })
+      },
+      getAll () {
+        this.dataForm.key = ''
+        this.pageIndex = 1
+        this.getDataList()
       },
       // 每页数
       sizeChangeHandle (val) {

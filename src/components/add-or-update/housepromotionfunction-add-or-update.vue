@@ -36,7 +36,7 @@
         dataForm: {
           id: 0,
           name: '',
-          description: '购买成功后，推广功能会作用到所有已发布的房源中。',
+          description: '此页面购买成功后，推广功能会作用到所有已发布的房源中。',
           number: '',
           price: ''
         },
