@@ -95,7 +95,6 @@ export default {
       //   params: { promotionId }
       // })
       // 调用支付接口
-      console.log(this.userInfo)
       this.$axios.post(`/promotion/housepromotionorder/createOrder`, {
         userId: this.userInfo.id,
         promotionId: promotionId,
