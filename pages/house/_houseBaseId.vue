@@ -361,7 +361,7 @@ export default {
       })
     },
     getPhone(){
-      alert('phone')
+      alert(this.houseInfo.contactInfo.contactPhone)
     }
   },
   // 监听属性 类似于data概念
