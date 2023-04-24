@@ -96,7 +96,7 @@
     </el-main>
     <!--  NUXT Footer部分  -->
     <el-footer style="background-color: #eff2f7">
-      footer
+      2019213106@黎海涛 （￣︶￣）↗  |　©版权所有，违版必究╰(艹皿艹 )
     </el-footer>
   </el-container>
 </template>

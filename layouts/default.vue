@@ -69,7 +69,9 @@
     <el-divider/>
     <!--  NUXT Footer部分  -->
     <el-footer>
-      footer
+      <div style="margin-top: 30px">
+        2019213106@黎海涛 （￣︶￣）↗  |　©版权所有，违版必究╰(艹皿艹 )
+      </div>
     </el-footer>
   </el-container>
 </template>
