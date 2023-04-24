@@ -1,8 +1,10 @@
 package com.sakanal.promotion.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sakanal.base.constant.OrderStateConstant;
 import com.sakanal.base.utils.PageUtils;
@@ -20,13 +22,19 @@ import com.sakanal.service.entity.promotion.HousePromotionOrderEntity;
 import com.sakanal.service.properties.MyCommonRabbitMQProperties;
 import com.sakanal.service.properties.MyCommonRedisProperties;
 import com.sakanal.service.utils.RedisUtils;
+import com.sakanal.service.vo.PromotionOrderVO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 
 @Service("housePromotionOrderService")
@@ -44,9 +52,39 @@ public class HousePromotionOrderServiceImpl extends ServiceImpl<HousePromotionOr
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<HousePromotionOrderEntity> page = this.page(new Query<HousePromotionOrderEntity>().getPage(params), new QueryWrapper<>());
+        LambdaQueryWrapper<HousePromotionOrderEntity> queryWrapper = new LambdaQueryWrapper<>();
+        String key = (String) params.get("key");
+        if (StringUtils.hasText(key)){
+            queryWrapper.like(HousePromotionOrderEntity::getId,key);
+        }
+        String userId = (String) params.get("userId");
+        if (StringUtils.hasText(userId)){
+            queryWrapper.eq(HousePromotionOrderEntity::getUserId,userId);
+        }
+        queryWrapper.orderByDesc(HousePromotionOrderEntity::getCreatedTime);
+        IPage<HousePromotionOrderEntity> page = this.page(new Query<HousePromotionOrderEntity>().getPage(params),queryWrapper);
 
-        return new PageUtils(page);
+        List<HousePromotionOrderEntity> records = page.getRecords();
+        // 收集推广套餐id（去重）
+        Set<Long> setPromotionId = records.stream().map(HousePromotionOrderEntity::getPromotionId).collect(Collectors.toSet());
+        // 搜集推广套餐数据<id，name>
+        Map<Long, String> mapPromotion = promotionFunctionService.listByIds(setPromotionId).stream().collect(Collectors.toMap(HousePromotionFunctionEntity::getId, HousePromotionFunctionEntity::getName));
+        // 收集房源基本信息id
+        List<Long> listBaseInfoId = records.stream().map(HousePromotionOrderEntity::getBaseInfoId).collect(Collectors.toList());
+        // 搜集房源数据<id,title>
+        Map<Long, String> mapHouse = houseFeignClient.getHouseTitleByIds(listBaseInfoId).getData("data", new TypeReference<Map<Long, String>>() {
+        });
+        List<PromotionOrderVO> resultData = records.stream().map(housePromotionOrderEntity -> {
+            PromotionOrderVO promotionOrderVO = new PromotionOrderVO(housePromotionOrderEntity);
+            // 设置推广套餐名
+            promotionOrderVO.setPromotionName(mapPromotion.get(housePromotionOrderEntity.getPromotionId()));
+            // 设置房源标题
+            promotionOrderVO.setBaseInfoTitle(mapHouse.get(housePromotionOrderEntity.getBaseInfoId()));
+            return promotionOrderVO;
+        }).collect(Collectors.toList());
+        Page<PromotionOrderVO> promotionOrderVOPage = new Page<>(page.getCurrent(),page.getSize(),page.getTotal());
+        promotionOrderVOPage.setRecords(resultData);
+        return new PageUtils(promotionOrderVOPage);
     }
 
     @Override

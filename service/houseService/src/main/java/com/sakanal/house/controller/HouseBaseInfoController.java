@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -92,4 +93,9 @@ public class HouseBaseInfoController {
         return R.ok().put("data",cityWithAreaVO);
     }
 
+    @RequestMapping("/getHouseTitleByIds")
+    public R getHouseTitleByIds(@RequestBody List<Long> baseInfoIds){
+        Map<Long, String> mapHouseTitle = houseBaseInfoService.listByIds(baseInfoIds).stream().collect(Collectors.toMap(HouseBaseInfoEntity::getId, HouseBaseInfoEntity::getName));
+        return R.ok().put("data",mapHouseTitle);
+    }
 }

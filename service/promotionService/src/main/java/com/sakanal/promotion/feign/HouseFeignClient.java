@@ -5,11 +5,9 @@ import com.sakanal.service.dto.PromotionNumberDTO;
 import com.sakanal.service.dto.PublishInfoListDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,4 +18,7 @@ public interface HouseFeignClient {
 
     @PutMapping("/house/housepromotion/addPromotionNumber")
     public R addPromotion(@RequestBody PromotionNumberDTO promotionNumberDTO);
+
+    @RequestMapping("/house/housebaseinfo/getHouseTitleByIds")
+    public R getHouseTitleByIds(@RequestBody List<Long> baseInfoIds);
 }

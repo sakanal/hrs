@@ -101,6 +101,7 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
 
     @Override
     public String login(LoginSimpleDTO loginSimple) {
+        // TODO Index: 0, Size: 0
         UserBaseInfoEntity userBaseInfoEntity = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()).last("limit 1")).get(0);
         boolean matches = PasswordUtils.matches(loginSimple.getPassword(), userBaseInfoEntity.getPassword());
         if (matches) {
