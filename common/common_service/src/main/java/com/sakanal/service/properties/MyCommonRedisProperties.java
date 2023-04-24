@@ -17,4 +17,6 @@ public class MyCommonRedisProperties {
     private String registerCodePrefix = "register::code::";
     private String loginCodePrefix = "login::code::";
     private String orderPrefix = "order::temp::";
+    private String bindPhoneCodePrefix = "bind::code::phone::";
+    private String bindEmailCodePrefix="bind::code::email::";
 }

@@ -207,12 +207,19 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
             }
             String phoneString = (String) params.get("phone");
             if (StringUtils.hasText(phoneString)){
-                String phoneRegex="^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
-                if (phoneString.matches(phoneRegex)){
-                    userBaseInfoEntity.setPhone(Long.valueOf(phoneString));
-                    changeFlag=true;
-                }else {
-                    throw new MyException("无效数据");
+                String code = (String) params.get("code");
+                if (StringUtils.hasText(code)){
+                    String codeRedis = (String) redisUtils.stringGet(redisProperties.getBindPhoneCodePrefix() + userId);
+                    if (Objects.equals(codeRedis,code)){
+                        String phoneRegex="^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
+                        if (phoneString.matches(phoneRegex)){
+                            userBaseInfoEntity.setPhone(Long.valueOf(phoneString));
+                            changeFlag=true;
+                            redisUtils.del(redisProperties.getBindPhoneCodePrefix()+userId);
+                        }else {
+                            throw new MyException("无效数据");
+                        }
+                    }
                 }
             }
             String email = (String) params.get("email");

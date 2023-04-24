@@ -1,10 +1,17 @@
 package com.sakanal.user.controller;
 
+import cn.hutool.core.util.RandomUtil;
+import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 import com.sakanal.service.dto.ChangePasswordDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
+import com.sakanal.service.properties.MyCommonRedisProperties;
+import com.sakanal.service.utils.RedisUtils;
 import com.sakanal.service.vo.UserBaseInfoVO;
+import com.sakanal.user.feign.SMSFeignClient;
 import com.sakanal.user.service.UserBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +35,12 @@ import java.util.Map;
 public class UserBaseInfoController {
     @Resource
     private UserBaseInfoService userBaseInfoService;
+    @Resource
+    private SMSFeignClient smsFeignClient;
+    @Resource
+    private RedisUtils redisUtils;
+    @Resource
+    private MyCommonRedisProperties redisProperties;
 
     /**
      * 列表
@@ -110,5 +123,23 @@ public class UserBaseInfoController {
         } else {
             return R.error();
         }
+    }
+    @RequestMapping("/sendCode/{userId}/{phone}")
+    public R sendCode(@PathVariable Long userId, @PathVariable String phone) {
+        if (userBaseInfoService.count(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getId,userId))==1){
+            if (!redisUtils.hasKey(redisProperties.getBindPhoneCodePrefix() + userId)) {
+                String code = RandomUtil.randomNumbers(6);
+                Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {
+                });
+                if (result == 0) {
+                    redisUtils.stringSet(redisProperties.getBindPhoneCodePrefix() + userId, code, redisProperties.getCodeExpireTime());
+                } else {
+                    return R.error(ErrorCodeEnum.SMS_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.SMS_FAIL_EXCEPTION.getMsg());
+                }
+            }
+        }else {
+            return R.error(ErrorCodeEnum.PHONE_INVALID_EXCEPTION.getCode(), ErrorCodeEnum.PHONE_INVALID_EXCEPTION.getMsg());
+        }
+        return R.ok();
     }
 }
