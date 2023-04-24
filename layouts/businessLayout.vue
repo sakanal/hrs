@@ -37,7 +37,7 @@
               <template slot="title">
                 <el-link :underline="false" href="/business">商家中心</el-link>
               </template>
-              <el-menu-item index="/business">我的发布</el-menu-item>
+              <el-menu-item index="/business/publish">我的发布</el-menu-item>
               <el-menu-item index="/user">账户资料</el-menu-item>
             </el-submenu>
           </el-menu>
@@ -49,15 +49,17 @@
             <el-link :underline="false" href="/business">商家中心logo</el-link>
           </div>
         </el-col>
-        <el-col :span="2"/>
-        <el-col :span="11">
+        <el-col :span="5"/>
+        <el-col :span="8">
           <el-menu style="border: 0" mode="horizontal" :router="true" default-active="/business">
             <el-menu-item index="/business">首页</el-menu-item>
             <el-menu-item index="/user">账户资料</el-menu-item>
             <el-menu-item index="/business/publish">我的发布</el-menu-item>
-            <el-menu-item index="/business/fund">我的资金</el-menu-item>
+            <!--                      <el-menu-item index="/business/fund">我的资金</el-menu-item>-->
             <el-menu-item index="/business/service/promotionList">订购服务</el-menu-item>
-            <el-menu-item index="/business/publish/toPublish">一键发布</el-menu-item>
+            <el-menu-item index="/business/publish/toPublish">
+              <el-button size="medium" type="danger">一键发布</el-button>
+            </el-menu-item>
           </el-menu>
         </el-col>
       </el-row>
@@ -90,35 +92,40 @@
 <!--                    </el-submenu>-->
                     <el-menu-item index="/business">首页</el-menu-item>
                     <el-menu-item index="/business/publish">我的发布</el-menu-item>
+                    <el-menu-item index="/user">个人资料</el-menu-item>
+<!--                    <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>-->
+<!--                    <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>-->
+                    <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>
+                    <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>
 <!--                    <el-submenu index="/business/publish">-->
 <!--                      <template slot="title">-->
 <!--                        <span>我的发布</span>-->
 <!--                      </template>-->
 <!--                      <el-menu-item index="/business/publish">我的发布</el-menu-item>-->
 <!--                    </el-submenu>-->
-                    <el-submenu index="/user">
-                      <template slot="title">
-                        <span>账户资料</span>
-                      </template>
-                      <el-menu-item index="/user">个人资料</el-menu-item>
-                      <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>
-                      <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="/business/fund">
-                      <template slot="title">
-                        <span>我的资金</span>
-                      </template>
-                      <el-menu-item index="/business/fund">我的钱包</el-menu-item>
-                      <el-menu-item index="/business/fund">推广余额</el-menu-item>
-                      <el-menu-item index="/business/fund">我的优惠券</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="/business/service/promotionList">
-                      <template slot="title">
-                        <span>订购服务</span>
-                      </template>
-                      <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>
-                      <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>
-                    </el-submenu>
+<!--                    <el-submenu index="/user">-->
+<!--                      <template slot="title">-->
+<!--                        <span>账户资料</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="/user">个人资料</el-menu-item>-->
+<!--                      <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>-->
+<!--                      <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>-->
+<!--                    </el-submenu>-->
+<!--                    <el-submenu index="/business/fund">-->
+<!--                      <template slot="title">-->
+<!--                        <span>我的资金</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="/business/fund">我的钱包</el-menu-item>-->
+<!--                      <el-menu-item index="/business/fund">推广余额</el-menu-item>-->
+<!--                      <el-menu-item index="/business/fund">我的优惠券</el-menu-item>-->
+<!--                    </el-submenu>-->
+<!--                    <el-submenu index="/business/service/promotionList">-->
+<!--                      <template slot="title">-->
+<!--                        <span>订购服务</span>-->
+<!--                      </template>-->
+<!--                      <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>-->
+<!--                      <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>-->
+<!--                    </el-submenu>-->
                   </el-menu>
                 </el-col>
               </el-row>

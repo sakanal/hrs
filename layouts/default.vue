@@ -35,7 +35,7 @@
               <template slot="title">
                 <el-link :underline="false" href="/business">商家中心</el-link>
               </template>
-              <el-menu-item index="/business">我的发布</el-menu-item>
+              <el-menu-item index="/business/publish">我的发布</el-menu-item>
               <el-menu-item index="/user">账户资料</el-menu-item>
             </el-submenu>
           </el-menu>
