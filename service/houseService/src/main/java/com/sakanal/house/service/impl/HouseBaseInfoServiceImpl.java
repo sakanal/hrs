@@ -59,7 +59,7 @@ public class HouseBaseInfoServiceImpl extends ServiceImpl<HouseBaseInfoDao, Hous
     }
 
     @Override
-    @Cacheable(value = {"HouseBaseInfo"},key = "#root.methodName")
+    @Cacheable(value = {"houseBaseInfo"},key = "#root.methodName")
     public CityWithAreaVO getCityWithAreaInfo(Long cityId) {
         // 根据 市级城市id 获取 省级城市数据
         List<HouseCityEntity> cityList = houseCityService.list(new LambdaQueryWrapper<HouseCityEntity>().eq(HouseCityEntity::getSuperiorId, cityId).eq(HouseCityEntity::getLevel, CityLevelConstant.THIRD));

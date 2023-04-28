@@ -30,7 +30,7 @@ public class BaseFacilitiesServiceImpl extends ServiceImpl<BaseFacilitiesDao, Ba
     }
 
     @Override
-    @Cacheable(value = {"Facilities"},key = "#root.methodName")
+    @Cacheable(value = {"facilities"},key = "#root.methodName")
     public List<FacilitiesVO> getAll() {
         return this.list().stream().map(FacilitiesVO::new).collect(Collectors.toList());
     }

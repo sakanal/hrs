@@ -30,7 +30,7 @@ public class BaseRentContentServiceImpl extends ServiceImpl<BaseRentContentDao, 
     }
 
     @Override
-    @Cacheable(value = {"RentContent"},key = "#root.methodName")
+    @Cacheable(value = {"rentContent"},key = "#root.methodName")
     public List<RentContentVO> getAll() {
         return this.list().stream().map(RentContentVO::new).collect(Collectors.toList());
     }

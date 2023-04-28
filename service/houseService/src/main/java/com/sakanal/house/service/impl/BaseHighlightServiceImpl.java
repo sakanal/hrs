@@ -30,7 +30,7 @@ public class BaseHighlightServiceImpl extends ServiceImpl<BaseHighlightDao, Base
     }
 
     @Override
-    @Cacheable(value = {"Highlight"},key = "#root.methodName")
+    @Cacheable(value = {"highLight"},key = "#root.methodName")
     public List<HighlightVO> getAll() {
         return this.list().stream().map(HighlightVO::new).collect(Collectors.toList());
     }

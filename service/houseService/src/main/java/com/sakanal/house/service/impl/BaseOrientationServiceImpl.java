@@ -30,7 +30,7 @@ public class BaseOrientationServiceImpl extends ServiceImpl<BaseOrientationDao, 
     }
 
     @Override
-    @Cacheable(value = {"Orientation"},key = "#root.methodName")
+    @Cacheable(value = {"orientation"},key = "#root.methodName")
     public List<OrientationVO> getAll() {
         return this.list().stream().map(OrientationVO::new).collect(Collectors.toList());
     }

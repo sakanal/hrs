@@ -30,7 +30,7 @@ public class BaseRentalRequirementsServiceImpl extends ServiceImpl<BaseRentalReq
     }
 
     @Override
-    @Cacheable(value = {"RentalRequirements"},key = "#root.methodName")
+    @Cacheable(value = {"rentalRequirements"},key = "#root.methodName")
     public List<RentalRequirementsVO> getAll() {
         return this.list().stream().map(RentalRequirementsVO::new).collect(Collectors.toList());
     }

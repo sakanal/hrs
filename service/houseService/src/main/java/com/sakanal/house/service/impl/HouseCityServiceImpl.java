@@ -34,7 +34,7 @@ public class HouseCityServiceImpl extends ServiceImpl<HouseCityDao, HouseCityEnt
     }
 
     @Override
-    @Cacheable(value = {"HouseCity"},key = "#root.methodName")
+    @Cacheable(value = {"houseCity"},key = "#root.methodName")
     public List<HouseCityEntity> childrenList(){
         //数据库中的所有未删除的数据
         List<HouseCityEntity> houseCityList = this.list();
