@@ -101,14 +101,18 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
 
     @Override
     public String login(LoginSimpleDTO loginSimple) {
-        // TODO Index: 0, Size: 0
-        UserBaseInfoEntity userBaseInfoEntity = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()).last("limit 1")).get(0);
-        boolean matches = PasswordUtils.matches(loginSimple.getPassword(), userBaseInfoEntity.getPassword());
-        if (matches) {
-            //登录成功 创建token，保存到redis中
-            return createToken(userBaseInfoEntity);
-        } else {
-            return null;
+        List<UserBaseInfoEntity> list = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()));
+        if (list.size()==1){
+            UserBaseInfoEntity userBaseInfoEntity = list.get(0);
+            boolean matches = PasswordUtils.matches(loginSimple.getPassword(), userBaseInfoEntity.getPassword());
+            if (matches) {
+                //登录成功 创建token，保存到redis中
+                return createToken(userBaseInfoEntity);
+            }else {
+                throw new MyException(ErrorCodeEnum.PASSWORD_INVALID_EXCEPTION.getMsg(),ErrorCodeEnum.PASSWORD_INVALID_EXCEPTION.getCode());
+            }
+        }else {
+            throw new MyException(ErrorCodeEnum.USER_INVALID_EXCEPTION.getMsg(),ErrorCodeEnum.USER_INVALID_EXCEPTION.getCode());
         }
     }
 
