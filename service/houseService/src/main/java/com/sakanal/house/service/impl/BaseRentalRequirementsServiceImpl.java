@@ -1,6 +1,7 @@
 package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.ShowStateConstant;
 import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.service.vo.RentalRequirementsVO;
 import org.springframework.cache.annotation.Cacheable;
@@ -41,7 +42,8 @@ public class BaseRentalRequirementsServiceImpl extends ServiceImpl<BaseRentalReq
     @Override
     @Cacheable(value = {"rentalRequirements"},key = "#root.methodName")
     public List<RentalRequirementsVO> getAll() {
-        return this.list().stream().map(RentalRequirementsVO::new).collect(Collectors.toList());
+        return this.list(new LambdaQueryWrapper<BaseRentalRequirementsEntity>().eq(BaseRentalRequirementsEntity::getShowState, ShowStateConstant.SHOW_STATUS))
+                .stream().map(RentalRequirementsVO::new).collect(Collectors.toList());
     }
 
 }

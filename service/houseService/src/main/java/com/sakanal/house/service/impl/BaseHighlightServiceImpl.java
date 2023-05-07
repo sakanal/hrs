@@ -1,6 +1,7 @@
 package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.ShowStateConstant;
 import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.service.vo.HighlightVO;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,7 +41,8 @@ public class BaseHighlightServiceImpl extends ServiceImpl<BaseHighlightDao, Base
     @Override
     @Cacheable(value = {"highLight"},key = "#root.methodName")
     public List<HighlightVO> getAll() {
-        return this.list().stream().map(HighlightVO::new).collect(Collectors.toList());
+        return this.list(new LambdaQueryWrapper<BaseHighlightEntity>().eq(BaseHighlightEntity::getShowState, ShowStateConstant.SHOW_STATUS))
+                .stream().map(HighlightVO::new).collect(Collectors.toList());
     }
 
 }

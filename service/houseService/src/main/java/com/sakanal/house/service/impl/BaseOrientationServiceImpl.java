@@ -1,6 +1,7 @@
 package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.ShowStateConstant;
 import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.service.vo.OrientationVO;
 import org.springframework.cache.annotation.Cacheable;
@@ -40,7 +41,8 @@ public class BaseOrientationServiceImpl extends ServiceImpl<BaseOrientationDao, 
     @Override
     @Cacheable(value = {"orientation"},key = "#root.methodName")
     public List<OrientationVO> getAll() {
-        return this.list().stream().map(OrientationVO::new).collect(Collectors.toList());
+        return this.list(new LambdaQueryWrapper<BaseOrientationEntity>().eq(BaseOrientationEntity::getShowState, ShowStateConstant.SHOW_STATUS))
+                .stream().map(OrientationVO::new).collect(Collectors.toList());
     }
 
 }

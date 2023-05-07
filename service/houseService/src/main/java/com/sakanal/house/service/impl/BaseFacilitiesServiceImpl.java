@@ -1,7 +1,9 @@
 package com.sakanal.house.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.base.constant.ShowStateConstant;
 import com.sakanal.service.entity.house.BaseHighlightEntity;
+import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.service.vo.FacilitiesVO;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,8 @@ public class BaseFacilitiesServiceImpl extends ServiceImpl<BaseFacilitiesDao, Ba
     @Override
     @Cacheable(value = {"facilities"},key = "#root.methodName")
     public List<FacilitiesVO> getAll() {
-        return this.list().stream().map(FacilitiesVO::new).collect(Collectors.toList());
+        return this.list(new LambdaQueryWrapper<BaseFacilitiesEntity>().eq(BaseFacilitiesEntity::getShowState, ShowStateConstant.SHOW_STATUS))
+                .stream().map(FacilitiesVO::new).collect(Collectors.toList());
     }
 
 }
