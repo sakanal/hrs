@@ -58,7 +58,7 @@
             </div>
           </template>
           <template v-else>
-            无
+            暂无房源数据
           </template>
         </div>
         <el-pagination

@@ -58,7 +58,7 @@
             </div>
           </template>
           <template v-else>
-            无
+            暂无房源数据
           </template>
         </div>
         <el-pagination
@@ -145,7 +145,7 @@ export default {
       })
     },
     getRefreshDataList (value) {
-      // this.publishInfo(value.baseInfoId, value.state)
+      this.publishInfo(value.baseInfoId, value.state)
     },
     publishInfo (baseInfoId, state) {
       this.$http({

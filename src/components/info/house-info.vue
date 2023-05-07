@@ -191,6 +191,15 @@
         </template>
         <template v-else>
           <el-button @click="visible = false">关闭</el-button>
+          <template v-if="houseInfo.state===1">
+            <el-button type="success" @click="successExamine">上架</el-button>
+          </template>
+          <template v-if="houseInfo.state===2">
+            <el-button type="danger" @click="houseOff">下架</el-button>
+          </template>
+          <template v-if="houseInfo.state===3">
+            <el-button type="success" @click="successExamine">重新上架</el-button>
+          </template>
         </template>
       </span>
     </el-dialog>
@@ -210,6 +219,8 @@ export default {
       visible: false,
       examine: false,
       houseInfo: {
+        state: 0,
+        houseBaseInfoId: 6,
         baseInfo: {
           cityName: '城市',
           roadName: '交通路',
@@ -285,6 +296,10 @@ export default {
     failExamine () {
       this.visible = false
       this.$emit('refreshDataList', {baseInfoId: this.baseInfoId, state: 4})
+    },
+    houseOff () {
+      this.visible = false
+      this.$emit('refreshDataList', {baseInfoId: this.baseInfoId, state: 3})
     }
   },
   // 监听属性 类似于data概念
