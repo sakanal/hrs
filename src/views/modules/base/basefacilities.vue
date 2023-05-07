@@ -10,7 +10,7 @@
       </div>
       <div>
         <template  v-for="facilities in dataList">
-          <el-tag :key="facilities.id" closable @close="handleCloseTag(facilities)" v-if="facilities.category===0">
+          <el-tag :type="facilities.showState===1?'':'info'"  :key="facilities.id" closable @close="handleCloseTag(facilities)" v-if="facilities.category===0">
             {{facilities.name}}
           </el-tag>
         </template>
@@ -22,7 +22,7 @@
       </div>
       <div>
         <template  v-for="facilities in dataList">
-          <el-tag :key="facilities.id" closable @close="handleCloseTag(facilities)" v-if="facilities.category===1">
+          <el-tag :type="facilities.showState===1?'':'info'"  :key="facilities.id" closable @close="handleCloseTag(facilities)" v-if="facilities.category===1">
             {{facilities.name}}
           </el-tag>
         </template>
@@ -131,8 +131,31 @@
           })
         })
       },
-      handleCloseTag (facilities) {
-        console.log(facilities)
+      handleCloseTag (data) {
+        this.$confirm(`是否将${data.name}${data.showState === 1 ? '隐藏' : '重新显示'}？`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          const showState = data.showState === 1 ? 0 : 1
+          this.$http({
+            url: this.$http.adornUrl(`/house/basefacilities/update`),
+            method: 'post',
+            data: this.$http.adornData({
+              id: data.id,
+              showState
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 800
+              })
+              this.getDataList()
+            }
+          })
+        })
       }
     }
   }
