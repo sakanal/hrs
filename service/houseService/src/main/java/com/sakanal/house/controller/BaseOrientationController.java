@@ -6,6 +6,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.service.vo.OrientationVO;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.BaseOrientationEntity;
@@ -57,6 +58,7 @@ public class BaseOrientationController {
      * 保存
      */
     @RequestMapping("/save")
+    @CacheEvict(value = {"orientation"},allEntries = true)
     //@RequiresPermissions("house:baseorientation:save")
     public R save(@RequestBody BaseOrientationEntity baseOrientation){
 		baseOrientationService.save(baseOrientation);
@@ -68,6 +70,7 @@ public class BaseOrientationController {
      * 修改
      */
     @RequestMapping("/update")
+    @CacheEvict(value = {"orientation"},allEntries = true)
     //@RequiresPermissions("house:baseorientation:update")
     public R update(@RequestBody BaseOrientationEntity baseOrientation){
 		baseOrientationService.updateById(baseOrientation);
@@ -79,6 +82,7 @@ public class BaseOrientationController {
      * 删除
      */
     @RequestMapping("/delete")
+    @CacheEvict(value = {"orientation"},allEntries = true)
     //@RequiresPermissions("house:baseorientation:delete")
     public R delete(@RequestBody Long[] ids){
 		baseOrientationService.removeByIds(Arrays.asList(ids));

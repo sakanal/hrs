@@ -1,5 +1,7 @@
 package com.sakanal.house.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.service.entity.house.BaseRentContentEntity;
 import com.sakanal.service.vo.OrientationVO;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import com.sakanal.base.utils.Query;
 import com.sakanal.house.dao.BaseOrientationDao;
 import com.sakanal.service.entity.house.BaseOrientationEntity;
 import com.sakanal.house.service.BaseOrientationService;
+import org.springframework.util.StringUtils;
 
 
 @Service("baseOrientationService")
@@ -24,7 +27,12 @@ public class BaseOrientationServiceImpl extends ServiceImpl<BaseOrientationDao, 
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<BaseOrientationEntity> page = this.page(new Query<BaseOrientationEntity>().getPage(params), new QueryWrapper<BaseOrientationEntity>());
+        String state = (String) params.get("state");
+        LambdaQueryWrapper<BaseOrientationEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.hasText(state)){
+            lambdaQueryWrapper.eq(BaseOrientationEntity::getShowState,state);
+        }
+        IPage<BaseOrientationEntity> page = this.page(new Query<BaseOrientationEntity>().getPage(params),lambdaQueryWrapper);
 
         return new PageUtils(page);
     }

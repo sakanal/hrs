@@ -8,6 +8,7 @@ import java.util.Map;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 import com.sakanal.service.vo.FacilitiesVO;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.BaseFacilitiesEntity;
@@ -57,6 +58,7 @@ public class BaseFacilitiesController {
      * 保存
      */
     @RequestMapping("/save")
+    @CacheEvict(value = {"facilities"},allEntries = true)
     //@RequiresPermissions("house:basefacilities:save")
     public R save(@RequestBody BaseFacilitiesEntity baseFacilities){
 		baseFacilitiesService.save(baseFacilities);
@@ -68,6 +70,7 @@ public class BaseFacilitiesController {
      * 修改
      */
     @RequestMapping("/update")
+    @CacheEvict(value = {"facilities"},allEntries = true)
     //@RequiresPermissions("house:basefacilities:update")
     public R update(@RequestBody BaseFacilitiesEntity baseFacilities){
 		baseFacilitiesService.updateById(baseFacilities);
@@ -79,6 +82,7 @@ public class BaseFacilitiesController {
      * 删除
      */
     @RequestMapping("/delete")
+    @CacheEvict(value = {"facilities"},allEntries = true)
     //@RequiresPermissions("house:basefacilities:delete")
     public R delete(@RequestBody Long[] ids){
 		baseFacilitiesService.removeByIds(Arrays.asList(ids));

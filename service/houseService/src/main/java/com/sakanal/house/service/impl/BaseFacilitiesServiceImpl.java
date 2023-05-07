@@ -1,5 +1,7 @@
 package com.sakanal.house.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sakanal.service.entity.house.BaseHighlightEntity;
 import com.sakanal.service.vo.FacilitiesVO;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import com.sakanal.base.utils.Query;
 import com.sakanal.house.dao.BaseFacilitiesDao;
 import com.sakanal.service.entity.house.BaseFacilitiesEntity;
 import com.sakanal.house.service.BaseFacilitiesService;
+import org.springframework.util.StringUtils;
 
 
 @Service("baseFacilitiesService")
@@ -24,7 +27,12 @@ public class BaseFacilitiesServiceImpl extends ServiceImpl<BaseFacilitiesDao, Ba
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<BaseFacilitiesEntity> page = this.page(new Query<BaseFacilitiesEntity>().getPage(params), new QueryWrapper<BaseFacilitiesEntity>());
+        String state = (String) params.get("state");
+        LambdaQueryWrapper<BaseFacilitiesEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.hasText(state)){
+            lambdaQueryWrapper.eq(BaseFacilitiesEntity::getShowState,state);
+        }
+        IPage<BaseFacilitiesEntity> page = this.page(new Query<BaseFacilitiesEntity>().getPage(params), lambdaQueryWrapper);
 
         return new PageUtils(page);
     }

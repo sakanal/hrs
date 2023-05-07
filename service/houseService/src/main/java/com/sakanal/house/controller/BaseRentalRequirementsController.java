@@ -6,6 +6,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.service.vo.RentalRequirementsVO;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.BaseRentalRequirementsEntity;
@@ -57,6 +58,7 @@ public class BaseRentalRequirementsController {
      * 保存
      */
     @RequestMapping("/save")
+    @CacheEvict(value = {"rentalRequirements"},allEntries = true)
     //@RequiresPermissions("house:baserentalrequirements:save")
     public R save(@RequestBody BaseRentalRequirementsEntity baseRentalRequirements){
 		baseRentalRequirementsService.save(baseRentalRequirements);
@@ -68,6 +70,7 @@ public class BaseRentalRequirementsController {
      * 修改
      */
     @RequestMapping("/update")
+    @CacheEvict(value = {"rentalRequirements"},allEntries = true)
     //@RequiresPermissions("house:baserentalrequirements:update")
     public R update(@RequestBody BaseRentalRequirementsEntity baseRentalRequirements){
 		baseRentalRequirementsService.updateById(baseRentalRequirements);
@@ -79,6 +82,7 @@ public class BaseRentalRequirementsController {
      * 删除
      */
     @RequestMapping("/delete")
+    @CacheEvict(value = {"rentalRequirements"},allEntries = true)
     //@RequiresPermissions("house:baserentalrequirements:delete")
     public R delete(@RequestBody Long[] ids){
 		baseRentalRequirementsService.removeByIds(Arrays.asList(ids));

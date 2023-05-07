@@ -6,6 +6,7 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.sakanal.service.vo.HighlightVO;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import com.sakanal.service.entity.house.BaseHighlightEntity;
@@ -57,6 +58,7 @@ public class BaseHighlightController {
      * 保存
      */
     @RequestMapping("/save")
+    @CacheEvict(value = {"highLight"},allEntries = true)
     //@RequiresPermissions("house:basehighlight:save")
     public R save(@RequestBody BaseHighlightEntity baseHighlight){
 		baseHighlightService.save(baseHighlight);
@@ -68,6 +70,7 @@ public class BaseHighlightController {
      * 修改
      */
     @RequestMapping("/update")
+    @CacheEvict(value = {"highLight"},allEntries = true)
     //@RequiresPermissions("house:basehighlight:update")
     public R update(@RequestBody BaseHighlightEntity baseHighlight){
 		baseHighlightService.updateById(baseHighlight);
@@ -79,6 +82,7 @@ public class BaseHighlightController {
      * 删除
      */
     @RequestMapping("/delete")
+    @CacheEvict(value = {"highLight"},allEntries = true)
     //@RequiresPermissions("house:basehighlight:delete")
     public R delete(@RequestBody Long[] ids){
 		baseHighlightService.removeByIds(Arrays.asList(ids));
