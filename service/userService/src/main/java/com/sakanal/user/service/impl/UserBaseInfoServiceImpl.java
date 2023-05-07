@@ -228,12 +228,19 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
             }
             String email = (String) params.get("email");
             if (StringUtils.hasText(email)){
-                String emailRegex ="^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
-                if (email.matches(emailRegex)){
-                    userBaseInfoEntity.setEmail(email);
-                    changeFlag=true;
-                }else {
-                    throw new MyException("无效数据");
+                String code = (String) params.get("code");
+                if (StringUtils.hasText(code)) {
+                    String codeRedis = (String) redisUtils.stringGet(redisProperties.getBindEmailCodePrefix() + userId);
+                    if (Objects.equals(codeRedis,code)){
+                        String emailRegex ="^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+                        if (email.matches(emailRegex)){
+                            userBaseInfoEntity.setEmail(email);
+                            changeFlag=true;
+                            redisUtils.del(redisProperties.getBindEmailCodePrefix()+userId);
+                        }else {
+                            throw new MyException("无效数据");
+                        }
+                    }
                 }
             }
             if (changeFlag){

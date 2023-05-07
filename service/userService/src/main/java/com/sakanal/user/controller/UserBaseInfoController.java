@@ -7,10 +7,11 @@ import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 import com.sakanal.service.dto.ChangePasswordDTO;
+import com.sakanal.service.dto.EmailCodeDTO;
 import com.sakanal.service.entity.user.UserBaseInfoEntity;
 import com.sakanal.service.properties.MyCommonRedisProperties;
 import com.sakanal.service.utils.RedisUtils;
-import com.sakanal.service.vo.UserBaseInfoVO;
+import com.sakanal.user.feign.MailFeignClient;
 import com.sakanal.user.feign.SMSFeignClient;
 import com.sakanal.user.service.UserBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,8 @@ public class UserBaseInfoController {
     private UserBaseInfoService userBaseInfoService;
     @Resource
     private SMSFeignClient smsFeignClient;
+    @Resource
+    private MailFeignClient mailFeignClient;
     @Resource
     private RedisUtils redisUtils;
     @Resource
@@ -124,21 +127,39 @@ public class UserBaseInfoController {
             return R.error();
         }
     }
-    @RequestMapping("/sendCode/{userId}/{phone}")
-    public R sendCode(@PathVariable Long userId, @PathVariable String phone) {
-        if (userBaseInfoService.count(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getId,userId))==1){
-            if (!redisUtils.hasKey(redisProperties.getBindPhoneCodePrefix() + userId)) {
-                String code = RandomUtil.randomNumbers(6);
-                Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {
-                });
-                if (result == 0) {
-                    redisUtils.stringSet(redisProperties.getBindPhoneCodePrefix() + userId, code, redisProperties.getCodeExpireTime());
-                } else {
-                    return R.error(ErrorCodeEnum.SMS_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.SMS_FAIL_EXCEPTION.getMsg());
-                }
+
+    @RequestMapping("/sendCode/phone/{userId}/{phone}")
+    public R sendCodePhone(@PathVariable Long userId, @PathVariable String phone) {
+        if (userBaseInfoService.count(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getId, userId)) == 1) {
+            String code = RandomUtil.randomNumbers(6);
+            Integer result = smsFeignClient.send(code, phone).getData("code", new TypeReference<Integer>() {
+            });
+            if (result == 0) {
+                redisUtils.stringSet(redisProperties.getBindPhoneCodePrefix() + userId, code, redisProperties.getCodeExpireTime());
+            } else {
+                return R.error(ErrorCodeEnum.SMS_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.SMS_FAIL_EXCEPTION.getMsg());
             }
-        }else {
-            return R.error(ErrorCodeEnum.PHONE_INVALID_EXCEPTION.getCode(), ErrorCodeEnum.PHONE_INVALID_EXCEPTION.getMsg());
+        } else {
+            return R.error(ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getCode(), ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
+
+    @RequestMapping("/sendCode/email")
+    public R sendCodeEmail(@RequestBody EmailCodeDTO email) {
+        if (userBaseInfoService.count(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getId, email.getUserId())) == 1) {
+            String code = RandomUtil.randomNumbers(6);
+            email.setSubject("换绑邮箱");
+            email.setText("验证码是：" + code);
+            email.setCode(code);
+            String result = mailFeignClient.send(email);
+            if ("success".equals(result)) {
+                redisUtils.stringSet(redisProperties.getBindEmailCodePrefix() + email.getUserId(), code, redisProperties.getCodeExpireTime());
+            } else {
+                return R.error(ErrorCodeEnum.MAIL_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.MAIL_FAIL_EXCEPTION.getMsg());
+            }
+        } else {
+            return R.error(ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getCode(), ErrorCodeEnum.TOKEN_INVALID_EXCEPTION.getMsg());
         }
         return R.ok();
     }
