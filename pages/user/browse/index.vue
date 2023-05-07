@@ -2,60 +2,64 @@
   <div class=''>
     <el-row>
       <el-col :span="24" style="padding-right: 20px">
-        <div v-for="publishInfo in publishInfoList">
-          <el-row :gutter="20" class="my-house-info">
-            <el-col :span="5">
-              <div>
-                <el-image
-                  style="width: 200px; height: 120px;margin-top: 5px"
-                  :src="publishInfo.url"
-                  :fit="'cover'"
-                  :preview-src-list="publishInfo.imageList"></el-image>
-              </div>
-            </el-col>
-            <el-col :span="15">
-              <div class="my-title">
-                <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
+        <template v-if="publishInfoList.length>0">
+          <div v-for="publishInfo in publishInfoList">
+            <el-row :gutter="20" class="my-house-info">
+              <el-col :span="5">
+                <div>
+                  <el-image
+                    style="width: 200px; height: 120px;margin-top: 5px"
+                    :src="publishInfo.url"
+                    :fit="'cover'"
+                    :preview-src-list="publishInfo.imageList"></el-image>
+                </div>
+              </el-col>
+              <el-col :span="15">
+                <div class="my-title">
+                  <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
                     <span style="font-size: 18px;text-overflow: ellipsis;">
                     {{ publishInfo.houseTitle }}
                     </span>
-                </el-link>
-              </div>
-              <div class="div-house-info">
-                <template v-if="publishInfo.hallNumber>0">{{ publishInfo.hallNumber }}厅</template>
-                <template v-if="publishInfo.roomNumber>0">{{ publishInfo.roomNumber }}室</template>
-                <template v-if="publishInfo.cloakroomNumber>0">{{ publishInfo.cloakroomNumber }}卫</template>
-                <template v-if="publishInfo.areaCovered>0">{{ publishInfo.areaCovered }}㎡</template>
-              </div>
-              <div class="div-house-info">
-                <template v-if="publishInfo.roadName!==null">{{ publishInfo.roadName }}</template>
-                <template v-if="publishInfo.areaName!==null">{{ publishInfo.areaName }}</template>
-              </div>
-              <div class="div-house-info">
-                <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
-              </div>
-            </el-col>
-            <el-col :span="4" style="font-size: 16px;color: red">
+                  </el-link>
+                </div>
+                <div class="div-house-info">
+                  <template v-if="publishInfo.hallNumber>0">{{ publishInfo.hallNumber }}厅</template>
+                  <template v-if="publishInfo.roomNumber>0">{{ publishInfo.roomNumber }}室</template>
+                  <template v-if="publishInfo.cloakroomNumber>0">{{ publishInfo.cloakroomNumber }}卫</template>
+                  <template v-if="publishInfo.areaCovered>0">{{ publishInfo.areaCovered }}㎡</template>
+                </div>
+                <div class="div-house-info">
+                  <template v-if="publishInfo.roadName!==null">{{ publishInfo.roadName }}</template>
+                  <template v-if="publishInfo.areaName!==null">{{ publishInfo.areaName }}</template>
+                </div>
+                <div class="div-house-info">
+                  <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
+                </div>
+              </el-col>
+              <el-col :span="4" style="font-size: 16px;color: red">
                 <span v-if="publishInfo.monthlyRent>0">
                   <span style="font-size: 24px">
                     {{ publishInfo.monthlyRent }}
                   </span>
                   元/月
                 </span>
-              <template v-else>面议</template>
-            </el-col>
-          </el-row>
-          <el-divider></el-divider>
-        </div>
-
-        <el-pagination
-          :hide-on-single-page="true"
-          @current-change="currentChange"
-          :page-size="pageSize"
-          :current-page.sync="currentPage"
-          layout="total, prev, pager, next"
-          :total="totalCount">
-        </el-pagination>
+                <template v-else>面议</template>
+              </el-col>
+            </el-row>
+            <el-divider></el-divider>
+          </div>
+          <el-pagination
+            :hide-on-single-page="true"
+            @current-change="currentChange"
+            :page-size="pageSize"
+            :current-page.sync="currentPage"
+            layout="total, prev, pager, next"
+            :total="totalCount">
+          </el-pagination>
+        </template>
+        <template v-else>
+          <el-empty description="暂无浏览记录"></el-empty>
+        </template>
       </el-col>
     </el-row>
   </div>

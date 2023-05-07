@@ -102,7 +102,7 @@
         </el-tabs>
 <!--        结果展示-->
         <div>
-          <el-row>
+          <el-row v-if="publishInfoList.length>0">
             <el-col :span="20">
               <div v-for="publishInfo in publishInfoList">
                 <el-row :gutter="20" class="my-house-info">
@@ -190,6 +190,9 @@
                 </template>
               </div>
             </el-col>
+          </el-row>
+          <el-row v-else>
+            <el-empty description="暂无房源"></el-empty>
           </el-row>
         </div>
 <!--        分页条-->

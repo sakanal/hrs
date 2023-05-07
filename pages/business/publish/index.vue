@@ -3,26 +3,83 @@
     <el-tabs style="height: 100%" type="border-card" @tab-click="tabClick" :value="tabNumber">
       <el-tab-pane label="显示中" name="2">
         <div>
-          <div v-for="publishInfo in publishInfoList">
-            <el-row :gutter="20">
-              <el-col :span="6">
-                <div>
-                  <el-image
-                    style="width: 200px; height: 110px"
-                    :src="publishInfo.url"
-                    :fit="'cover'"
-                    :preview-src-list="publishInfo.imageList"></el-image>
-                </div>
-              </el-col>
+          <template v-if="publishInfoList.length>0">
+            <div v-for="publishInfo in publishInfoList">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <div>
+                    <el-image
+                      style="width: 200px; height: 110px"
+                      :src="publishInfo.url"
+                      :fit="'cover'"
+                      :preview-src-list="publishInfo.imageList"></el-image>
+                  </div>
+                </el-col>
+                <el-col :span="14">
+                  <div>
+                    <template>
+                      <div class="my-title">
+                        <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
+                        <span style="font-size: 18px;text-overflow: ellipsis;">
+                          {{ publishInfo.houseTitle }}
+                        </span>
+                        </el-link>
+                      </div>
+                    </template>
+                  </div>
+                  <div class="div-house-info">
+                    <template v-if="publishInfo.hallNumber>0">{{ publishInfo.hallNumber }}厅</template>
+                    <template v-if="publishInfo.roomNumber>0">{{ publishInfo.roomNumber }}室</template>
+                    <template v-if="publishInfo.cloakroomNumber>0">{{ publishInfo.cloakroomNumber }}卫</template>
+                    <template v-if="publishInfo.areaCovered>0">{{ publishInfo.areaCovered }}㎡</template>
+                  </div>
+                  <div class="div-house-info">
+                    <template v-if="publishInfo.roadName!==null">{{ publishInfo.roadName }}</template>
+                    <template v-if="publishInfo.areaName!==null">{{ publishInfo.areaName }}</template>
+                  </div>
+                  <div class="div-house-info">
+                    <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
+                  </div>
+                </el-col>
+                <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
+                <span v-if="publishInfo.monthlyRent>0">
+                  <span style="font-size: 24px">
+                    {{ publishInfo.monthlyRent }}
+                  </span>
+                  元/月
+                </span>
+                  <template v-else>面议</template>
+                  <el-button type="primary" size="small" @click="toPay(publishInfo.baseInfoId)">推广</el-button>
+                  <el-button type="danger" size="small" @click="setHouseOff(publishInfo.baseInfoId)">下架</el-button>
+                </el-col>
+              </el-row>
+              <el-divider></el-divider>
+            </div>
+          </template>
+          <template v-else>
+            <el-empty description="暂无发布的房源"></el-empty>
+          </template>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="审核中" name="1">
+        <div>
+          <template v-if="publishInfoList.length>0">
+            <div v-for="publishInfo in publishInfoList">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <div>
+                    <el-image
+                      style="width: 200px; height: 110px"
+                      :src="publishInfo.url"
+                      :fit="'cover'"
+                      :preview-src-list="publishInfo.imageList"></el-image>
+                  </div>
+                </el-col>
               <el-col :span="14">
                 <div>
                   <template>
                     <div class="my-title">
-                      <el-link :underline="false" :href="`/house/${publishInfo.baseInfoId}`">
-                        <span style="font-size: 18px;text-overflow: ellipsis;">
-                          {{ publishInfo.houseTitle }}
-                        </span>
-                      </el-link>
+                      {{ publishInfo.houseTitle }}
                     </div>
                   </template>
                 </div>
@@ -48,112 +105,72 @@
                   元/月
                 </span>
                 <template v-else>面议</template>
-                <el-button type="primary" size="small" @click="toPay(publishInfo.baseInfoId)">推广</el-button>
-                <el-button type="danger" size="small" @click="setHouseOff(publishInfo.baseInfoId)">下架</el-button>
+                <el-button type="danger" size="small" @click="toChangeHouseInfo(publishInfo.baseInfoId)">我要修改
+                </el-button>
               </el-col>
-            </el-row>
-            <el-divider></el-divider>
-          </div>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="审核中" name="1">
-        <div>
-          <div v-for="publishInfo in publishInfoList">
-            <el-row :gutter="20">
-              <el-col :span="6">
-                <div>
-                  <el-image
-                    style="width: 200px; height: 110px"
-                    :src="publishInfo.url"
-                    :fit="'cover'"
-                    :preview-src-list="publishInfo.imageList"></el-image>
-                </div>
-              </el-col>
-              <el-col :span="14">
-                <div>
-                  <template>
-                    <div class="my-title">
-                      {{ publishInfo.houseTitle }}
-                    </div>
-                  </template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.hallNumber>0">{{publishInfo.hallNumber}}厅</template>
-                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
-                  <template v-if="publishInfo.cloakroomNumber>0">{{publishInfo.cloakroomNumber}}卫</template>
-                  <template v-if="publishInfo.areaCovered>0">{{publishInfo.areaCovered}}㎡</template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.roadName!==null">{{publishInfo.roadName}}</template>
-                  <template v-if="publishInfo.areaName!==null">{{publishInfo.areaName}}</template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
-                </div>
-              </el-col>
-              <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
-                <span v-if="publishInfo.monthlyRent>0">
-                  <span style="font-size: 24px">
-                    {{publishInfo.monthlyRent}}
-                  </span>
-                  元/月
-                </span>
-                <template v-else>面议</template>
-                <el-button type="danger" size="small" @click="toChangeHouseInfo(publishInfo.baseInfoId)">我要修改</el-button>
-              </el-col>
-            </el-row>
-            <el-divider></el-divider>
-          </div>
+              </el-row>
+              <el-divider></el-divider>
+            </div>
+          </template>
+          <template v-else>
+            <el-empty description="暂无审核中的房源"></el-empty>
+          </template>
         </div>
       </el-tab-pane>
       <el-tab-pane label="已下架" name="3">
         <div>
-          <div v-for="publishInfo in publishInfoList">
-            <el-row :gutter="20">
-              <el-col :span="6">
-                <div>
-                  <el-image
-                    style="width: 200px; height: 110px"
-                    :src="publishInfo.url"
-                    :fit="'cover'"
-                    :preview-src-list="publishInfo.imageList"></el-image>
-                </div>
-              </el-col>
-              <el-col :span="14">
-                <div>
-                  <template>
-                    <div class="my-title">
-                      {{ publishInfo.houseTitle }}
-                    </div>
-                  </template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.hallNumber>0">{{publishInfo.hallNumber}}厅</template>
-                  <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
-                  <template v-if="publishInfo.cloakroomNumber>0">{{publishInfo.cloakroomNumber}}卫</template>
-                  <template v-if="publishInfo.areaCovered>0">{{publishInfo.areaCovered}}㎡</template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.roadName!==null">{{publishInfo.roadName}}</template>
-                  <template v-if="publishInfo.areaName!==null">{{publishInfo.areaName}}</template>
-                </div>
-                <div class="div-house-info">
-                  <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
-                </div>
-              </el-col>
-              <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
+          <template v-if="publishInfoList.length>0">
+            <div v-for="publishInfo in publishInfoList">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <div>
+                    <el-image
+                      style="width: 200px; height: 110px"
+                      :src="publishInfo.url"
+                      :fit="'cover'"
+                      :preview-src-list="publishInfo.imageList"></el-image>
+                  </div>
+                </el-col>
+                <el-col :span="14">
+                  <div>
+                    <template>
+                      <div class="my-title">
+                        {{ publishInfo.houseTitle }}
+                      </div>
+                    </template>
+                  </div>
+                  <div class="div-house-info">
+                    <template v-if="publishInfo.hallNumber>0">{{publishInfo.hallNumber}}厅</template>
+                    <template v-if="publishInfo.roomNumber>0">{{publishInfo.roomNumber}}室</template>
+                    <template v-if="publishInfo.cloakroomNumber>0">{{publishInfo.cloakroomNumber}}卫</template>
+                    <template v-if="publishInfo.areaCovered>0">{{publishInfo.areaCovered}}㎡</template>
+                  </div>
+                  <div class="div-house-info">
+                    <template v-if="publishInfo.roadName!==null">{{publishInfo.roadName}}</template>
+                    <template v-if="publishInfo.areaName!==null">{{publishInfo.areaName}}</template>
+                  </div>
+                  <div class="div-house-info">
+                    <template v-if="publishInfo.publisherIdentity===0">来自个人房源</template>
+                  </div>
+                </el-col>
+                <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
                 <span v-if="publishInfo.monthlyRent>0">
                   <span style="font-size: 24px">
-                    {{publishInfo.monthlyRent}}
+                    {{ publishInfo.monthlyRent }}
                   </span>
                   元/月
                 </span>
-                <template v-else>面议</template>
-                <el-button type="danger" size="small" @click="toChangeHouseInfo(publishInfo.baseInfoId)">再次发布</el-button>
-              </el-col>
-            </el-row>
-            <el-divider></el-divider>
-          </div>
+                  <template v-else>面议</template>
+                  <el-button type="danger" size="small" @click="toChangeHouseInfo(publishInfo.baseInfoId)">再次发布
+                  </el-button>
+                </el-col>
+              </el-row>
+              <el-divider></el-divider>
+            </div>
+          </template>
+          <template v-else>
+            <el-empty description="暂无已下架的房源"></el-empty>
+          </template>
         </div>
       </el-tab-pane>
 
