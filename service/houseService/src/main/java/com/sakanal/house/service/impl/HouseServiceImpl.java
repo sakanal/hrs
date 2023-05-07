@@ -367,8 +367,12 @@ public class HouseServiceImpl implements HouseService {
             contactInfoVO.setHeadPortraitUrl(userBaseInfo.getHeadPortraitUrl());
             publishInfoVO.setContactInfo(contactInfoVO);
         }, executor);
+        CompletableFuture<Void> stateCompletableFuture = CompletableFuture.runAsync(() -> {
+            HouseStateEntity state = stateService.getOne(new LambdaQueryWrapper<HouseStateEntity>().eq(HouseStateEntity::getBaseInfoId, houseBaseInfoId));
+            publishInfoVO.setState(state.getHousePublishState());
+        }, executor);
 
-        CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedInfoCompletableFuture, imageListCompletableFuture, contactInfoCompletableFuture).join();
+        CompletableFuture.allOf(baseInfoCompletableFuture, rentInfoCompletableFuture, detailedInfoCompletableFuture, imageListCompletableFuture, contactInfoCompletableFuture,stateCompletableFuture).join();
         return publishInfoVO;
 
     }

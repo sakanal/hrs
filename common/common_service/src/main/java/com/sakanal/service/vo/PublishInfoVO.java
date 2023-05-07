@@ -21,6 +21,7 @@ public class PublishInfoVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long houseBaseInfoId;
+    private Integer state;
     private PublishInfoVO.BaseInfoVO baseInfo;
     private PublishInfoVO.RentInfoVO rentInfo;
     private PublishInfoVO.DetailedInfoVO detailedInfo;
