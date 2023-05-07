@@ -8,8 +8,8 @@
             {{cityName}} [<nuxt-link style="text-decoration: none" to="/house/location">切换城市</nuxt-link>]
           </div>
         </el-col>
-        <el-col :span="7"/>
-        <el-col :span="6" class=" my-el-menu">
+        <el-col :span="6"/>
+        <el-col :span="7" class=" my-el-menu">
           <el-menu class="my-el-menu-header" style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">

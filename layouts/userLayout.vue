@@ -9,8 +9,8 @@
             <el-link :underline="false" href="/">首页</el-link>
           </div>
         </el-col>
-        <el-col :span="7"/>
-        <el-col :span="6">
+        <el-col :span="6"/>
+        <el-col :span="7">
           <el-menu class="my-el-menu-header" style="border: 0;background-color: #fbfbfb;height: 30px;line-height: 30px" mode="horizontal" @select="handleSelect" :router="true">
             <el-menu-item>
               <template v-if="userInfo.nickName === undefined">
