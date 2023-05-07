@@ -256,9 +256,19 @@
                           <el-col :span="18">
                             <el-form-item>
                               <el-checkbox-group v-model="detailedForm.baseFacilitiesIds">
-                                <template v-for="facilities in facilitiesList">
-                                  <el-checkbox :label="facilities.id">{{ facilities.name }}</el-checkbox>
-                                </template>
+                                <div>
+                                  <span>公共设施</span>
+                                  <template v-for="facilities in facilitiesList" v-if="facilities.category===0">
+                                    <el-checkbox :label="facilities.id">{{ facilities.name }}</el-checkbox>
+                                  </template>
+                                </div>
+                                <hr>
+                                <div>
+                                  <span>卧室设施</span>
+                                  <template v-for="facilities in facilitiesList" v-if="facilities.category===1">
+                                    <el-checkbox :label="facilities.id">{{ facilities.name }}</el-checkbox>
+                                  </template>
+                                </div>
                               </el-checkbox-group>
                             </el-form-item>
                           </el-col>
@@ -897,7 +907,7 @@ export default {
           }
         })
       } else {
-        this.$message.error('submit error')
+        this.$message.error('请完成必要信息的填写')
       }
     },
     validateAll () {
