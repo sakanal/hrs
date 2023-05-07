@@ -68,7 +68,7 @@
                            background-color="#545c64"
                            text-color="#fff">
                     <el-menu-item index="/user">用户中心</el-menu-item>
-                    <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>
+<!--                    <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>-->
                     <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>
 <!--                    <el-menu-item index="/user/info/messageManagement">消息管理</el-menu-item>-->
                     <el-menu-item index="/user/collection">我的收藏</el-menu-item>

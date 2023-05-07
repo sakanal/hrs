@@ -33,9 +33,6 @@
                     <el-checkbox-group v-model="simpleLogin.autoLogin">
                       <el-checkbox label="autoLogin">7天免登录</el-checkbox>
                     </el-checkbox-group>
-                    <div style="position: absolute;top: 0;right: 5px">
-                      <el-link :underline="false">忘记密码</el-link>
-                    </div>
                   </el-form-item>
                   <el-form-item size="medium">
                     <el-button type="primary" style="min-width: 100%" @click="toSimpleLogin">登录</el-button>
@@ -44,12 +41,7 @@
               </el-tab-pane>
               <!--手机验证码登录-->
               <el-tab-pane label="手机验证码登录" name="phone">
-                <el-form ref="phoneLoginForm" :model="phoneLogin" :rules="phoneRules" status-icon label-width="0px"
-                         class="demo-ruleForm">
-<!--                  <el-form-item prop="userName">-->
-<!--                    <el-input v-model="phoneLogin.phone" placeholder="手机号" autocomplete="off"/>-->
-<!--                  </el-form-item>-->
-
+                <el-form ref="phoneLoginForm" :model="phoneLogin" :rules="phoneRules" status-icon label-width="0px" class="demo-ruleForm">
                   <el-form-item prop="phone">
                     <el-input v-model="phoneLogin.phone" placeholder="手机号" auto-complete="false">
                       <template slot="append">
@@ -69,9 +61,6 @@
                     <el-checkbox-group v-model="simpleLogin.autoLogin">
                       <el-checkbox label="autoLogin">7天免登录</el-checkbox>
                     </el-checkbox-group>
-                    <div style="position: absolute;top: 0;right: 5px">
-                      <el-link :underline="false">忘记密码</el-link>
-                    </div>
                   </el-form-item>
                   <el-form-item size="medium">
                     <el-button type="primary" style="min-width: 100%" @click="toPhoneLogin">登录</el-button>
