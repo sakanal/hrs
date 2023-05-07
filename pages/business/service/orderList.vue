@@ -40,7 +40,7 @@
             <el-tag>所有房源</el-tag>
           </template>
           <template>
-            <span>{{prop.row.baseInfoTitle}}</span>
+            <span class="my-house-title">{{ prop.row.baseInfoTitle }}</span>
           </template>
         </template>
       </el-table-column>
@@ -57,14 +57,14 @@
         label="总金额">
       </el-table-column>
       <el-table-column
-        prop="showState"
+        prop="state"
         header-align="center"
         align="center"
         label="订单状态">
         <template slot-scope="prop">
-          <el-tag v-if="prop.row.showState===0">未支付</el-tag>
-          <el-tag v-if="prop.row.showState===1" type="success">已支付</el-tag>
-          <el-tag v-if="prop.row.showState===2" type="danger">超时未支付</el-tag>
+          <el-tag v-if="prop.row.state===0">未支付</el-tag>
+          <el-tag v-if="prop.row.state===1" type="success">已支付</el-tag>
+          <el-tag v-if="prop.row.state===2" type="danger">超时未支付</el-tag>
         </template>
       </el-table-column>
       <!--      <el-table-column-->
@@ -73,29 +73,31 @@
       <!--        align="center"-->
       <!--        label="0-未删除 1-已删除">-->
       <!--      </el-table-column>-->
-      <el-table-column
-        prop="createdTime"
-        header-align="center"
-        align="center"
-        label="订单创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="modifyTime"
-        header-align="center"
-        align="center"
-        label="收单时间">
-      </el-table-column>
       <!--      <el-table-column-->
-      <!--        fixed="right"-->
+      <!--        prop="createdTime"-->
       <!--        header-align="center"-->
       <!--        align="center"-->
-      <!--        width="150"-->
-      <!--        label="操作">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>-->
-      <!--          <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>-->
-      <!--        </template>-->
+      <!--        label="订单创建时间">-->
       <!--      </el-table-column>-->
+      <!--      <el-table-column-->
+      <!--        prop="modifyTime"-->
+      <!--        header-align="center"-->
+      <!--        align="center"-->
+      <!--        label="收单时间">-->
+      <!--      </el-table-column>-->
+      <el-table-column
+        fixed="right"
+        header-align="center"
+        align="center"
+        width="150"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.state===0" type="text" size="small" @click="toPay(scope.row.id)">
+            去支付
+          </el-button>
+          <el-button v-else type="text" size="small" @click="deleteHandle(scope.row.id)">删除订单</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -104,9 +106,11 @@
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
       :total="totalPage"
-      :hide-on-single-page="'true'"
+      :hide-on-single-page="true"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+
+    <div ref="alipayWap" v-html="alipay"/>
   </div>
 </template>
 
@@ -132,7 +136,8 @@ export default {
       totalPage: 0,
       dataListLoading: false,
       dataListSelections: [],
-      addOrUpdateVisible: false
+      addOrUpdateVisible: false,
+      alipay: ''
     }
   },
   // 方法集合
@@ -172,36 +177,43 @@ export default {
       this.dataListSelections = val
     },
     // 新增 / 修改
-    addOrUpdateHandle (id) {
-      this.addOrUpdateVisible = true
-      this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id)
-      })
+    toPay (id) {
+      this.$axios.post(`/promotion/housepromotionorder/toPay/${id}`)
+        .then((res) => {
+          // 渲染支付页面
+          this.alipay = res.pay
+          // 防抖避免重复支付
+          this.$nextTick(() => {
+            // 提交支付表单
+            this.$refs.alipayWap.children[0].submit()
+            setTimeout(() => {
+            }, 500)
+          })
+        })
     },
     // 删除
     deleteHandle (id) {
-      var ids = id ? [id] : this.dataListSelections.map(item => {
-        return item.id
-      })
-      this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+      this.$confirm(`是否删除[${id}]号订单?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.post('/promotion/housepromotionorder/delete',{ids}).then(({data}) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: '操作成功',
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.getDataList()
-              }
-            })
-          } else {
-            this.$message.error(data.msg)
-          }
-        })
+        this.$axios.delete(`/promotion/housepromotionorder/userDelete/${id}`)
+          .then(response => {
+            if (response.code === 0) {
+              this.$message({
+                message: '删除成功',
+                type: 'success',
+                duration: 800,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+
       })
     }
   },
@@ -254,5 +266,11 @@ export default {
 </script>
 
 <style scoped>
-
+.my-house-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
 </style>
