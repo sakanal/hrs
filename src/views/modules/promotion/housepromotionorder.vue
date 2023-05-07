@@ -51,7 +51,7 @@
             <el-tag>所有房源</el-tag>
           </template>
           <template>
-            <span>{{prop.row.baseInfoTitle}}</span>
+            <span class="my-house-title">{{prop.row.baseInfoTitle}}</span>
           </template>
         </template>
       </el-table-column>
@@ -68,14 +68,14 @@
         label="总金额">
       </el-table-column>
       <el-table-column
-        prop="showState"
+        prop="state"
         header-align="center"
         align="center"
         label="订单状态">
         <template slot-scope="prop">
-          <el-tag v-if="prop.row.showState===0">未支付</el-tag>
-          <el-tag v-if="prop.row.showState===1" type="success">已支付</el-tag>
-          <el-tag v-if="prop.row.showState===2" type="danger">超时未支付</el-tag>
+          <el-tag v-if="prop.row.state===0">未支付</el-tag>
+          <el-tag v-if="prop.row.state===1" type="success">已支付</el-tag>
+          <el-tag v-if="prop.row.state===2" type="danger">超时未支付</el-tag>
         </template>
       </el-table-column>
 <!--      <el-table-column-->
@@ -228,3 +228,13 @@
     }
   }
 </script>
+
+<style scoped>
+.my-house-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+</style>
