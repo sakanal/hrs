@@ -23,6 +23,7 @@ public class PromotionOrderVO implements Serializable {
     private String baseInfoTitle;
     private Long number;
     private BigDecimal totalMoney;
+    private Integer state;
     private Integer showState;
     private Date createdTime;
     private Date modifyTime;
@@ -34,6 +35,7 @@ public class PromotionOrderVO implements Serializable {
         this.baseInfoId=housePromotionOrderEntity.getBaseInfoId();
         this.number=housePromotionOrderEntity.getNumber();
         this.totalMoney=housePromotionOrderEntity.getTotalMoney();
+        this.state=housePromotionOrderEntity.getState();
         this.showState=housePromotionOrderEntity.getShowState();
         this.createdTime=housePromotionOrderEntity.getCreatedTime();
         this.modifyTime=housePromotionOrderEntity.getModifyTime();

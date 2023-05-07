@@ -13,7 +13,8 @@ public enum ErrorCodeEnum {
     USER_INVALID_EXCEPTION(10014,"用户名无效"),
     PASSWORD_INVALID_EXCEPTION(10015,"密码错误"),
     PUBLISH_FAIL_EXCEPTION(20001,"发布失败"),
-    UPDATE_FAIL_EXCEPTION(20001,"修改失败");
+    UPDATE_FAIL_EXCEPTION(20001,"修改失败"),
+    ORDER_DELETE_FAIL_EXCEPTION(30000,"订单删除失败");
 
     private final int code;
     private final String msg;

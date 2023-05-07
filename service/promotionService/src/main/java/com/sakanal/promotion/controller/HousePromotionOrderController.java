@@ -1,6 +1,8 @@
 package com.sakanal.promotion.controller;
 
 import com.alibaba.fastjson.TypeReference;
+import com.sakanal.base.constant.ShowStateConstant;
+import com.sakanal.base.exception.ErrorCodeEnum;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
 import com.sakanal.promotion.feign.AliPayFeignClient;
@@ -90,10 +92,33 @@ public class HousePromotionOrderController {
 
         return R.ok();
     }
+    @DeleteMapping("/userDelete/{OrderId}")
+    public R userDelete(@PathVariable Long OrderId){
+        HousePromotionOrderEntity housePromotionOrderEntity = new HousePromotionOrderEntity();
+        housePromotionOrderEntity.setId(OrderId);
+        housePromotionOrderEntity.setShowState(ShowStateConstant.HIDE_STATUS);
+        if (housePromotionOrderService.updateById(housePromotionOrderEntity)){
+            return R.ok();
+        }else {
+            return R.error(ErrorCodeEnum.ORDER_DELETE_FAIL_EXCEPTION.getCode(), ErrorCodeEnum.ORDER_DELETE_FAIL_EXCEPTION.getMsg());
+        }
+    }
 
     @PostMapping("/createOrder")
     public R createOrder(@RequestBody @Valid PromotionOrderDTO promotionOrderDTO){
         PayDTO order = housePromotionOrderService.createOrder(promotionOrderDTO);
+        if (order!=null){
+            R r = aliPayFeignClient.simplePay(order);
+            String pay = r.getData("pay", new TypeReference<String>() {
+            });
+            return R.ok().put("pay",pay);
+        }
+        return R.error();
+    }
+
+    @PostMapping("/toPay/{orderId}")
+    public R toPay(@PathVariable Long orderId){
+        PayDTO order = housePromotionOrderService.toPay(orderId);
         if (order!=null){
             R r = aliPayFeignClient.simplePay(order);
             String pay = r.getData("pay", new TypeReference<String>() {

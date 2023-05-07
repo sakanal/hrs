@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sakanal.base.constant.OrderStateConstant;
+import com.sakanal.base.constant.ShowStateConstant;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.Query;
 import com.sakanal.promotion.dao.HousePromotionOrderDao;
@@ -29,10 +30,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -59,32 +57,36 @@ public class HousePromotionOrderServiceImpl extends ServiceImpl<HousePromotionOr
         }
         String userId = (String) params.get("userId");
         if (StringUtils.hasText(userId)){
-            queryWrapper.eq(HousePromotionOrderEntity::getUserId,userId);
+            queryWrapper.eq(HousePromotionOrderEntity::getUserId,userId)
+                    .eq(HousePromotionOrderEntity::getShowState, ShowStateConstant.SHOW_STATUS);
         }
         queryWrapper.orderByDesc(HousePromotionOrderEntity::getCreatedTime);
         IPage<HousePromotionOrderEntity> page = this.page(new Query<HousePromotionOrderEntity>().getPage(params),queryWrapper);
 
         List<HousePromotionOrderEntity> records = page.getRecords();
-        // 收集推广套餐id（去重）
-        Set<Long> setPromotionId = records.stream().map(HousePromotionOrderEntity::getPromotionId).collect(Collectors.toSet());
-        // 搜集推广套餐数据<id，name>
-        Map<Long, String> mapPromotion = promotionFunctionService.listByIds(setPromotionId).stream().collect(Collectors.toMap(HousePromotionFunctionEntity::getId, HousePromotionFunctionEntity::getName));
-        // 收集房源基本信息id
-        List<Long> listBaseInfoId = records.stream().map(HousePromotionOrderEntity::getBaseInfoId).collect(Collectors.toList());
-        // 搜集房源数据<id,title>
-        Map<Long, String> mapHouse = houseFeignClient.getHouseTitleByIds(listBaseInfoId).getData("data", new TypeReference<Map<Long, String>>() {
-        });
-        List<PromotionOrderVO> resultData = records.stream().map(housePromotionOrderEntity -> {
-            PromotionOrderVO promotionOrderVO = new PromotionOrderVO(housePromotionOrderEntity);
-            // 设置推广套餐名
-            promotionOrderVO.setPromotionName(mapPromotion.get(housePromotionOrderEntity.getPromotionId()));
-            // 设置房源标题
-            promotionOrderVO.setBaseInfoTitle(mapHouse.get(housePromotionOrderEntity.getBaseInfoId()));
-            return promotionOrderVO;
-        }).collect(Collectors.toList());
-        Page<PromotionOrderVO> promotionOrderVOPage = new Page<>(page.getCurrent(),page.getSize(),page.getTotal());
-        promotionOrderVOPage.setRecords(resultData);
-        return new PageUtils(promotionOrderVOPage);
+        if (records.size()>0){
+            // 收集推广套餐id（去重）
+            Set<Long> setPromotionId = records.stream().map(HousePromotionOrderEntity::getPromotionId).collect(Collectors.toSet());
+            // 搜集推广套餐数据<id，name>
+            Map<Long, String> mapPromotion = promotionFunctionService.listByIds(setPromotionId).stream().collect(Collectors.toMap(HousePromotionFunctionEntity::getId, HousePromotionFunctionEntity::getName));
+            // 收集房源基本信息id
+            List<Long> listBaseInfoId = records.stream().map(HousePromotionOrderEntity::getBaseInfoId).collect(Collectors.toList());
+            // 搜集房源数据<id,title>
+            Map<Long, String> mapHouse = houseFeignClient.getHouseTitleByIds(listBaseInfoId).getData("data", new TypeReference<Map<Long, String>>() {
+            });
+            List<PromotionOrderVO> resultData = records.stream().map(housePromotionOrderEntity -> {
+                PromotionOrderVO promotionOrderVO = new PromotionOrderVO(housePromotionOrderEntity);
+                // 设置推广套餐名
+                promotionOrderVO.setPromotionName(mapPromotion.get(housePromotionOrderEntity.getPromotionId()));
+                // 设置房源标题
+                promotionOrderVO.setBaseInfoTitle(mapHouse.get(housePromotionOrderEntity.getBaseInfoId()));
+                return promotionOrderVO;
+            }).collect(Collectors.toList());
+            Page<PromotionOrderVO> promotionOrderVOPage = new Page<>(page.getCurrent(),page.getSize(),page.getTotal());
+            promotionOrderVOPage.setRecords(resultData);
+            return new PageUtils(promotionOrderVOPage);
+        }
+        return null;
     }
 
     @Override
@@ -132,7 +134,7 @@ public class HousePromotionOrderServiceImpl extends ServiceImpl<HousePromotionOr
 
             HousePromotionOrderEntity housePromotionOrderEntity = new HousePromotionOrderEntity();
             housePromotionOrderEntity.setId(orderId);
-            housePromotionOrderEntity.setShowState(OrderStateConstant.SUCCESS);
+            housePromotionOrderEntity.setState(OrderStateConstant.SUCCESS);
             if (this.updateById(housePromotionOrderEntity)){
                 // 获取订单信息
                 HousePromotionOrderEntity promotionOrder = this.getById(orderId);
@@ -146,6 +148,20 @@ public class HousePromotionOrderServiceImpl extends ServiceImpl<HousePromotionOr
             }
         }
         return false;
+    }
+
+    @Override
+    public PayDTO toPay(Long orderId) {
+        HousePromotionOrderEntity order = this.getById(orderId);
+        if (order!=null && Objects.equals(order.getState(), OrderStateConstant.DEFAULT)){
+            HousePromotionFunctionEntity function = promotionFunctionService.getById(order.getPromotionId());
+            String subject=null;
+            if (function!=null){
+                subject=function.getName();
+            }
+            return new PayDTO(orderId,subject,order.getTotalMoney());
+        }
+        return null;
     }
 
 }

@@ -23,5 +23,7 @@ public interface HousePromotionOrderService extends IService<HousePromotionOrder
     PayDTO createOrder(PromotionOrderDTO promotionOrderDTO);
 
     boolean handlePayResult(PayAsyncDTO payAsyncDTO);
+
+    PayDTO toPay(Long orderId);
 }
 
