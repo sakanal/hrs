@@ -38,7 +38,8 @@
         <el-tab-pane label="修改个人信息"></el-tab-pane>
       </el-tabs>
       <div>
-        <account-binding-phone :user-id="this.userInfo.id" :phone-change-flag="phoneChangeFlag" @bindingResult="bindingResult"/>
+        <account-binding-phone :user-id="this.userInfo.id" :phone-change-flag="phoneChangeFlag" @bindingResult="bindingPhone"/>
+        <account-binding-email :user-id="this.userInfo.id" :email-change-flag="emailChangeFlag" @bindingResult="bindingEmail"/>
         <el-row>
           <el-col :span="12">
             <el-form ref="userInfoFromRef" :model="userInfoFrom" :rules="rules" label-width="100px"
@@ -82,7 +83,7 @@
                 </template>
               </el-form-item>
               <el-form-item label="手机">
-                <template v-if="userInfo.phone">
+                <template v-if="userInfo.phone && userInfo.phone!=='null'">
                   <span class="my-form-item-span">
 <!--                    <template v-if="phoneChangeFlag">-->
 <!--                      <el-input v-model="userInfoFrom.phone"></el-input>-->
@@ -103,33 +104,33 @@
                 </template>
                 <template v-else>
                   <span style="padding-left: 15px">
-                    <el-button type="text">前往绑定手机</el-button>
+                    <el-button type="text" @click="phoneChangeFlag=true">前往绑定手机</el-button>
                   </span>
                 </template>
               </el-form-item>
               <el-form-item label="邮箱">
                 <template v-if="userInfo.email">
                   <span class="my-form-item-span">
-                  <template v-if="emailChangeFlag">
-                    <el-input v-model="userInfoFrom.email"></el-input>
-                  </template>
-                  <template v-else>
+<!--                  <template v-if="emailChangeFlag">-->
+<!--                    <el-input v-model="userInfoFrom.email"></el-input>-->
+<!--                  </template>-->
+                  <template>
                     <span style="padding-left: 15px">
                       {{ userInfo.email }}
                     </span>
                   </template>
                 </span>
-                  <template v-if="emailChangeFlag">
-                    <el-button type="text" @click="emailChange(true)">确认</el-button>
-                    <el-button type="text" @click="emailChange(false)">取消</el-button>
-                  </template>
-                  <template v-else>
+<!--                  <template v-if="emailChangeFlag">-->
+<!--                    <el-button type="text" @click="emailChange(true)">确认</el-button>-->
+<!--                    <el-button type="text" @click="emailChange(false)">取消</el-button>-->
+<!--                  </template>-->
+                  <template>
                     <el-button type="text" @click="emailChangeFlag=true">换绑</el-button>
                   </template>
                 </template>
                 <template v-else>
                   <span style="padding-left: 15px">
-                    <el-button type="text">前往绑定邮箱</el-button>
+                    <el-button type="text" @click="emailChangeFlag=true">前往绑定邮箱</el-button>
                   </span>
                 </template>
               </el-form-item>
@@ -148,11 +149,11 @@
 import cookie from 'js-cookie'
 import singleUpload from '@/components/upload/singleUpload'
 import accountBindingPhone from '@/components/binding/accountBindingPhone'
-
+import accountBindingEmail from '@/components/binding/accountBindingEmail'
 export default {
   layout: 'userLayout',
   // import引入的组件需要注入到对象中才能使用
-  components: { singleUpload, accountBindingPhone },
+  components: { singleUpload, accountBindingPhone,accountBindingEmail },
   data () {
     const validateName = (rule, value, callback) => {
       if (value === '') {
@@ -303,7 +304,7 @@ export default {
         this.$refs.userInfoFromRef.clearValidate()
       }
     },
-    bindingResult(flag){
+    bindingPhone(flag){
       this.phoneChangeFlag=flag
       this.getUserInfo()
     },
@@ -315,6 +316,10 @@ export default {
         this.emailChangeFlag = false
         this.$refs.userInfoFromRef.clearValidate()
       }
+    },
+    bindingEmail(flag){
+      this.emailChangeFlag=flag
+      this.getUserInfo()
     }
   },
   // 监听属性 类似于data概念

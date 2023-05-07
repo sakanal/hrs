@@ -106,7 +106,7 @@ export default {
     getCode () {
       this.$refs.dataFormRef.validateField('phone', (valid) => {
         if (!valid && !this.hasCode) {
-          this.$axios.get(`/user/userbaseinfo/sendCode/${this.userId}/${this.dataForm.phone}`).then(response => {
+          this.$axios.get(`/user/userbaseinfo/sendCode/phone/${this.userId}/${this.dataForm.phone}`).then(response => {
             if (response && response.code === 0) {
               this.$message.success('动态码发送成功')
               this.time=60
