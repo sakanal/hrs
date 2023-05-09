@@ -42,13 +42,13 @@
                   </div>
                 </el-col>
                 <el-col :span="4" style="font-size: 16px;margin-top: 5%;color: red">
-                <span v-if="publishInfo.monthlyRent>0">
-                  <span style="font-size: 24px">
-                    {{ publishInfo.monthlyRent }}
-                  </span>
-                  元/月
-                </span>
-                  <template v-else>面议</template>
+                  <div v-if="publishInfo.monthlyRent>0">
+                    <span style="font-size: 24px">
+                      {{ publishInfo.monthlyRent }}
+                    </span>
+                    元/月
+                  </div>
+                  <div v-else>面议</div>
                   <el-button type="primary" size="small" @click="toPay(publishInfo.baseInfoId)">推广</el-button>
                   <el-button type="danger" size="small" @click="setHouseOff(publishInfo.baseInfoId)">下架</el-button>
                 </el-col>
