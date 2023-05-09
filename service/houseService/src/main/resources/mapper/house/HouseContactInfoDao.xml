@@ -24,6 +24,14 @@
             state.base_info_id = contact.base_info_id
           AND state.publisher_id=#{userId}
     </update>
+    <update id="updatePublisherPhoneByUserId">
+        UPDATE house_state AS state,
+            house_contact_info AS contact
+        SET contact.contact_phone=#{phone}
+        WHERE
+            state.base_info_id = contact.base_info_id
+          AND state.publisher_id=#{userId}
+    </update>
 
 
 </mapper>

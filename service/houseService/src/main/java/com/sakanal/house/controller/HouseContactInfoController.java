@@ -93,4 +93,13 @@ public class HouseContactInfoController {
         }
     }
 
+    @PutMapping("/updatePublisherPhoneByUserId")
+    public R updatePublisherPhoneByUserId(@RequestBody Map<String, Object> params){
+        if(houseContactInfoService.updatePublisherPhoneByUserId(params)){
+            return R.ok();
+        }else {
+            return R.error();
+        }
+    }
+
 }

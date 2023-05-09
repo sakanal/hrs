@@ -13,6 +13,8 @@ import java.util.Map;
 public interface HouseFeignClient {
     @PutMapping("/house/housecontactinfo/updatePublisherNameByUserId")
     public R updatePublisherNameByUserId(@RequestBody Map<String, Object> params);
+    @PutMapping("/house/housecontactinfo/updatePublisherPhoneByUserId")
+    public R updatePublisherPhoneByUserId(@RequestBody Map<String, Object> params);
 
     @PostMapping("/house/houseInfo/getPublishInfoList")
     public R getPublishInfoList(@RequestBody PublishInfoListDTO publishInfoListDTO);

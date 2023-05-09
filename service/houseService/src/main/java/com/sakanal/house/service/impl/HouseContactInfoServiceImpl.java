@@ -37,4 +37,17 @@ public class HouseContactInfoServiceImpl extends ServiceImpl<HouseContactInfoDao
         return false;
     }
 
+    @Override
+    public boolean updatePublisherPhoneByUserId(Map<String, Object> params) {
+        String userIdString = (String) params.get("userId");
+        if (StringUtils.hasText(userIdString)){
+            long userId = Long.parseLong(userIdString);
+            String phone = (String) params.get("phone");
+            if(StringUtils.hasText(phone)){
+                return baseMapper.updatePublisherPhoneByUserId(userId,phone);
+            }
+        }
+        return false;
+    }
+
 }

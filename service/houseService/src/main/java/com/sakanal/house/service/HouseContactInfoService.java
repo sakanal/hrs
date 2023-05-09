@@ -18,5 +18,7 @@ public interface HouseContactInfoService extends IService<HouseContactInfoEntity
     PageUtils queryPage(Map<String, Object> params);
 
     boolean updatePublisherNameByUserId(Map<String, Object> params);
+
+    boolean updatePublisherPhoneByUserId(Map<String, Object> params);
 }
 

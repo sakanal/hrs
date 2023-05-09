@@ -16,4 +16,6 @@ import org.apache.ibatis.annotations.Param;
 public interface HouseContactInfoDao extends BaseMapper<HouseContactInfoEntity> {
 
     boolean updatePublisherNameByUserId(@Param("userId") Long userId, @Param("nickName") String nickName);
+
+    boolean updatePublisherPhoneByUserId(@Param("userId") long userId, @Param("phone") String phone);
 }
