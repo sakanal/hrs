@@ -248,9 +248,19 @@
                           <el-col :span="18">
                             <el-form-item>
                               <el-checkbox-group v-model="detailedForm.baseFacilitiesIds">
-                                <template v-for="facilities in facilitiesList">
-                                  <el-checkbox :label="facilities.id">{{ facilities.name }}</el-checkbox>
-                                </template>
+                                <div>
+                                  <span>公共设施</span>
+                                  <template v-for="facilities in facilitiesList" v-if="facilities.category===0">
+                                    <el-checkbox :label="facilities.id">{{ facilities.name }}</el-checkbox>
+                                  </template>
+                                </div>
+                                <hr>
+                                <div>
+                                  <span>卧室设施</span>
+                                  <template v-for="facilities in facilitiesList" v-if="facilities.category===1">
+                                    <el-checkbox :label="facilities.id">{{ facilities.name }}</el-checkbox>
+                                  </template>
+                                </div>
                               </el-checkbox-group>
                             </el-form-item>
                           </el-col>
@@ -353,7 +363,7 @@
                               <el-time-select
                                 placeholder="起始时间"
                                 v-model="contactForm.answerPeriodTimeStart"
-                                :picker-options="{start: '00:00',step: '01:00',end: '24:00'}">
+                                :picker-options="{start: '00:00',step: '01:00',end: '23:59'}">
                               </el-time-select>
                             </el-form-item>
                           </el-col>
@@ -363,7 +373,7 @@
                               <el-time-select
                                 placeholder="结束时间"
                                 v-model="contactForm.answerPeriodTimeEnd"
-                                :picker-options="{start: '00:00',step: '01:00',end: '24:00',minTime:contactForm.answerPeriodTimeStart}">
+                                :picker-options="{start: '00:00',step: '01:00',end: '23:59',minTime:contactForm.answerPeriodTimeStart}">
                               </el-time-select>
                             </el-form-item>
                           </el-col>
@@ -1031,7 +1041,11 @@ export default {
           if (response && response.code===0){
             let userInfo = response.userInfo
             this.contactForm.publisherName = userInfo.nickName
-            this.contactForm.contactPhone = userInfo.phone
+            this.$axios.get(`/user/userbaseinfo/getPhone/${userInfo.id}`).then(response => {
+              if (response && response.code === 0) {
+                this.contactForm.contactPhone = response.phone
+              }
+            })
             this.userInfo = userInfo
           }else {
             this.$message.error(response.msg)

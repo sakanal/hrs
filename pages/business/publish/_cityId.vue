@@ -373,7 +373,7 @@
                               <el-time-select
                                 placeholder="起始时间"
                                 v-model="contactForm.answerPeriodTimeStart"
-                                :picker-options="{start: '00:00',step: '01:00',end: '24:00'}">
+                                :picker-options="{start: '00:00',step: '01:00',end: '23:59'}">
                               </el-time-select>
                             </el-form-item>
                           </el-col>
@@ -383,7 +383,7 @@
                               <el-time-select
                                 placeholder="结束时间"
                                 v-model="contactForm.answerPeriodTimeEnd"
-                                :picker-options="{start: '00:00',step: '01:00',end: '24:00',minTime:contactForm.answerPeriodTimeStart}">
+                                :picker-options="{start: '00:00',step: '01:00',end: '23:59',minTime:contactForm.answerPeriodTimeStart}">
                               </el-time-select>
                             </el-form-item>
                           </el-col>
