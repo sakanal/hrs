@@ -17,6 +17,7 @@ public class FacilitiesVO implements Serializable {
 
     private Long id;
     private String name;
+    private Integer category;
 
     public FacilitiesVO(BaseFacilitiesEntity facilitiesEntity) {
         BeanUtils.copyProperties(facilitiesEntity,this);
