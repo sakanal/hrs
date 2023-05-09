@@ -71,6 +71,7 @@ public class PublishInfoDTO implements Serializable {
         private Date earliestInTime;
         private Integer livablePeopleNumber;
         private Integer lookingHouseStateTime;
+        private Integer lookingHouseTimeState;
         private Integer decorationState;
         private List<Long> baseFacilitiesIds;
         private List<Long> baseHighlightIds;
