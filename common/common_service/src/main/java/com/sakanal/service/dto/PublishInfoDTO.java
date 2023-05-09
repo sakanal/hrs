@@ -96,9 +96,9 @@ public class PublishInfoDTO implements Serializable {
         private String publisherName;
         private Integer publisherIdentity;
         private Long contactPhone;
-        @JsonFormat(pattern = "hh:mm")
+        @JsonFormat(pattern = "HH:mm")
         private Date answerPeriodTimeStart;
-        @JsonFormat(pattern = "hh:mm")
+        @JsonFormat(pattern = "HH:mm")
         private Date answerPeriodTimeEnd;
     }
 
