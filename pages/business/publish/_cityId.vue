@@ -200,7 +200,7 @@
                         </el-form-item>
                       </div>
                     </el-form>
-                    <el-form ref="detailedForm" :model="detailedForm">
+                    <el-form ref="detailedForm" :model="detailedForm" :rules="detailedRules">
                       <div style="margin: 20px 0 20px 0;">
                         <div style="margin: 20px 0 20px 0;" id="detailedForm"><b>详细介绍</b></div>
                         <el-form-item label="最早入住">
@@ -216,7 +216,7 @@
                             </el-form-item>
                           </el-col>
                           <el-col :span="4">
-                            <el-form-item prop="">
+                            <el-form-item prop="livablePeopleNumber">
                               <el-input onkeyup="this.value=this.value.replace(/\D/g,'')"
                                         v-model="detailedForm.livablePeopleNumber" class="my-center-input">
                                 <template slot="prefix">宜住</template>
