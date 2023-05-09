@@ -140,6 +140,13 @@ export default {
             if (response===undefined){
               this.$refs.dataFormRef.resetFields()
             }else if (response.code===0){
+              // 更改房源信息中的联系人电话
+              this.$axios.put('/house/housecontactinfo/updatePublisherPhoneByUserId',{
+                userId: this.userId.toString(),
+                phone: this.dataForm.phone
+              }).then(response=>{
+                console.log(response)
+              })
               this.$message.success('换绑手机成功')
               this.handleClose()
             }
