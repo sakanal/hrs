@@ -390,7 +390,7 @@
             </el-card>
           </el-col>
           <el-col :span="4">
-            <el-card style="position: fixed;top: 30.1%;width: 183px">
+            <el-card style="position: fixed;top: 42%;width: 183px">
               <div style="height: 300px;">
                 <el-steps direction="vertical" :active="stepActive">
                   <el-step title="基础信息">
