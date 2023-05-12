@@ -5,7 +5,6 @@
       <el-row style="background-color: #fbfbfb;height: 30px;line-height: 30px" type="flex" class="row-bg" justify="center">
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            logo
             <el-link :underline="false" href="/">首页</el-link>
           </div>
         </el-col>
@@ -42,10 +41,14 @@
           </el-menu>
         </el-col>
       </el-row>
-      <el-row style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)" type="flex" class="row-bg" justify="center">
+      <el-row style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);height: 60px" type="flex" class="row-bg" justify="center">
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            <el-link :underline="false" href="/">logo</el-link>
+            <el-link :underline="false" href="/user">
+              <el-image
+                style="width: 60px; height: 60px"
+                :src="logo.url"></el-image>
+            </el-link>
           </div>
         </el-col>
         <el-col :span="5"/>
@@ -130,7 +133,11 @@ export default {
   data () {
     // 这里存放数据
     return {
-      userInfo: {}
+      userInfo: {},
+      logo:{
+        name: 'logo',
+        url: require('/static/image/user_logo.png')
+      }
     }
   },
   // 方法集合

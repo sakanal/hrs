@@ -14,8 +14,8 @@
           <el-link :underline="false" href="/login" style="float: right">已有账号？去登录</el-link>
         </div>
         <el-card>
-          <div slot="header" class="title">
-            <span>logo</span>
+          <div slot="header" style="text-align: center" class="title">
+            <span>用户注册</span>
           </div>
           <div>
             <el-form ref="registerForm" :model="register" :rules="rules" status-icon label-width="0px"

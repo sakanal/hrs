@@ -45,16 +45,15 @@
       <el-row style="background-color: #fbfbfb;height: 90px;line-height: 90px" type="flex" class="row-bg" justify="center">
         <el-col :span="6">
           <div>
-            logo
-            <el-link :underline="false" href="/">首页</el-link>
+            <el-link :underline="false" href="/">
+              <el-image
+                style="width: 90px; height: 90px"
+                :src="logo.url"></el-image>
+            </el-link>
           </div>
         </el-col>
-        <el-col :span="7"></el-col>
-        <el-col :span="6">
-<!--          <div style="height: 100%;width: 100%">-->
-<!--            <nuxt-link to="/business/publish/toPublish">免费发布</nuxt-link>-->
-<!--          </div>-->
-        </el-col>
+        <el-col :span="7">如果您需要在异乡寻找住所</el-col>
+        <el-col :span="6">那在这里就有您最需要的家</el-col>
       </el-row>
     </el-header>
     <!--  NUXT主体部分  -->
@@ -98,6 +97,10 @@ export default {
     return {
       userInfo: {},
       cityName: '',
+      logo:{
+        name: 'logo',
+        url: require('/static/image/logo.png')
+      }
     }
   },
   // 方法集合

@@ -14,8 +14,8 @@
           <el-link :underline="false" href="/register" style="float: right">没有账号？去注册</el-link>
         </div>
         <el-card>
-          <div slot="header" class="title">
-            <span>logo</span>
+          <div slot="header" style="text-align: center" class="title">
+            <span>用户登录</span>
           </div>
           <div>
             <el-tabs v-model="activeName" @tab-click="handleClick" stretch>
