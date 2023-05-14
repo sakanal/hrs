@@ -10,27 +10,27 @@
     <el-form-item label="昵称" prop="nickName">
       <el-input v-model="dataForm.nickName" placeholder="昵称"></el-input>
     </el-form-item>
-    <el-form-item label="头像url" prop="headPortraitUrl">
-      <el-input v-model="dataForm.headPortraitUrl" placeholder="头像url"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="头像url" prop="headPortraitUrl">-->
+<!--      <el-input v-model="dataForm.headPortraitUrl" placeholder="头像url"></el-input>-->
+<!--    </el-form-item>-->
     <el-form-item label="电话" prop="phone">
       <el-input v-model="dataForm.phone" placeholder="电话"></el-input>
     </el-form-item>
     <el-form-item label="邮箱" prop="email">
       <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
     </el-form-item>
-    <el-form-item label="密码" prop="password">
-      <el-input v-model="dataForm.password" placeholder="密码"></el-input>
-    </el-form-item>
-    <el-form-item label="是否删除 0-未删除 1-已删除" prop="isDeleted">
-      <el-input v-model="dataForm.isDeleted" placeholder="是否删除 0-未删除 1-已删除"></el-input>
-    </el-form-item>
-    <el-form-item label="创建时间" prop="createdTime">
-      <el-input v-model="dataForm.createdTime" placeholder="创建时间"></el-input>
-    </el-form-item>
-    <el-form-item label="修改时间" prop="modifyTime">
-      <el-input v-model="dataForm.modifyTime" placeholder="修改时间"></el-input>
-    </el-form-item>
+<!--    <el-form-item label="密码" prop="password">-->
+<!--      <el-input v-model="dataForm.password" placeholder="密码"></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item label="是否删除 0-未删除 1-已删除" prop="isDeleted">-->
+<!--      <el-input v-model="dataForm.isDeleted" placeholder="是否删除 0-未删除 1-已删除"></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item label="创建时间" prop="createdTime">-->
+<!--      <el-input v-model="dataForm.createdTime" placeholder="创建时间"></el-input>-->
+<!--    </el-form-item>-->
+<!--    <el-form-item label="修改时间" prop="modifyTime">-->
+<!--      <el-input v-model="dataForm.modifyTime" placeholder="修改时间"></el-input>-->
+<!--    </el-form-item>-->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
