@@ -105,59 +105,62 @@
       },
       // 删除
       deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
+        let ids = id ? [id] : this.dataListSelections.map(item => {
           return item.id
         })
-        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http({
-            url: this.$http.adornUrl('/house/baseorientation/delete'),
-            method: 'post',
-            data: this.$http.adornData(ids, false)
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1000,
-                onClose: () => {
-                  this.getDataList()
-                }
-              })
-            } else {
-              this.$message.error(data.msg)
-            }
+        this.$http({
+          url: this.$http.adornUrl('/house/baseorientation/delete'),
+          method: 'post',
+          data: this.$http.adornData(ids, false)
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 1000,
+              onClose: () => {
+                this.getDataList()
+              }
+            })
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+      },
+      hideHandle (data) {
+        const showState = data.showState === 1 ? 0 : 1
+        this.$http({
+          url: this.$http.adornUrl(`/house/baseorientation/update`),
+          method: 'post',
+          data: this.$http.adornData({
+            id: data.id,
+            showState
           })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 800
+            })
+            this.getDataList()
+          }
         })
       },
       handleCloseTag (data) {
-        this.$confirm(`是否将${data.orientation}${data.showState === 1 ? '隐藏' : '重新显示'}？`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          const showState = data.showState === 1 ? 0 : 1
-          this.$http({
-            url: this.$http.adornUrl(`/house/baseorientation/update`),
-            method: 'post',
-            data: this.$http.adornData({
-              id: data.id,
-              showState
-            })
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 800
-              })
-              this.getDataList()
-            }
+        if (data.showState === 1) {
+          this.hideHandle(data)
+        } else {
+          this.$confirm(`请选择对${data.orientation}的操作？`, '提示', {
+            confirmButtonText: '重新显示',
+            cancelButtonText: '完全删除',
+            type: 'warning'
+          }).then(() => {
+            this.hideHandle(data)
+          }).catch(() => {
+            this.deleteHandle(data.id)
           })
-        })
+        }
       },
       showInput () {
         this.inputVisible = true
