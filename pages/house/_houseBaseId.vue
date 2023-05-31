@@ -345,23 +345,36 @@ export default {
       })
     },
     addCollection(){
-      this.$axios.post(`/user/usercollection/addCollection/${this.houseBaseId}`).then(response=>{
-        if (response && response.code===0){
-          this.$message.success('加入收藏成功')
-          this.isMyCollection=true
-        }
-      })
+      if (this.checkUser()){
+        this.$axios.post(`/user/usercollection/addCollection/${this.houseBaseId}`).then(response=>{
+          if (response && response.code===0){
+            this.$message.success('加入收藏成功')
+            this.isMyCollection=true
+          }
+        })
+      }
     },
     removeCollection(){
-      this.$axios.delete(`/user/usercollection/removeCollection/${this.houseBaseId}`).then(response=>{
-        if (response && response.code===0){
-          this.$message.success('取消收藏成功')
-          this.isMyCollection=false
-        }
-      })
+      if (this.checkUser()) {
+        this.$axios.delete(`/user/usercollection/removeCollection/${this.houseBaseId}`).then(response => {
+          if (response && response.code === 0) {
+            this.$message.success('取消收藏成功')
+            this.isMyCollection = false
+          }
+        })
+      }
     },
     getPhone(){
       alert(this.houseInfo.contactInfo.contactPhone)
+    },
+    checkUser(){
+      if (!cookie.get('userToken')){
+        this.$message.error('请先登录')
+        this.$router.push({path:'/login'})
+        return false
+      }else {
+        return true
+      }
     }
   },
   // 监听属性 类似于data概念
