@@ -4,20 +4,20 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="推广标题" prop="name">
-      <el-input v-model="dataForm.name" placeholder="推广标题"></el-input>
+    <el-form-item label="推荐标题" prop="name">
+      <el-input v-model="dataForm.name" placeholder="推荐标题"></el-input>
     </el-form-item>
-    <el-form-item label="推广备注" prop="description">
+    <el-form-item label="推荐备注" prop="description">
       <el-input
         type="textarea"
         placeholder="请输入内容"
         v-model="dataForm.description"
       />
     </el-form-item>
-    <el-form-item label="推广次数" prop="number">
+    <el-form-item label="推荐次数" prop="number">
       <el-input-number v-model="dataForm.number" :min="0" :step="100"></el-input-number>
     </el-form-item>
-    <el-form-item label="推广价格" prop="price">
+    <el-form-item label="推荐价格" prop="price">
       <el-input-number v-model="dataForm.price" :precision="2" :min="0"></el-input-number>
     </el-form-item>
     </el-form>
@@ -36,22 +36,22 @@
         dataForm: {
           id: 0,
           name: '',
-          description: '此页面购买成功后，推广功能会作用到所有已发布的房源中。',
+          description: '此页面购买成功后，推荐功能会作用到所有已发布的房源中。',
           number: '',
           price: ''
         },
         dataRule: {
           name: [
-            { required: true, message: '推广标题不能为空', trigger: 'blur' }
+            { required: true, message: '推荐标题不能为空', trigger: 'blur' }
           ],
           description: [
-            { required: true, message: '推广描述不能为空', trigger: 'blur' }
+            { required: true, message: '推荐描述不能为空', trigger: 'blur' }
           ],
           number: [
-            { required: true, message: '推广次数不能为空', trigger: 'blur' }
+            { required: true, message: '推荐次数不能为空', trigger: 'blur' }
           ],
           price: [
-            { required: true, message: '推广价格不能为空', trigger: 'blur' }
+            { required: true, message: '推荐价格不能为空', trigger: 'blur' }
           ]
         }
       }

@@ -27,27 +27,27 @@
         header-align="center"
         align="center"
         min-width="25%"
-        label="推广标题">
+        label="推荐标题">
       </el-table-column>
       <el-table-column
         prop="description"
         header-align="center"
         align="center"
-        label="推广备注">
+        label="推荐备注">
       </el-table-column>
       <el-table-column
         prop="number"
         header-align="center"
         align="center"
         width="100"
-        label="推广次数">
+        label="推荐次数">
       </el-table-column>
       <el-table-column
         prop="price"
         header-align="center"
         align="center"
         width="100"
-        label="推广价格">
+        label="推荐价格">
       </el-table-column>
       <el-table-column
         prop="showState"
