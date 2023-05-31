@@ -1,21 +1,15 @@
 package com.sakanal.house.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.sakanal.service.entity.house.HouseImageEntity;
-import com.sakanal.house.service.HouseImageService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sakanal.base.utils.PageUtils;
 import com.sakanal.base.utils.R;
+import com.sakanal.house.service.HouseImageService;
+import com.sakanal.service.dto.ImageDeleteDTO;
+import com.sakanal.service.entity.house.HouseImageEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 
 
@@ -82,9 +76,12 @@ public class HouseImageController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("house:houseimage:delete")
-    public R delete(@RequestBody Long[] ids){
-		houseImageService.removeByIds(Arrays.asList(ids));
-
+    public R delete(@RequestBody ImageDeleteDTO imageDeleteDTO) {
+        if (imageDeleteDTO!=null){
+            houseImageService.remove(new LambdaQueryWrapper<HouseImageEntity>()
+                    .eq(HouseImageEntity::getName, imageDeleteDTO.getName())
+                    .eq(HouseImageEntity::getUrl, imageDeleteDTO.getUrl()));
+        }
         return R.ok();
     }
 

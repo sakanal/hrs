@@ -27,7 +27,7 @@
         INNER JOIN house_area area ON base.area_id = area.id
         INNER JOIN house_detailed_info AS detailed ON base.id = detailed.base_info_id
         <where>
-            image.is_default_image = 1
+            image.is_default_image = 1 AND image.is_deleted = 0
             <if test="isDeleted == null">
                 AND state.is_deleted = 0
             </if>
@@ -161,7 +161,7 @@
                                      INNER JOIN house_detailed_info AS detailed ON base.id=detailed.base_info_id
                                      INNER JOIN house_rent_info AS rent ON base.id=rent.base_info_id
                                      INNER JOIN house_state AS state ON base.id=state.base_info_id
-        WHERE image.is_default_image=1 AND state.is_deleted=0 AND state.house_publish_state=2
+        WHERE image.is_default_image=1 AND image.is_deleted = 0 AND state.is_deleted=0 AND state.house_publish_state=2
         <if test="childrenCityId!=null">
             AND base.city_id = #{childrenCityId}
         </if>
@@ -206,7 +206,7 @@
         INNER JOIN house_area area ON base.area_id = area.id
         INNER JOIN house_detailed_info AS detailed ON base.id = detailed.base_info_id
         <where>
-            image.is_default_image = 1
+            image.is_default_image = 1  AND image.is_deleted = 0
             <if test="isDeleted == null">
                 AND state.is_deleted = 0
             </if>
