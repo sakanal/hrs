@@ -450,7 +450,11 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public boolean changePublishState(Long houseBaseInfoId, Integer state) {
-        if (state >= 0 && state <= 4) {
+        if (Objects.equals(state, PublishStateConstant.DEFAULT_STATE) ||
+                Objects.equals(state, PublishStateConstant.EXAMINE_STATE) ||
+                Objects.equals(state, PublishStateConstant.PUBLISH_STATE) ||
+                Objects.equals(state, PublishStateConstant.PUBLISH_END_STATE) ||
+                Objects.equals(state, PublishStateConstant.EXAMINE_FAIL_STATE)) {
             return stateService.update(new LambdaUpdateWrapper<HouseStateEntity>()
                     .eq(HouseStateEntity::getBaseInfoId, houseBaseInfoId)
                     .set(HouseStateEntity::getHousePublishState, state));

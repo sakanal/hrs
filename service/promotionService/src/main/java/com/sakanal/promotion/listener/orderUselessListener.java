@@ -29,7 +29,7 @@ public class orderUselessListener {
 
     @RabbitHandler
     public void listener(Long orderId, Channel channel, Message message) {
-        log.info("获取到过期消息（订单超时未支付）-->{}", orderId);
+        log.info("获取到订单号-->{}", orderId);
         if (redisUtils.hasKey(redisProperties.getOrderPrefix()+orderId)) {
             // 30分钟内未支付订单
             HousePromotionOrderEntity housePromotionOrderEntity = new HousePromotionOrderEntity();
@@ -39,6 +39,8 @@ public class orderUselessListener {
                 log.info("订单取消成功");
                 redisUtils.del(redisProperties.getOrderPrefix()+orderId);
             }
+        }else {
+            log.info("订单已完成支付");
         }
 //        try {
 //            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);

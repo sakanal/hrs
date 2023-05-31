@@ -1,6 +1,5 @@
 package com.sakanal.user.service.impl;
 
-import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -101,7 +100,7 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
 
     @Override
     public String login(LoginSimpleDTO loginSimple) {
-        List<UserBaseInfoEntity> list = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()));
+        List<UserBaseInfoEntity> list = this.list(new LambdaQueryWrapper<UserBaseInfoEntity>().eq(UserBaseInfoEntity::getUserName, loginSimple.getUserName()).last("limit 1"));
         if (list.size()==1){
             UserBaseInfoEntity userBaseInfoEntity = list.get(0);
             boolean matches = PasswordUtils.matches(loginSimple.getPassword(), userBaseInfoEntity.getPassword());
