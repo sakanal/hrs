@@ -32,6 +32,7 @@
                   <el-form-item>
                     <el-checkbox-group v-model="simpleLogin.autoLogin">
                       <el-checkbox label="autoLogin">7天免登录</el-checkbox>
+                      <el-link :underline="false" href="http://localhost:8001" style="float: right">我是管理员</el-link>
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item size="medium">
@@ -55,11 +56,12 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item prop="password">
-                    <el-input type="password" v-model="phoneLogin.code" placeholder="验证码" autocomplete="off"/>
+                    <el-input  v-model="phoneLogin.code" placeholder="验证码" autocomplete="off"/>
                   </el-form-item>
                   <el-form-item>
                     <el-checkbox-group v-model="simpleLogin.autoLogin">
                       <el-checkbox label="autoLogin">7天免登录</el-checkbox>
+                      <el-link :underline="false" href="http://localhost:8001" style="float: right">我是管理员</el-link>
                     </el-checkbox-group>
                   </el-form-item>
                   <el-form-item size="medium">

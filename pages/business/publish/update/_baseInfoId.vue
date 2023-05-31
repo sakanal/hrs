@@ -312,7 +312,8 @@
                           <el-col :span="18">
                             <el-row>
                               <div style=" font-size: 14px; color: #999;line-height: 24px;">
-                                请上传清晰、实拍的室内图片，请不要在图片上添加文字、数字、网址等内容，请勿上传名片、二维码、自拍照、风景照等与房源无关的图片，最多上传12张，每张最大10M
+                                请上传清晰、实拍的室内图片，请不要在图片上添加文字、数字、网址等内容，请勿上传名片、二维码、自拍照、风景照等与房源无关的图片，最多上传12张，每张最大10M。<br>
+                                <span style="color: red">注意：首张图片将作为图片集的默认图片，在房源筛选时会显示该图片！</span>
                               </div>
                             </el-row>
                             <el-row style="margin-top: 25px">
@@ -866,6 +867,7 @@ export default {
   methods: {
     multiUpload (value) {
       this.imageForm = value
+      console.log(value)
     },
     initRoadListAndAreaList(cityId,roadId){
       let roadList = this.roadList
