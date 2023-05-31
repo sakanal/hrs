@@ -28,7 +28,7 @@ public class HouseAreaServiceImpl extends ServiceImpl<HouseAreaDao, HouseAreaEnt
     private HouseCityService houseCityService;
 
     @Override
-    @Cacheable(value = {"houseArea"},key = "#root.methodName+'::'+#params['limit']+'+'+#params['cityId']+'+'+#params['key']")
+    @Cacheable(value = {"houseArea"},key = "#root.methodName+'::'+#params['limit']+'+'+#params['page']+'+'+#params['cityId']+'+'+#params['key']")
     public PageUtils queryPage(Map<String, Object> params) {
         String key = (String) params.get("key");
         LambdaQueryWrapper<HouseAreaEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
