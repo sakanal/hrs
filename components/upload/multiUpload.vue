@@ -88,6 +88,13 @@ export default {
         .then(response => {
           if (response === undefined){
             return Promise.reject();
+          }else {
+            this.$axios.post('/house/houseimage/delete',{
+              name: file.name,
+              url: file.url
+            }).then(response=>{
+              console.log(response)
+            })
           }
         })
     },
@@ -106,6 +113,12 @@ export default {
      */
     beforeUpload (file) {
       let _self = this
+      // 判断图片基础情况
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+      if (!isJpgOrPng) {
+        this.$message.error('上传的数据只能是图片格式!')
+        return false
+      }
       return this.$axios.get(`/thirdParty/OSS/upload/${this.fileDir}`)
         .then(response => {
           _self.dataObj.policy = response.data.policy
@@ -119,11 +132,6 @@ export default {
           _self.dataObj.dir = response.data.dir
           _self.dataObj.host = response.data.host
 
-          // 判断图片基础情况
-          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-          if (!isJpgOrPng) {
-            this.$message.error('上传图片只能是 JPG 或 PNG 格式!')
-          }
           const isLt2M = file.size / 1024 / 1024 < 2
           return new Promise((resolve) => {
             // 小于2M 不压缩
