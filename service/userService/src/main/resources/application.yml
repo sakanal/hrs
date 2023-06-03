@@ -1,24 +1,45 @@
-#server:
-#  port: 8030
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://192.168.38.131:3306/gulimall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-#    username: root
-#    password: 123456
-#  jackson:
-#    date-format: yyyy-MM-dd  HH:mm:ss
-#    time-zone: Asia/Shanghai
-#  thymeleaf:
-#    cache: false
-#  redis:
-#    port: 6379
-#    host: 192.168.38.131
-#    password: Redisqaz360782
-#  cache:
-#    type: redis
-#  session:
-#    store-type: redis
+server:
+  port: 8010
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${datasource.url}/hrs_user?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  jackson:
+    date-format: yyyy-MM-dd  HH:mm:ss
+    time-zone: Asia/Shanghai
+  cache:
+    #指定缓存类型为redis
+    type: redis
+    redis:
+      # 指定redis中的过期时间为1h
+      time-to-live: 3600000
+      key-prefix: CACHE_   #缓存key前缀
+      use-key-prefix: true #是否开启缓存key前缀
+      cache-null-values: true #缓存空值，解决缓存穿透问题
+  redis:
+    host: 192.168.38.131
+    port: 6379
+    password: Redisqaz360782
+    database: 0
+  rabbitmq:
+    host: 192.168.38.131
+    port: 5672
+    username: sakanal
+    password: RabbitMQqaz360782
+    #这个配置是保证提供者确保消息推送到交换机中，不管成不成功，都会回调
+    publisher-confirm-type: correlated
+    publisher-returns: true
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+datasource:
+  url: localhost:3306
 logging:
   level:
     com.sakanal.user: debug

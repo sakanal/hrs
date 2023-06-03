@@ -1,3 +1,42 @@
+server:
+  port: 8030
+spring:
+  application:
+    name: thirdParty
+  cloud:
+    alicloud:
+      access-key: key
+      secret-key: key
+      oss:
+        endpoint: key
+        bucket: key
+      sms:
+        host: key
+        path: key
+        method: POST
+        appcode: key
+        template-id: key
+  mail:
+    host: key
+    username: key
+    password: key
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+alipay:
+  app-id: key
+  merchant-private-key: key
+  alipay-public-key: key
+  gateway-url: https://openapi.alipaydev.com/gateway.do
+  sign-type: RSA2
+  charset: UTF-8
+  return-url: key
+  notify-url: key
 logging:
   level:
     com.sakanal.thirdparty: debug
