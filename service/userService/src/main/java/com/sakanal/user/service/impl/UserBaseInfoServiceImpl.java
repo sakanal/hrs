@@ -47,7 +47,12 @@ public class UserBaseInfoServiceImpl extends ServiceImpl<UserBaseInfoDao, UserBa
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<UserBaseInfoEntity> page = this.page(new Query<UserBaseInfoEntity>().getPage(params), new QueryWrapper<>());
+        String key = (String) params.get("key");
+        LambdaQueryWrapper<UserBaseInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        if(StringUtils.hasText(key)){
+            queryWrapper.like(UserBaseInfoEntity::getUserName,key);
+        }
+        IPage<UserBaseInfoEntity> page = this.page(new Query<UserBaseInfoEntity>().getPage(params), queryWrapper);
 
         return new PageUtils(page);
     }
