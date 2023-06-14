@@ -80,7 +80,7 @@
                       <template slot="title">
                         <span>订购服务</span>
                       </template>
-                      <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>
+                      <el-menu-item index="/business/service/promotionList">推荐活动</el-menu-item>
                       <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>
                     </el-submenu>
                   </el-menu>

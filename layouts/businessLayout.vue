@@ -89,7 +89,7 @@
 <!--                      <el-menu-item index="/business/publish">我的发布</el-menu-item>-->
 <!--                      <el-menu-item index="/business/info">我的资料</el-menu-item>-->
 <!--                      <el-menu-item index="/business/fund">我的资金</el-menu-item>-->
-<!--                      <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>-->
+<!--                      <el-menu-item index="/business/service/promotionList">推荐活动</el-menu-item>-->
 <!--                      <el-menu-item index="/business">推广管理</el-menu-item>-->
 <!--                      <el-menu-item index="/business">交易管理</el-menu-item>-->
 <!--                    </el-submenu>-->
@@ -98,7 +98,7 @@
                     <el-menu-item index="/user">个人资料</el-menu-item>
 <!--                    <el-menu-item index="/user/info/accountBinding">账户绑定</el-menu-item>-->
 <!--                    <el-menu-item index="/user/info/changePassword">修改密码</el-menu-item>-->
-                    <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>
+                    <el-menu-item index="/business/service/promotionList">推荐活动</el-menu-item>
                     <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>
 <!--                    <el-submenu index="/business/publish">-->
 <!--                      <template slot="title">-->
@@ -126,7 +126,7 @@
 <!--                      <template slot="title">-->
 <!--                        <span>订购服务</span>-->
 <!--                      </template>-->
-<!--                      <el-menu-item index="/business/service/promotionList">推广活动</el-menu-item>-->
+<!--                      <el-menu-item index="/business/service/promotionList">推荐活动</el-menu-item>-->
 <!--                      <el-menu-item index="/business/service/orderList">我的订单</el-menu-item>-->
 <!--                    </el-submenu>-->
                   </el-menu>

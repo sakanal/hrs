@@ -330,7 +330,7 @@ export default {
       // 需要推广的房源信息
       publishHouseInfo: {},
       selectButtonId: 0,
-      // 所有推广活动列表以及相关数据
+      // 所有推荐活动列表以及相关数据
       promotion: {
         // 页面尺寸
         pageSize: 0,
@@ -403,7 +403,7 @@ export default {
       this.drawerVisit = true
       this.promotionHouseInfo.baseInfoId = baseInfoId
       this.promotionHouseInfo.userId = this.userInfo.id
-      // 获取推广活动数据
+      // 获取推荐活动数据
       this.$axios.get(`/promotion/housepromotionfunction/list`, {
         params: {
           showState: 1,
