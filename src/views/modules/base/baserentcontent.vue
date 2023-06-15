@@ -151,7 +151,7 @@
         if (data.showState === 1) {
           this.hideHandle(data)
         } else {
-          this.$confirm(`请选择对${data.name}的操作？`, '提示', {
+          this.$confirm(`请选择对${data.rentContentName}的操作？`, '提示', {
             confirmButtonText: '重新显示',
             cancelButtonText: '完全删除',
             type: 'warning'
