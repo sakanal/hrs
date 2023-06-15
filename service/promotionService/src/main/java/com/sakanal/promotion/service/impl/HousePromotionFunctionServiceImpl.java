@@ -25,6 +25,10 @@ public class HousePromotionFunctionServiceImpl extends ServiceImpl<HousePromotio
         if (StringUtils.hasText(showState)){
             queryWrapper.eq(HousePromotionFunctionEntity::getShowState,Integer.valueOf(showState));
         }
+        String key = (String) params.get("key");
+        if (StringUtils.hasText(key)){
+            queryWrapper.like(HousePromotionFunctionEntity::getName,key);
+        }
         IPage<HousePromotionFunctionEntity> page = this.page(new Query<HousePromotionFunctionEntity>().getPage(params),queryWrapper);
 
         return new PageUtils(page);
